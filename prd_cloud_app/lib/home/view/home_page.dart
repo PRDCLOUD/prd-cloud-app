@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+      appBar: AppBar(title: const Text('Homes')),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -28,7 +28,7 @@ class HomePage extends StatelessWidget {
               onPressed: () {
                 context
                     .read<AuthenticationBloc>()
-                    .add(AuthenticationLogoutRequested());
+                    .add(AuthenticationRefreshRequested());
               },
             ),
           ],

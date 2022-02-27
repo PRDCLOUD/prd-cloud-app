@@ -7,3 +7,4 @@ environment:
 
 dependencies:
   flutter_appauth: ^2.4.1
+  flutter_secure_storage: ^5.0.2

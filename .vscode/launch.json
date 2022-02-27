@@ -8,7 +8,8 @@
       "name": "prd_cloud_app",
       "cwd": "prd_cloud_app",
       "request": "launch",
-      "type": "dart"
+      "type": "dart",
+      "program": "lib/main.dart"
     },
     {
       "name": "prd_cloud_app (profile mode)",
