@@ -10,7 +10,7 @@ class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Homes')),
+      appBar: AppBar(title: const Text('Home')),
       body: Center(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -25,6 +25,14 @@ class HomePage extends StatelessWidget {
             ),
             ElevatedButton(
               child: const Text('Logout'),
+              onPressed: () {
+                context
+                    .read<AuthenticationBloc>()
+                    .add(AuthenticationLogoutRequested());
+              },
+            ),
+            ElevatedButton(
+              child: const Text('Refresh'),
               onPressed: () {
                 context
                     .read<AuthenticationBloc>()

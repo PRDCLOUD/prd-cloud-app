@@ -62,6 +62,12 @@ class _AppViewState extends State<AppView> {
                   (route) => false,
                 );
                 break;
+              case AuthenticationStatus.unknown:
+                _navigator.pushAndRemoveUntil<void>(
+                  InitialPage.route(),
+                  (route) => false,
+                );
+                break;
               default:
                 break;
             }
@@ -71,5 +77,19 @@ class _AppViewState extends State<AppView> {
       },
       onGenerateRoute: (_) => SplashPage.route(),
     );
+  }
+}
+
+class InitialPage extends StatelessWidget {
+  static Route route() {
+    return MaterialPageRoute<void>(builder: (_) => InitialPage());
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    RepositoryProvider.of<AuthenticationRepository>(context).refreshToken();
+
+    return const Scaffold(body: Padding(padding: EdgeInsets.all(12), child: Text("Setup", textAlign: TextAlign.center)));
   }
 }

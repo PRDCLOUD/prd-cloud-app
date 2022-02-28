@@ -1,37 +1,54 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:authentication_repository/src/model/auth_data.dart';
+import 'package:authentication_repository/src/utils/jwt-parser.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:http/http.dart' as http;
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
 
+  final issuer = 'https://dev-244599.oktapreview.com/oauth2/default';
+  final clientId = '0oa15rgy0m4Y8k9Ik0h8';
+  final redirectUrl = 'cloud.prd.auth:/callback';
+
   final _storage = new FlutterSecureStorage();
-  final FlutterAppAuth _appAuth = FlutterAppAuth();
   final _controller = StreamController<AuthenticationStatus>();
 
   AuthData? _authData;
 
   Stream<AuthenticationStatus> get status async* {
-    yield AuthenticationStatus.unauthenticated;
+    yield AuthenticationStatus.unknown;
     yield* _controller.stream;
   }
 
   Future<void> logIn() async {
-
+    final FlutterAppAuth _appAuth = FlutterAppAuth();
     final result = await _appAuth.authorizeAndExchangeCode(
                         AuthorizationTokenRequest(
-                          '0oa6cklumdlz9CMnW4x7',
-                          'cloud.prd.auth:/callback',
-                          issuer: 'https://dev-701974.okta.com/oauth2/default',
+                          clientId,
+                          redirectUrl,
+                          issuer: issuer,
                           scopes: ['openid', 'profile', 'email', 'offline_access'],
                         ),
                       );
 
+      
+
     if (result != null) {
-      _authData = new AuthData('', result.accessToken, result.accessTokenExpirationDateTime);
-      await _storeRefreshToken('', result.refreshToken!);
+      var claims = JWT.parse(result.idToken!);
+
+      _authData = new AuthData(
+        userId: claims['sub'],
+        userEmail: claims['email'],
+        name: claims['name'],
+        accessToken: result.accessToken!,
+        expiration: result.accessTokenExpirationDateTime!,
+        groups: (claims['groups'] as List<dynamic>).map((x) => x.toString()).toList()
+      );
+      await _storeRefreshToken(result.refreshToken!);
       _controller.add(AuthenticationStatus.authenticated);
     } else {
       logOut();
@@ -41,45 +58,88 @@ class AuthenticationRepository {
 
   void logOut() {
     _authData = null;
+    _clearRefreshToken();
     _controller.add(AuthenticationStatus.unauthenticated);
   }
 
-  Future<void> refreshToken() async {
+  Future<bool> refreshToken() async {
 
-    if (_authData != null) {
-      final refreshToken = await _getRefreshToken(_authData!.userEmail);
+    final refreshToken = await _getRefreshToken();
 
-      final result = await _appAuth.token(TokenRequest('0oa6cklumdlz9CMnW4x7', 'cloud.prd.auth:/callback',
-                              issuer: 'https://dev-701974.okta.com/oauth2/default',
-                              refreshToken: refreshToken,
-                              scopes: ['openid','profile', 'email', 'offline_access', 'api']));
+    if (refreshToken == null) {
+      logOut();
+      return false;
+    }
 
-      if (result != null) {
-        _authData = new AuthData('', result.accessToken, result.accessTokenExpirationDateTime);
-        await _storeRefreshToken('', result.refreshToken!);
-        _controller.add(AuthenticationStatus.authenticated);
-      } else {
-        logOut();
-      }
-    } else {
+    Map<String, dynamic> body = {
+      'grant_type': 'refresh_token', 
+      'scope': 'openid profile email offline_access',
+      'refresh_token': refreshToken,
+      'client_id': clientId
+    };
+        
+    var response = await http.post(
+                      Uri.parse('${issuer}/v1/token'),
+                      headers: {
+                        'accept': 'application/json',
+                        "Content-Type": "application/x-www-form-urlencoded"
+                      },
+                      body: body,
+                      encoding: Encoding.getByName('utf-8')
+                    );
+    
+
+    if (response.statusCode != 200) {
+      logOut();
+      return false;
+    }
+
+    var result = json.decode(response.body);
+
+    var idTokenClaims = JWT.parse(result['id_token']);
+
+    _authData = new AuthData(
+                  userId: idTokenClaims['sub'],
+                  userEmail: idTokenClaims['sub'],
+                  name: idTokenClaims['name'],
+                  accessToken: result['access_token'],
+                  expiration: DateTime.now().add(Duration(seconds: result['expires_in'] as int)).subtract(Duration(minutes: 5)),
+                  groups: (idTokenClaims['groups'] as List<dynamic>).map((x) => x.toString()).toList()
+                );
+
+    await _storeRefreshToken(result['refresh_token'] as String);
+    _controller.add(AuthenticationStatus.authenticated);
+    return true;
+  }
+
+  Future<String> getAccessToken() async {
+    
+    if (_authData == null) {
       logOut();
     }
+
+    if (_authData!.expiration.isAfter(DateTime.now())) {
+      await refreshToken();
+    }
+      
+    return _authData!.accessToken;
+    
   }
 
-  Future<void> _storeRefreshToken(String user, String? refreshToken) async {
+  Future<void> _storeRefreshToken(String? refreshToken) async {
     if (refreshToken == null) {
-      await _clearRefreshToken(user);
+      await _clearRefreshToken();
     } else {
-      await _storage.write(key: "${user}_refresh_token", value: refreshToken);
+      await _storage.write(key: "refresh_token", value: refreshToken);
     }
   }
 
-  Future<void> _clearRefreshToken(String user) async {
-    await _storage.delete(key: "${user}_refresh_token");
+  Future<void> _clearRefreshToken() async {
+    await _storage.delete(key: "refresh_token");
   }
 
-  Future<String?> _getRefreshToken(String user) async {
-    return await _storage.read(key: "${user}_refresh_token");
+  Future<String?> _getRefreshToken() async {
+    return await _storage.read(key: "refresh_token");
   }
 
   void dispose() => _controller.close();

@@ -6,6 +6,4 @@ environment:
   sdk: ">=2.16.0 <3.0.0"
 
 dependencies:
-  flutter_appauth: ^2.4.1
-  flutter_secure_storage: ^5.0.2
   http: ^0.13.4
