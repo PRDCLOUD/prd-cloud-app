@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:prd_cloud_app/authentication/authentication.dart';
+import 'package:prd_cloud_app/business_layer/business_layer.dart';
+import 'package:prd_cloud_app/business_layer/tenant_options/cubit/tenant_options_cubit.dart';
 
 class HomePage extends StatelessWidget {
+
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => HomePage());
   }
@@ -17,10 +19,8 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             Builder(
               builder: (context) {
-                final userId = context.select(
-                  (AuthenticationBloc bloc) => bloc.state.user.id,
-                );
-                return Text('UserID: $userId');
+                final tenantState = context.select((TenantOptionsCubit bloc) => bloc.state);
+                return Text(tenantState.tenants.join("-"));
               },
             ),
             ElevatedButton(

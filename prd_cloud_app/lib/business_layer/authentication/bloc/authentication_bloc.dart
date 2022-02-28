@@ -19,8 +19,7 @@ class AuthenticationBloc extends Bloc<AuthenticationEvent, AuthenticationState> 
 
   final AuthenticationRepository _authenticationRepository;
   final UserRepository _userRepository;
-  late StreamSubscription<AuthenticationStatus>
-      _authenticationStatusSubscription;
+  late StreamSubscription<AuthenticationStatus> _authenticationStatusSubscription;
 
   @override
   Future<void> close() {

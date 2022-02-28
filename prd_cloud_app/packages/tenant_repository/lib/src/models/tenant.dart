@@ -1,4 +1,6 @@
-class Tenant {
+import 'package:equatable/equatable.dart';
+
+class Tenant extends Equatable {
   const Tenant(this.name);
 
   final String name;
