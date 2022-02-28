@@ -15,13 +15,13 @@ class AuthenticationRepository {
   final redirectUrl = 'cloud.prd.auth:/callback';
 
   final _storage = new FlutterSecureStorage();
-  final _controller = StreamController<AuthenticationStatus>();
-
+  final _statusController = StreamController<AuthenticationStatus>();
+    
   AuthData? _authData;
 
   Stream<AuthenticationStatus> get status async* {
     yield AuthenticationStatus.unknown;
-    yield* _controller.stream;
+    yield* _statusController.stream;
   }
 
   Future<void> logIn() async {
@@ -49,7 +49,7 @@ class AuthenticationRepository {
         groups: (claims['groups'] as List<dynamic>).map((x) => x.toString()).toList()
       );
       await _storeRefreshToken(result.refreshToken!);
-      _controller.add(AuthenticationStatus.authenticated);
+      _statusController.add(AuthenticationStatus.authenticated);
     } else {
       logOut();
     }
@@ -59,7 +59,7 @@ class AuthenticationRepository {
   void logOut() {
     _authData = null;
     _clearRefreshToken();
-    _controller.add(AuthenticationStatus.unauthenticated);
+    _statusController.add(AuthenticationStatus.unauthenticated);
   }
 
   Future<bool> refreshToken() async {
@@ -108,7 +108,7 @@ class AuthenticationRepository {
                 );
 
     await _storeRefreshToken(result['refresh_token'] as String);
-    _controller.add(AuthenticationStatus.authenticated);
+    _statusController.add(AuthenticationStatus.authenticated);
     return true;
   }
 
@@ -142,5 +142,5 @@ class AuthenticationRepository {
     return await _storage.read(key: "refresh_token");
   }
 
-  void dispose() => _controller.close();
+  void dispose() => _statusController.close();
 }

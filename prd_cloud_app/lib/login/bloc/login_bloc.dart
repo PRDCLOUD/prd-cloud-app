@@ -8,15 +8,15 @@ part 'login_event.dart';
 part 'login_state.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc({
-    required AuthenticationRepository authenticationRepository,
-  })  : _authenticationRepository = authenticationRepository,
-        super(const LoginState()) {
+
+  final AuthenticationRepository _authenticationRepository;
+
+  LoginBloc({required AuthenticationRepository authenticationRepository}) 
+    : _authenticationRepository = authenticationRepository, super(const LoginState()) {
     on<LoginSubmitted>(_onSubmitted);
   }
 
-  final AuthenticationRepository _authenticationRepository;
-  void _onSubmitted(LoginSubmitted event,Emitter<LoginState> emit) async {
+    void _onSubmitted(LoginSubmitted event,Emitter<LoginState> emit) async {
     emit(state.copyWith(status: FormzStatus.submissionInProgress));
     try {
       await _authenticationRepository.logIn();
