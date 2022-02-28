@@ -3,7 +3,8 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
-import 'package:tenant_repository/tenant_repository.dart';
+
+import '../../models/tenant.dart';
 
 part 'tenant_selection_state.dart';
 

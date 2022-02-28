@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/business_layer/business_layer.dart';
-import 'package:prd_cloud_app/business_layer/tenant_options/cubit/tenant_options_cubit.dart';
 
 class TenantSelectionPage extends StatelessWidget {
+  const TenantSelectionPage({Key? key}) : super(key: key);
+
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => TenantSelectionPage());
+    return MaterialPageRoute<void>(builder: (_) => const TenantSelectionPage());
   }
 
   @override
@@ -19,7 +20,7 @@ class TenantSelectionPage extends StatelessWidget {
         itemCount: tenantOptions.length,
         itemBuilder: (BuildContext context, int index) {
           return GestureDetector(
-            child: Container(
+            child: SizedBox(
               height: 50,
               child: Center(child: Text(tenantOptions[index].name)),
             ),

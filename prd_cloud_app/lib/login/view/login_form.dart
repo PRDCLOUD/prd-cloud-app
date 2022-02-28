@@ -4,6 +4,8 @@ import 'package:prd_cloud_app/login/login.dart';
 import 'package:formz/formz.dart';
 
 class LoginForm extends StatelessWidget {
+  const LoginForm({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return BlocListener<LoginBloc, LoginState>(

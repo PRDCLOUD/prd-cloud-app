@@ -4,8 +4,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/login/login.dart';
 
 class LoginPage extends StatelessWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => LoginPage());
+    return MaterialPageRoute<void>(builder: (_) => const LoginPage());
   }
 
   @override
@@ -18,7 +20,7 @@ class LoginPage extends StatelessWidget {
           create: (context) {
             return LoginBloc(authenticationRepository: RepositoryProvider.of<AuthenticationRepository>(context));
           },
-          child: LoginForm(),
+          child: const LoginForm(),
         ),
       ),
     );

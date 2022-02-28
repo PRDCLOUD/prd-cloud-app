@@ -2,7 +2,6 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/business_layer/business_layer.dart';
-import 'package:prd_cloud_app/business_layer/tenant_options/cubit/tenant_options_cubit.dart';
 import 'package:prd_cloud_app/home/home.dart';
 import 'package:prd_cloud_app/login/login.dart';
 import 'package:prd_cloud_app/splash/splash.dart';
@@ -36,13 +35,15 @@ class App extends StatelessWidget {
               create: (_) => TenantOptionsCubit(
                   authenticationRepository: authenticationRepository)),
         ],
-        child: AppView(),
+        child: const AppView(),
       ),
     );
   }
 }
 
 class AppView extends StatefulWidget {
+  const AppView({Key? key}) : super(key: key);
+
   @override
   _AppViewState createState() => _AppViewState();
 }
@@ -113,8 +114,10 @@ class _AppViewState extends State<AppView> {
 }
 
 class InitialLoadingPage extends StatelessWidget {
+  const InitialLoadingPage({Key? key}) : super(key: key);
+
   static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => InitialLoadingPage());
+    return MaterialPageRoute<void>(builder: (_) => const InitialLoadingPage());
   }
 
   @override
