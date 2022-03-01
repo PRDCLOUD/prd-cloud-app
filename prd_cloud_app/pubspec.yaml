@@ -38,6 +38,8 @@ dependencies:
     path: packages/authentication_repository
   user_repository:
     path: packages/user_repository
+  apontamentos_repository:
+    path: packages/apontamentos_repository
   models:
     path: packages/models
 

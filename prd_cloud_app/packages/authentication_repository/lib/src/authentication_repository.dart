@@ -90,7 +90,7 @@ class AuthenticationRepository {
                       Uri.parse('${issuer}/v1/token'),
                       headers: {
                         'accept': 'application/json',
-                        "Content-Type": "application/x-www-form-urlencoded"
+                        'Content-Type': 'application/x-www-form-urlencoded'
                       },
                       body: body,
                       encoding: Encoding.getByName('utf-8')
