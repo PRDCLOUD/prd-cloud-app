@@ -3,8 +3,6 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http_connections/http_connections.dart';
-import 'package:models/models.dart';
-import 'package:prd_cloud_app/business_layer/apontamentos/bloc/apontamentos_bloc.dart';
 import 'package:prd_cloud_app/business_layer/business_layer.dart';
 import 'package:prd_cloud_app/home/home.dart';
 

@@ -28,7 +28,11 @@ class AuthenticatedHttpClient {
   }
 
   Future<dynamic> getProductionData(int take) async {
-    return await _getRequest('/api/production/concluded', { 'take': take.toString() });
+    return (await _getRequest('api/production/concluded', 
+    { 
+      'type': 'all', 
+      'take': take.toString() 
+    })).data;
   }
   
 
