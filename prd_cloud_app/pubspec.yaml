@@ -40,6 +40,8 @@ dependencies:
     path: packages/user_repository
   apontamentos_repository:
     path: packages/apontamentos_repository
+  http_connections:
+    path: packages/http_connections
   models:
     path: packages/models
 

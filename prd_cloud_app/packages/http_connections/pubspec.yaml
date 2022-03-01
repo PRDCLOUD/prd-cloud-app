@@ -1,4 +1,4 @@
-name: apontamentos_repository
+name: http_connections
 description: Dart package which manages the user domain.
 publish_to: none
 
@@ -10,5 +10,3 @@ dependencies:
   dio: ^4.0.4  
   models:
     path: ../models
-  http_connections:
-    path: ../http_connections

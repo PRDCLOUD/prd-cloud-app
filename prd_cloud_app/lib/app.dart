@@ -1,8 +1,8 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:prd_cloud_app/authenticated_provider/view/authenticated_provider.dart';
 import 'package:prd_cloud_app/business_layer/business_layer.dart';
-import 'package:prd_cloud_app/home/home.dart';
 import 'package:prd_cloud_app/login/login.dart';
 import 'package:prd_cloud_app/splash/splash.dart';
 import 'package:prd_cloud_app/tenant_selection/view/tenant_selection_page.dart';
@@ -106,7 +106,7 @@ class _AppViewState extends State<AppView> {
       );
     } else {
       _navigator.pushAndRemoveUntil<void>(
-        HomePage.route(),
+        AuthenticatedProviderPage.route(),
         (route) => false,
       );
     }

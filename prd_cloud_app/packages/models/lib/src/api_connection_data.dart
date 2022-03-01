@@ -1,9 +1,11 @@
+import '../models.dart';
+
 class ApiConnectionData {
 
 
-  final String tenant;
+  final Tenant tenant;
   final String authority;
-  final String Function() getAccessToken;
+  final Future<String> Function() getAccessToken;
 
   ApiConnectionData(this.authority, this.tenant, this.getAccessToken);
 

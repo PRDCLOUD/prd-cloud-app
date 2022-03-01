@@ -1,27 +1,20 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
-import 'package:http/http.dart' as http;
+import 'package:http_connections/http_connections.dart';
 import 'package:models/models.dart';
 
 
 class ApontamentosRepository {
 
-  final ApiConnectionData _apiConnectionData;
+  final AuthenticatedHttpClient _http;
 
-  ApontamentosRepository(this._apiConnectionData);
+  ApontamentosRepository(this._http);
 
   Future<List<dynamic>> getApontamentos(int take) async {
-    var accessToken = await _apiConnectionData.getAccessToken();
 
-    Map<String, dynamic> queryParams = Map();
-    queryParams['type'] = "All";
-    queryParams['take'] = take;
-
-    var response = await http.get(Uri.https(_apiConnectionData.authority, _apiConnectionData.tenant + '/api/production/concluded', queryParams), headers: {
-      'Authorization' : 'Basic ' + accessToken,
-      'Content-Type' : 'application/json'
-    });
+    var response = await _http.getProductionData(take);
 
     if (response.statusCode == 200) {
       List<dynamic> list = json.decode(response.body);
