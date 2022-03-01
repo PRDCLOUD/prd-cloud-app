@@ -1,4 +1,4 @@
-name: apontamentos_repository
+name: production_data_repository
 description: Dart package which manages the user domain.
 publish_to: none
 

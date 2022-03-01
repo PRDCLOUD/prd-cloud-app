@@ -15,13 +15,6 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "2.8.0"
-  apontamentos_repository:
-    dependency: "direct main"
-    description:
-      path: "packages/apontamentos_repository"
-      relative: true
-    source: path
-    version: "0.0.0"
   args:
     dependency: transitive
     description:
@@ -408,6 +401,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.0"
+  production_data_repository:
+    dependency: "direct main"
+    description:
+      path: "packages/production_data_repository"
+      relative: true
+    source: path
+    version: "0.0.0"
   provider:
     dependency: transitive
     description:

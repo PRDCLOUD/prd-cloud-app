@@ -2,7 +2,6 @@ import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:models/models.dart';
 
-
 class AuthenticatedHttpClient {
   
   final Dio _dio = Dio();
@@ -12,7 +11,7 @@ class AuthenticatedHttpClient {
 
   AuthenticatedHttpClient(this._authority, this._tenant, this._getAccessToken);
 
-  Future<Response> _getRequest(String path, Map<String, String> queryParams) async {
+  Future<Response> _getRequest(String path, [ Map<String, String>? queryParams = null ]) async {
 
     var accessToken = await _getAccessToken();
 
@@ -27,13 +26,16 @@ class AuthenticatedHttpClient {
     return response;  
   }
 
-  Future<dynamic> getProductionData(int take) async {
+  Future<dynamic> getProductionDataList(int take) async {
     return (await _getRequest('api/production/concluded', 
     { 
       'type': 'all', 
       'take': take.toString() 
     })).data;
   }
-  
+
+  Future<dynamic> getProductionDataById(int id) async {
+    return await _getRequest('api/production' + id.toString());
+  }  
 
 }

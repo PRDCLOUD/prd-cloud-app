@@ -1,4 +1,4 @@
-import 'package:apontamentos_repository/apontamento_repository.dart';
+import 'package:production_data_repository/production_data_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
@@ -11,7 +11,7 @@ class ProductionDataBloc extends Bloc<ProductionDataEvent, ProductionDataState> 
     on<ApontamentosRefreshEvent>(_onAuthenticationStatusChanged);
   }
 
-  final ApontamentosRepository _apontamentosRepository;
+  final ProductionDataRepository _apontamentosRepository;
 
   void _onAuthenticationStatusChanged(ApontamentosRefreshEvent event, Emitter<ProductionDataState> emit) async {
     emit(ProductionDataState.loading());
