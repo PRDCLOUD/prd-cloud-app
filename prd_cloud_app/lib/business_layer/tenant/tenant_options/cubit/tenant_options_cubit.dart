@@ -2,8 +2,7 @@ import 'dart:async';
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
-
-import '../../models/tenant.dart';
+import 'package:models/models.dart';
 
 part 'tenant_options_state.dart';
 

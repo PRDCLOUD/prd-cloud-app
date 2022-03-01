@@ -1,4 +1,4 @@
-name: apontamento_repository
+name: models
 description: Dart package which manages the user domain.
 publish_to: none
 
@@ -7,6 +7,3 @@ environment:
 
 dependencies:
   equatable: ^2.0.0
-  http: ^0.13.4
-  models:
-    path: ../models
