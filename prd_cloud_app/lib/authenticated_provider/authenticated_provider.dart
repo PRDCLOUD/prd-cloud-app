@@ -1,1 +1,0 @@
-export 'view/authenticated_provider.dart';

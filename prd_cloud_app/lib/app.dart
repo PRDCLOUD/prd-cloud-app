@@ -1,22 +1,21 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:prd_cloud_app/authenticated_provider/view/authenticated_provider.dart';
-import 'package:prd_cloud_app/business_layer/business_layer.dart';
-import 'package:prd_cloud_app/login/login.dart';
-import 'package:prd_cloud_app/splash/splash.dart';
-import 'package:prd_cloud_app/tenant_selection/view/tenant_selection_page.dart';
-import 'package:user_repository/user_repository.dart';
+import 'package:prd_cloud_app/modules/initial/bloc/authentication/authentication_bloc.dart';
+import 'package:prd_cloud_app/modules/initial/bloc/tenant_options/tenant_options_cubit.dart';
+import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/cubit/tenant_selection_cubit.dart';
+import 'package:prd_cloud_app/modules/initial/screens/authenticated_provider/view/authenticated_provider.dart';
+import 'package:prd_cloud_app/modules/initial/screens/login/view/login_page.dart';
+import 'package:prd_cloud_app/modules/initial/screens/splash/view/splash_page.dart';
+import 'package:prd_cloud_app/modules/initial/screens/tenant_selection/view/tenant_selection_page.dart';
 
 class App extends StatelessWidget {
   const App({
     Key? key,
-    required this.authenticationRepository,
-    required this.userRepository,
+    required this.authenticationRepository
   }) : super(key: key);
 
   final AuthenticationRepository authenticationRepository;
-  final UserRepository userRepository;
 
   @override
   Widget build(BuildContext context) {
@@ -26,8 +25,7 @@ class App extends StatelessWidget {
         providers: [
           BlocProvider<AuthenticationBloc>(
               create: (_) => AuthenticationBloc(
-                  authenticationRepository: authenticationRepository,
-                  userRepository: userRepository)),
+                  authenticationRepository: authenticationRepository)),
           BlocProvider<TenantSelectionCubit>(
               create: (_) => TenantSelectionCubit(
                   authenticationRepository: authenticationRepository)),
