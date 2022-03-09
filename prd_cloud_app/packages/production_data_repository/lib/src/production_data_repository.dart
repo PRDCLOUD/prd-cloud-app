@@ -16,7 +16,7 @@ class ProductionDataRepository {
   }
 
   Future<ProductionBasicData> getApontamento(int id) async {
-    var response = await _http.getProductionDataList(id);
-    return ProductionBasicData.fromJson(response);
+    var response = await _http.getProductionDataById(id);
+    return ProductionBasicData.fromJson(response.data[0]);
   }
 }

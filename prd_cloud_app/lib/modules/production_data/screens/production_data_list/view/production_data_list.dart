@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:prd_cloud_app/modules/production_data/bloc/cubit/open_production_data_cubit.dart';
 import 'package:production_data_repository/production_data_repository.dart';
 import '../bloc/production_data_bloc.dart';
 
@@ -10,8 +11,11 @@ class ProductionDataListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Home')),
-      body: BlocProvider(
-          create: (context) => ProductionDataBloc(apontamentosRepository: context.read<ProductionDataRepository>())..add(ApontamentosRefreshEvent(take: 100)),
+      body: MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => ProductionDataBloc(apontamentosRepository: context.read<ProductionDataRepository>())..add(ApontamentosRefreshEvent(take: 100))),
+            BlocProvider(create: (context) => OpenProductionDataCubit(productionDataRepository: context.read<ProductionDataRepository>()))
+          ],
           child: BlocBuilder<ProductionDataBloc, ProductionDataState>(
             builder: (BuildContext context, state) {
               switch (state.status) {
@@ -26,7 +30,7 @@ class ProductionDataListPage extends StatelessWidget {
                           height: 50,
                           child: Center(child: Text(state.loadedResult[index]['ProductionLine'])),
                         ),
-                        onTap: () => {}
+                        onTap: () => { context.read<OpenProductionDataCubit>().insertProductionData(state.loadedResult[index]['ID'])}
                       );
                     }
                   );

@@ -34,8 +34,8 @@ class AuthenticatedHttpClient {
     })).data;
   }
 
-  Future<dynamic> getProductionDataById(int id) async {
-    return await _getRequest('api/production' + id.toString());
+  Future<Response> getProductionDataById(int id) async {
+    return await _getRequest('api/production/' + id.toString());
   }  
 
 }

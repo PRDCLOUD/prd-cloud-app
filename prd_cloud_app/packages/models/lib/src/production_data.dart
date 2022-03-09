@@ -3,6 +3,8 @@ import 'dart:convert';
 import 'package:equatable/equatable.dart';
 import 'package:models/src/stop.dart';
 
+import 'loss.dart';
+
 enum ProductionDataStatus { concluded, opened, canceled }
 
 class ProductionBasicData {
@@ -23,14 +25,14 @@ class ProductionBasicData {
   // losses: ProductionLoss[];
   // stops: ProductionStop[];
 
-  // lossesOptions: Loss[];
-  final List<Stop> stops;
+  final List<Loss> lossesOptions;
+  final List<Stop> stopOptions;
 
   final String comments;
 
   final int status;
 
-  ProductionBasicData({required this.id, required this.begin, required this.end, required this.productId, required this.productionLineId, required this.stops, required this.comments, required this.status});
+  ProductionBasicData({required this.id, required this.begin, required this.end, required this.productId, required this.productionLineId, required this.comments, required this.status, required this.stopOptions, required this.lossesOptions });
 
 
   factory ProductionBasicData.fromJson(Map<String, dynamic> json) {
@@ -43,7 +45,8 @@ class ProductionBasicData {
       id: json['id'],
       productionLineId: json['productionLineId'],
       status: json['status'],
-      stops: json['stop'].map((x) => Stop.fromJson(x)).toList()
+      stopOptions: json['stopOptions'].map((x) => Stop.fromJson(x)).toList(),
+      lossesOptions: json['lossesOptions'].map((x) => Loss.fromJson(x)).toList(),
     );
   }
 }
