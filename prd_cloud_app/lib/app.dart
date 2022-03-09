@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/authentication/authentication_bloc.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_options/tenant_options_cubit.dart';
-import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/cubit/tenant_selection_cubit.dart';
+import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/tenant_selection_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/screens/authenticated_provider/view/authenticated_provider.dart';
 import 'package:prd_cloud_app/modules/initial/screens/login/view/login_page.dart';
 import 'package:prd_cloud_app/modules/initial/screens/splash/view/splash_page.dart';

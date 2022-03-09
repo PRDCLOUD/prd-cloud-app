@@ -2,9 +2,12 @@
 
 part of 'open_production_data_cubit.dart';
 
-class OpenProductionDataState {
+@immutable
+class OpenProductionDataState extends Equatable {
+
   final List<ProductionBasicData> items;
-  OpenProductionDataState(this.items);
+  
+  const OpenProductionDataState(this.items);
 
   factory OpenProductionDataState.empty() => OpenProductionDataState(List.empty());
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_options/tenant_options_cubit.dart';
-import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/cubit/tenant_selection_cubit.dart';
+import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/tenant_selection_cubit.dart';
 
 class TenantSelectionPage extends StatelessWidget {
   const TenantSelectionPage({Key? key}) : super(key: key);

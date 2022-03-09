@@ -1,0 +1,12 @@
+name: tenant_data_repository
+description: Dart package which manages the user domain.
+publish_to: none
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+
+dependencies:
+  equatable: ^2.0.0
+  dio: ^4.0.4  
+  http_connections:
+    path: ../http_connections

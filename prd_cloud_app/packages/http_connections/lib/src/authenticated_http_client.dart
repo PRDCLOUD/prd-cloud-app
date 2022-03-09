@@ -26,12 +26,16 @@ class AuthenticatedHttpClient {
     return response;  
   }
 
-  Future<dynamic> getProductionDataList(int take) async {
+  Future<Response> getTenantInformation() async {
+    return await _getRequest('api/tenant/claims');
+  }  
+
+  Future<Response> getProductionDataList(int take) async {
     return (await _getRequest('api/production/concluded', 
     { 
       'type': 'all', 
       'take': take.toString() 
-    })).data;
+    }));
   }
 
   Future<Response> getProductionDataById(int id) async {
