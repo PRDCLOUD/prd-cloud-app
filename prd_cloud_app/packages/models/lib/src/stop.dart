@@ -3,8 +3,7 @@ class Stop {
   final String? code;
   final String name;
   final int typeOf;
-  final double averageTime;
-  final bool active;
+  final double? averageTime;
   final List<int> lineUnitStops;
   final List<StopClaim> stopClaims;
 
@@ -14,7 +13,6 @@ class Stop {
     required this.name, 
     required this.typeOf, 
     required this.averageTime, 
-    required this.active, 
     required this.lineUnitStops, 
     required this.stopClaims
     });
@@ -30,13 +28,12 @@ class Stop {
       
       return Stop(
         id: json['id'],
-        active: json['active'],
         averageTime: json['averageTime'],
         code: json['code'],
         name: json['name'],
         typeOf: json['typeOf'],
-        stopClaims: json['stopClaims'].keys?.map((key) => StopClaim.fromJson(key, json['stopClaims'][key])).toList(),
-        lineUnitStops: json['lineUnitStops']?.map((x) => x['lineUnitId']).toList(),
+        stopClaims: json['claims'].keys?.map((key) => StopClaim.fromJson(key, json['claims'][key])).cast<StopClaim>().toList(),
+        lineUnitStops: json['lineUnitStop']?.map((x) => x['lineUnitId']).cast<int>().toList(),
       );
     }
 

@@ -9,7 +9,7 @@ part 'open_production_data_state.dart';
 class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
   OpenProductionDataCubit({required ProductionDataRepository productionDataRepository}) : _productionDataRepository = productionDataRepository, super(OpenProductionDataState.empty());
 
-  final List<ProductionBasicData> items = List.empty();
+  final List<ProductionBasicData> items = List.empty(growable: true);
   final ProductionDataRepository _productionDataRepository;
 
   Future insertProductionData(int id) async {
