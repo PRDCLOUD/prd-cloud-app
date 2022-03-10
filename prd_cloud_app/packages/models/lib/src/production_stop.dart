@@ -2,15 +2,16 @@ import 'package:models/src/line_unit.dart';
 
 abstract class ProductionStop {
   final int id;
-  final int productionBasicDataId;
+  final int? productionBasicDataId;
   final int lineUnitId;
   final LineUnit lineUnit;
   final int stopCurrentDefinitionId;
-  final String code;
-  final String name;
-  final String typeProductionStop;
+  final String? code;
+  final String? name;
+  final String? typeProductionStop;
+  final double totalTime;
 
-  final List<ProductionStopClaim> claims;
+  final List<ProductionStopClaim>? claims;
 
   ProductionStop({ 
     required this.id, 
@@ -20,13 +21,14 @@ abstract class ProductionStop {
     required this.stopCurrentDefinitionId, 
     required this.code, 
     required this.name, 
-    required this.typeProductionStop, 
+    required this.typeProductionStop,
+    required this.totalTime,
     required this.claims
   });
 
   factory ProductionStop.fromJson(Map<String, dynamic> json) {
     switch (json['typeProductionStop']) {
-      case 1: 
+      case 'StopBeginEnd': 
         return ProductionStopBeginEnd(
           id: json['id'],
           code: json['code'],
@@ -36,11 +38,12 @@ abstract class ProductionStop {
           productionBasicDataId: json['productionBasicDataId'],
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
+          totalTime: json['totalTime'],
           claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
-          begin: DateTime.parse(json['begin']).toLocal(),
-          end: DateTime.parse(json['end']).toLocal()
+          begin: DateTime.parse(json['beginAtStopBeginEnd']).toLocal(),
+          end: DateTime.parse(json['endAtStopBeginEnd']).toLocal()
         );
-      case 2: 
+      case 'StopBeginTimeSpan': 
         return ProductionStopBeginAndTimeSpan(
           id: json['id'],
           code: json['code'],
@@ -50,11 +53,12 @@ abstract class ProductionStop {
           productionBasicDataId: json['productionBasicDataId'],
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
+          totalTime: json['totalTime'],
           claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
-          begin: DateTime.parse(json['begin']).toLocal(),
-          timeSpan: json['timeSpan']
+          begin: DateTime.parse(json['beginAtStopBeginAndTimeSpan']).toLocal(),
+          timeSpan: json['timeSpanAtStopBeginAndTimeSpan']
         );
-      case 3:
+      case 'StopQtyAverageTime':
         return ProductionStopQtyAverageTime(
           id: json['id'],
           code: json['code'],
@@ -64,11 +68,12 @@ abstract class ProductionStop {
           productionBasicDataId: json['productionBasicDataId'],
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
+          totalTime: json['totalTime'],
           claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
-          averageTime: json['averageTime'],
-          qty: json['qty']
+          averageTime: json['averageTimeAtStopQtyAverageTime'],
+          qty: json['qtyAtStopQtyAverageTime']
         );
-      case 4:
+      case 'StopQtyTotalTime':
         return ProductionStopQtyTotalTime(
           id: json['id'],
           code: json['code'],
@@ -78,11 +83,12 @@ abstract class ProductionStop {
           productionBasicDataId: json['productionBasicDataId'],
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
-          claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
           totalTime: json['totalTime'],
-          qty: json['qty']
+          claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
+          qty: json['qtyAtStopQtyTotalTime'],
+          totalTimeAtStopQtyTotalTime: json['totalTimeAtStopQtyTotalTime']
         );
-      case 5:
+      case 'StopTimePerStop':
         return ProductionStopTimePerStop(
           id: json['id'],
           code: json['code'],
@@ -92,9 +98,9 @@ abstract class ProductionStop {
           productionBasicDataId: json['productionBasicDataId'],
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
-          claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
           totalTime: json['totalTime'],
-          stopTimePerStop: json['stopTimePerStop']
+          claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
+          stopTimePerStop: json['stopTimeAtStopTimePerStop']
         );
       default:
         throw new Exception("Argument out of Range");
@@ -110,15 +116,16 @@ class ProductionStopBeginEnd extends ProductionStop {
   final DateTime? end;
 
   ProductionStopBeginEnd({ 
-    required id, 
-    required productionBasicDataId, 
-    required lineUnitId, 
-    required lineUnit, 
-    required stopCurrentDefinitionId, 
-    required code, 
-    required name, 
-    required typeProductionStop, 
-    required claims,
+    required int id, 
+    required int? productionBasicDataId, 
+    required int lineUnitId, 
+    required LineUnit lineUnit, 
+    required int stopCurrentDefinitionId, 
+    required String? code, 
+    required String? name, 
+    required String? typeProductionStop, 
+    required List<ProductionStopClaim>? claims,
+    required double totalTime,
     required this.begin,
     required this.end
   }) : super(
@@ -128,6 +135,7 @@ class ProductionStopBeginEnd extends ProductionStop {
     lineUnit: lineUnit, 
     lineUnitId: lineUnitId, 
     name: name, 
+    totalTime: totalTime,
     productionBasicDataId: productionBasicDataId, 
     stopCurrentDefinitionId: stopCurrentDefinitionId, 
     typeProductionStop: typeProductionStop
@@ -140,15 +148,16 @@ class ProductionStopBeginAndTimeSpan extends ProductionStop{
   final double? timeSpan;  // minutes
 
   ProductionStopBeginAndTimeSpan({ 
-    required id, 
-    required productionBasicDataId, 
-    required lineUnitId, 
-    required lineUnit, 
-    required stopCurrentDefinitionId, 
-    required code, 
-    required name, 
-    required typeProductionStop, 
-    required claims,
+    required int id, 
+    required int? productionBasicDataId, 
+    required int lineUnitId, 
+    required LineUnit lineUnit, 
+    required int stopCurrentDefinitionId, 
+    required String? code, 
+    required String? name, 
+    required String? typeProductionStop, 
+    required List<ProductionStopClaim>? claims,
+    required double totalTime,
     required this.begin,
     required this.timeSpan
   }) : super(
@@ -159,6 +168,7 @@ class ProductionStopBeginAndTimeSpan extends ProductionStop{
     lineUnitId: lineUnitId, 
     name: name, 
     productionBasicDataId: productionBasicDataId, 
+    totalTime: totalTime,
     stopCurrentDefinitionId: stopCurrentDefinitionId, 
     typeProductionStop: typeProductionStop
   ); 
@@ -170,15 +180,16 @@ class ProductionStopQtyAverageTime extends ProductionStop{
   final double? averageTime;  // minutes
 
   ProductionStopQtyAverageTime({ 
-    required id, 
-    required productionBasicDataId, 
-    required lineUnitId, 
-    required lineUnit, 
-    required stopCurrentDefinitionId, 
-    required code, 
-    required name, 
-    required typeProductionStop, 
-    required claims,
+    required int id, 
+    required int? productionBasicDataId, 
+    required int lineUnitId, 
+    required LineUnit lineUnit, 
+    required int stopCurrentDefinitionId, 
+    required String? code, 
+    required String? name, 
+    required String? typeProductionStop, 
+    required List<ProductionStopClaim>? claims,
+    required double totalTime,
     required this.qty,
     required this.averageTime
   }) : super(
@@ -190,27 +201,30 @@ class ProductionStopQtyAverageTime extends ProductionStop{
     name: name, 
     productionBasicDataId: productionBasicDataId, 
     stopCurrentDefinitionId: stopCurrentDefinitionId, 
-    typeProductionStop: typeProductionStop
+    typeProductionStop: typeProductionStop,
+    totalTime: totalTime
   ); 
 
 }
 
 class ProductionStopQtyTotalTime extends ProductionStop{
   final int? qty;  // integer
-  final double? totalTime;  // minutes
+  final double? totalTimeAtStopQtyTotalTime;  // minutes
 
   ProductionStopQtyTotalTime({ 
-    required id, 
-    required productionBasicDataId, 
-    required lineUnitId, 
-    required lineUnit, 
-    required stopCurrentDefinitionId, 
-    required code, 
-    required name, 
-    required typeProductionStop, 
-    required claims,
+    required int id, 
+    required int? productionBasicDataId, 
+    required int lineUnitId, 
+    required LineUnit lineUnit, 
+    required int stopCurrentDefinitionId, 
+    required String? code, 
+    required String? name, 
+    required String? typeProductionStop, 
+    required List<ProductionStopClaim>? claims,
+    required double totalTime,
     required this.qty,
-    required this.totalTime
+    required this.totalTimeAtStopQtyTotalTime
+
   }) : super(
     claims: claims, 
     code: code, 
@@ -220,27 +234,27 @@ class ProductionStopQtyTotalTime extends ProductionStop{
     name: name, 
     productionBasicDataId: productionBasicDataId, 
     stopCurrentDefinitionId: stopCurrentDefinitionId, 
-    typeProductionStop: typeProductionStop
+    typeProductionStop: typeProductionStop,
+    totalTime: totalTime
   ); 
 
 }
 
 class ProductionStopTimePerStop extends ProductionStop{
   final double? stopTimePerStop; // minutes
-  final double? totalTime; // Calculated on the Server
 
   ProductionStopTimePerStop({ 
-    required id, 
-    required productionBasicDataId, 
-    required lineUnitId, 
-    required lineUnit, 
-    required stopCurrentDefinitionId, 
-    required code, 
-    required name, 
-    required typeProductionStop, 
-    required claims,
-    required this.stopTimePerStop,
-    required this.totalTime
+    required int id, 
+    required int? productionBasicDataId, 
+    required int lineUnitId, 
+    required LineUnit lineUnit, 
+    required int stopCurrentDefinitionId, 
+    required String? code, 
+    required String? name, 
+    required String? typeProductionStop, 
+    required List<ProductionStopClaim>? claims,
+    required double totalTime,
+    required this.stopTimePerStop
   }) : super(
     claims: claims, 
     code: code, 
@@ -250,7 +264,8 @@ class ProductionStopTimePerStop extends ProductionStop{
     name: name, 
     productionBasicDataId: productionBasicDataId, 
     stopCurrentDefinitionId: stopCurrentDefinitionId, 
-    typeProductionStop: typeProductionStop
+    typeProductionStop: typeProductionStop,
+    totalTime: totalTime
   ); 
 
 }

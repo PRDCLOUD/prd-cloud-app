@@ -127,7 +127,7 @@ class AuthenticationRepository {
       logOut();
     }
 
-    if (_authData!.expiration.isAfter(DateTime.now())) {
+    if (_authData!.expiration.isBefore(DateTime.now())) {
       await refreshToken();
     }
       

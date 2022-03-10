@@ -1,11 +1,11 @@
 class LineUnit {
 
-  final String code;
-  final String description;
+  final String? code;
+  final String? description;
   final int id;
   final String name;
-  final int order;
-  final int productionLineId;
+  final int? order;
+  final int? productionLineId;
   final String publicDiscriminator;
 
   LineUnit({ required this.code, required this.description, required this.id, required this.name, required this.order, required this.productionLineId, required this.publicDiscriminator });
