@@ -9,9 +9,6 @@ class Loss {
 
   final List<int> lineUnitLoss;
 
-  // lineUnitLosses: LineUnitLoss[];
-  // lossClaims: LossClaim[];
-
   Loss({ required this.id, 
          required this.code, 
          required this.name, 
