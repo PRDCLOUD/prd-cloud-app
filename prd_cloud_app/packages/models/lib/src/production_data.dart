@@ -32,11 +32,11 @@ class ProductionBasicData {
   ProductionBasicData({required this.id, required this.begin, required this.end, required this.productId, required this.productionLineId, required this.comments, required this.status, required this.stopOptions, required this.lossesOptions });
 
 
-  factory ProductionBasicData.fromJson(Map<String, dynamic> json) {
+  factory ProductionBasicData.fromJson(Map<String, dynamic> json, String timezone) {
 
     return ProductionBasicData(
-      begin: json['begin'],
-      end: json['end'],
+      begin: DateTime.parse(json['begin']),
+      end: DateTime.parse(json['end']),
       comments: json['comments'],
       productId: json['productId'],
       id: json['id'],

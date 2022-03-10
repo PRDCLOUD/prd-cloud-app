@@ -8,8 +8,9 @@ import 'package:models/models.dart';
 class ProductionDataRepository {
 
   final AuthenticatedHttpClient _http;
+  final TenantInformation _tenantInformation;
 
-  ProductionDataRepository(this._http);
+  ProductionDataRepository(this._http, this._tenantInformation);
 
   Future<Response> getApontamentos(int take) async {
     var response = await _http.getProductionDataList(take);
@@ -18,6 +19,6 @@ class ProductionDataRepository {
 
   Future<ProductionBasicData> getApontamento(int id) async {
     var response = await _http.getProductionDataById(id);
-    return ProductionBasicData.fromJson(response.data[0]);
+    return ProductionBasicData.fromJson(response.data[0], _tenantInformation.timeZone);
   }
 }

@@ -19,14 +19,12 @@ class AuthenticatedProviderPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var authenticationRepository = context.read<AuthenticationRepository>();
-    var tenantSelection =
-        context.read<TenantSelectionCubit>().state as TenantSelectedState;
-    var httpConnections = AuthenticatedHttpClient('prod-api-v15.prdcloud.net',
-        tenantSelection.tenant, authenticationRepository.getAccessToken);
+    var tenantSelection = context.read<TenantSelectionCubit>().state as TenantSelectedState;
+    var httpConnections = AuthenticatedHttpClient('prod-api-v15.prdcloud.net', tenantSelection.tenant, authenticationRepository.getAccessToken);
 
     return MultiRepositoryProvider(providers: [
-        RepositoryProvider(create: (context) => ProductionDataRepository(httpConnections), lazy: false,),
-        RepositoryProvider(create: (context) => TenantDataRepository(httpConnections), lazy: false)
+        RepositoryProvider(create: (context) => TenantDataRepository(httpConnections), lazy: false),
+        RepositoryProvider(create: (context) => httpConnections)
       ], 
       child: MultiBlocProvider(providers: [
             BlocProvider(
@@ -49,7 +47,7 @@ class TenantInformationLoadingPage extends StatelessWidget {
       builder: (context, state) {
         switch (state.tenantInformationLoadState) {
           case TenantInformationLoadState.loaded: 
-            return const ProductionDataListPage();
+            return  const MainRepositoryProviderPage(child: ProductionDataListPage());
           case TenantInformationLoadState.loading:
             return const Scaffold(
                 body: Padding(
@@ -70,5 +68,27 @@ class TenantInformationLoadingPage extends StatelessWidget {
         
       },
     );
+  }
+}
+
+
+class MainRepositoryProviderPage extends StatelessWidget {
+  const MainRepositoryProviderPage({ Key? key, required Widget child }) : _child = child, super(key: key);
+
+  final Widget _child;
+
+  @override
+  Widget build(BuildContext context) {
+    var authenticatedHttpClient = context.read<AuthenticatedHttpClient>();
+    var tenantInformation = (context.read<TenantInformationCubit>().state as TenantInformationLoaded).tenantInformation;
+    return MultiRepositoryProvider(providers: [
+            RepositoryProvider(create: (context) =>  ProductionDataRepository(authenticatedHttpClient, tenantInformation), lazy: false)
+          ], 
+          child: Builder(
+            builder: (context) {
+              return _child;
+            }
+          ));
+  
   }
 }
