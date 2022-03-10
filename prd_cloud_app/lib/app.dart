@@ -34,7 +34,7 @@ class App extends StatelessWidget {
           BlocProvider<TenantOptionsCubit>(
               create: (_) => TenantOptionsCubit(authenticationRepository: authenticationRepository),
               lazy: false
-              ),
+              )
         ],
         child: const AppView(),
       ),
@@ -62,10 +62,7 @@ class _AppViewState extends State<AppView> {
         
         var initialTenantSelectionState = context.select((TenantSelectionCubit bloc) => bloc.state);
 
-        return BlocListener<TenantOptionsCubit, TenantOptionsState>(
-            listener: (context, state) =>
-                {}, // Start Cubit before token refresh on AuthenticationStatus.unknown
-            child: BlocListener<TenantSelectionCubit, TenantSelectionState>(
+        return BlocListener<TenantSelectionCubit, TenantSelectionState>(
               listener: (context, state) {
                 tenantSelectionStateToView(state);
               },
@@ -93,7 +90,7 @@ class _AppViewState extends State<AppView> {
                 },
                 child: child,
               ),
-            ));
+            );
       },
       onGenerateRoute: (_) => SplashPage.route(),
     );

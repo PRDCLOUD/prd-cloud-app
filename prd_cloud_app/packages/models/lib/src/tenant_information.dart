@@ -15,7 +15,7 @@ class TenantInformation extends Equatable {
       language: json['language'], 
       lossGeneralCurrency: json['lossGeneralCurrency'], 
       lossGeneralUnit: json['lossGeneralUnit'], 
-      lossGridOptions: json['lossGridOptions'], 
+      lossGridOptions: List<String>.from(json['lossGridOptions']), 
       timeZone: json['timeZone']);
   }
 
