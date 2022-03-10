@@ -37,6 +37,8 @@ dependencies:
   flutter_secure_storage: ^5.0.2
   authentication_repository:
     path: packages/authentication_repository
+  tenant_data_repository:
+    path: packages/tenant_data_repository
   production_data_repository:
     path: packages/production_data_repository
   http_connections:

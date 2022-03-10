@@ -24,14 +24,17 @@ class App extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AuthenticationBloc>(
-              create: (_) => AuthenticationBloc(
-                  authenticationRepository: authenticationRepository)),
+              create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
+              lazy: false
+              ),
           BlocProvider<TenantSelectionCubit>(
-              create: (_) => TenantSelectionCubit(
-                  authenticationRepository: authenticationRepository)),
+              create: (_) => TenantSelectionCubit(authenticationRepository: authenticationRepository),
+              lazy: false
+              ),
           BlocProvider<TenantOptionsCubit>(
-              create: (_) => TenantOptionsCubit(
-                  authenticationRepository: authenticationRepository)),
+              create: (_) => TenantOptionsCubit(authenticationRepository: authenticationRepository),
+              lazy: false
+              ),
         ],
         child: const AppView(),
       ),

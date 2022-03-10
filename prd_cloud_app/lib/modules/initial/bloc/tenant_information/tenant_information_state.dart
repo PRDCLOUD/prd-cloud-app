@@ -7,8 +7,9 @@ abstract class TenantInformationState extends Equatable {
   List<Object> get props => [];
 }
 
-class TenantInformationMissing extends TenantInformationState {}
+class TenantInformationUnloaded extends TenantInformationState {}
 
+class TenantInformationLoading extends TenantInformationState {}
 
 class TenantInformationLoaded extends TenantInformationState {
 
