@@ -30,7 +30,7 @@ class AuthenticatedProviderPage extends StatelessWidget {
       ], 
       child: MultiBlocProvider(providers: [
             BlocProvider(
-              create: (context) => TenantInformationCubit(tenantDataRepository: context.read<TenantDataRepository>()),
+              create: (context) => TenantInformationCubit(tenantDataRepository: context.read<TenantDataRepository>())..loadTenantInformation((context.read<TenantSelectionCubit>().state as TenantSelectedState).tenant),
               child: Container()
             )
           ], 

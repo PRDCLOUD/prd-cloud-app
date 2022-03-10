@@ -10,7 +10,7 @@ abstract class TenantInformationState extends Equatable {
   const TenantInformationState(this.tenantInformationLoadState);
 
   @override
-  List<Object> get props => [];
+  List<Object> get props => [tenantInformationLoadState];
 }
 
 class TenantInformationUnloaded extends TenantInformationState {
@@ -31,5 +31,5 @@ class TenantInformationLoaded extends TenantInformationState {
     : super (TenantInformationLoadState.loaded);
 
   @override
-  List<Object> get props => [tenantInformation];
+  List<Object> get props => [tenantInformationLoadState, tenantInformation];
 }
