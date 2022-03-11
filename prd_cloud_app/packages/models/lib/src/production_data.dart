@@ -18,7 +18,6 @@ class ProductionBasicData {
   // product: Product;
 
   final int? productionLineId;
-  final ProductionLineUnit productionLine;
 
   final List<ProductionLineUnit> lineUnits;
 
@@ -38,7 +37,6 @@ class ProductionBasicData {
     required this.end, 
     required this.productId, 
     required this.productionLineId, 
-    required this.productionLine,
     required this.comments, 
     required this.status, 
     required this.stopOptions, 
@@ -64,7 +62,6 @@ class ProductionBasicData {
       lossesOptions: json['lossesOptions'].map((x) => Loss.fromJson(x)).cast<Loss>().toList(),
       losses: json['losses'].map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList(),
       lineUnits: json['lineUnits'].map((x) => ProductionLineUnit.fromJson(x)).cast<ProductionLineUnit>().toList(),
-      productionLine: ProductionLineUnit.fromJson(json['productionLine'])
     );
   }
 }

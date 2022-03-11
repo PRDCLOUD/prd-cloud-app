@@ -4,7 +4,6 @@ class ProductionLineUnit {
 
   final int id;
   final String name;
-  final int productBasicDataId;
   final int lineUnitId;
   final LineUnit lineUnit;
   final int order;
@@ -13,7 +12,6 @@ class ProductionLineUnit {
   ProductionLineUnit({ 
     required this.id,
     required this.name,
-    required this.productBasicDataId,
     required this.lineUnitId,
     required this.lineUnit,
     required this.order,
@@ -28,7 +26,6 @@ class ProductionLineUnit {
         lineUnitId: json['lineUnitId'],
         name: json['name'],
         order: json['order'],
-        productBasicDataId: json['productBasicDataId'],
         type: json['type']
       );
 
