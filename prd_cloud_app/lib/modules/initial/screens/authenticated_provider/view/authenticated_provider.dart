@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http_connections/http_connections.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_information/tenant_information_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/tenant_selection_cubit.dart';
-import 'package:prd_cloud_app/modules/production_data/screens/production_data_list/production_data_list.dart';
+import 'package:prd_cloud_app/modules/main/production_data/menu/drawer_menu.dart';
 import 'package:production_data_repository/production_data_repository.dart';
 import 'package:tenant_data_repository/tenant_data_repository.dart';
 
@@ -47,7 +47,7 @@ class TenantInformationLoadingPage extends StatelessWidget {
       builder: (context, state) {
         switch (state.tenantInformationLoadState) {
           case TenantInformationLoadState.loaded: 
-            return  const MainRepositoryProviderPage(child: ProductionDataListPage());
+            return  const MainRepositoryProviderPage(child: DrawerMenuPage());
           case TenantInformationLoadState.loading:
             return const Scaffold(
                 body: Padding(
