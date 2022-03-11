@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:models/src/line_unit.dart';
 
-abstract class ProductionStop {
+abstract class ProductionStop extends Equatable {
   final int id;
   final int? productionBasicDataId;
   final int lineUnitId;
@@ -107,7 +108,6 @@ abstract class ProductionStop {
     }
 
   }
-
 }
 
 class ProductionStopBeginEnd extends ProductionStop {
@@ -139,7 +139,25 @@ class ProductionStopBeginEnd extends ProductionStop {
     productionBasicDataId: productionBasicDataId, 
     stopCurrentDefinitionId: stopCurrentDefinitionId, 
     typeProductionStop: typeProductionStop
-  ); 
+  );
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      productionBasicDataId,
+      lineUnitId,
+      lineUnit,
+      stopCurrentDefinitionId,
+      code,
+      name,
+      typeProductionStop,
+      totalTime,
+      claims,
+      begin,
+      end
+    ];
+  }
 
 }
 
@@ -173,6 +191,24 @@ class ProductionStopBeginAndTimeSpan extends ProductionStop{
     typeProductionStop: typeProductionStop
   ); 
 
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      productionBasicDataId,
+      lineUnitId,
+      lineUnit,
+      stopCurrentDefinitionId,
+      code,
+      name,
+      typeProductionStop,
+      totalTime,
+      claims,
+      begin,
+      timeSpan
+    ];
+  }
+
 }
 
 class ProductionStopQtyAverageTime extends ProductionStop{
@@ -204,6 +240,24 @@ class ProductionStopQtyAverageTime extends ProductionStop{
     typeProductionStop: typeProductionStop,
     totalTime: totalTime
   ); 
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      productionBasicDataId,
+      lineUnitId,
+      lineUnit,
+      stopCurrentDefinitionId,
+      code,
+      name,
+      typeProductionStop,
+      totalTime,
+      claims,
+      qty,
+      averageTime
+    ];
+  }
 
 }
 
@@ -238,6 +292,24 @@ class ProductionStopQtyTotalTime extends ProductionStop{
     totalTime: totalTime
   ); 
 
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      productionBasicDataId,
+      lineUnitId,
+      lineUnit,
+      stopCurrentDefinitionId,
+      code,
+      name,
+      typeProductionStop,
+      totalTime,
+      claims,
+      qty,
+      totalTimeAtStopQtyTotalTime
+    ];
+  }
+
 }
 
 class ProductionStopTimePerStop extends ProductionStop{
@@ -268,9 +340,26 @@ class ProductionStopTimePerStop extends ProductionStop{
     totalTime: totalTime
   ); 
 
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      productionBasicDataId,
+      lineUnitId,
+      lineUnit,
+      stopCurrentDefinitionId,
+      code,
+      name,
+      typeProductionStop,
+      totalTime,
+      claims,
+      stopTimePerStop
+    ];
+  }
+
 }
 
-class ProductionStopClaim {
+class ProductionStopClaim extends Equatable {
 
   final String claim;
   final String claimValue;
@@ -297,5 +386,17 @@ class ProductionStopClaim {
       required: json['required'],
       valueList: json['valueList']?.cast<String>().toList(),
     );
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      claim,
+      claimValue,
+      defaultValue,
+      onTheFly,
+      valueList,
+      required,
+    ];
   }
 }

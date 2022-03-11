@@ -9,29 +9,22 @@ part 'open_production_data_state.dart';
 class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
   OpenProductionDataCubit({required ProductionDataRepository productionDataRepository}) : _productionDataRepository = productionDataRepository, super(OpenProductionDataState.empty());
 
-  final List<ProductionBasicData> items = List.empty(growable: true);
   final ProductionDataRepository _productionDataRepository;
 
-  Future insertProductionData(int id) async {
-    if (!items.any((element) => element.id == id)) {
-      var productionData = await _productionDataRepository.getApontamento(id);
-      _addItem(productionData);
-    }  
+  Future loadProductionData(int id) async {
+
+    if (state.loadingItem) return;
+    if (state.loadedItems.any((element) => element.id == id)) return;
+
+    emit(state.copyWith(loadingItem: true));
+
+    var productionData = await _productionDataRepository.getApontamento(id);
+
+    emit(state.copyWith(loadingItem: true, loadedItems: state.loadedItems..add(productionData)));
   }
 
   void closeProductionData(int id) {
-    var itemToRemove = items.firstWhere((x) => x.id == id);
-    _removeItem(itemToRemove);
+    var itemToRemove = state.loadedItems.firstWhere((x) => x.id == id);
+    emit(state.copyWith(loadedItems: state.loadedItems..remove(itemToRemove)));
   }
-
-  void _addItem(ProductionBasicData item) {
-    items.add(item);
-    emit(state.copyWith(items: items));
-  }
-
-  void _removeItem(ProductionBasicData item) {
-    items.remove(item);
-    emit(state.copyWith(items: items));
-  }
-
 }

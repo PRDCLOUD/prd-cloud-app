@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 import 'line_unit.dart';
 
-class ProductionLoss {
+class ProductionLoss extends Equatable {
 
   final int id;
   final int lineUnitId;
@@ -37,4 +39,19 @@ class ProductionLoss {
       order: json['order']);
   }
 
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      lineUnitId,
+      lineUnit,
+      lossCurrentDefinitionId,
+      code,
+      name,
+      unit,
+      numberValue,
+      order,
+    ];
+  }
 }

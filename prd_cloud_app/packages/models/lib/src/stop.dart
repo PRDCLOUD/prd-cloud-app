@@ -1,4 +1,6 @@
-class Stop {
+import 'package:equatable/equatable.dart';
+
+class Stop extends Equatable {
   final int id;
   final String? code;
   final String name;
@@ -37,9 +39,22 @@ class Stop {
       );
     }
 
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      code,
+      name,
+      typeOf,
+      averageTime,
+      lineUnitStops,
+      stopClaims,
+    ];
+  }
 }
 
-class StopClaim {
+class StopClaim extends Equatable {
 
   final String claim;
   final String claimValue;
@@ -59,6 +74,18 @@ class StopClaim {
       defaultValue: json['defaultValue'],
       required: json['required'],
     );
+  }
+
+  @override
+  List<Object> get props {
+    return [
+      claim,
+      claimValue,
+      defaultValue,
+      valueList,
+      onTheFly,
+      required,
+    ];
   }
 }
 

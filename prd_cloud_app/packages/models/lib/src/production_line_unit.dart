@@ -1,8 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:models/src/line_unit.dart';
 
-import '../models.dart';
-
-class ProductionLineUnit {
+class ProductionLineUnit extends Equatable {
 
   final int id;
   final String name;
@@ -31,5 +30,17 @@ class ProductionLineUnit {
       type: json['type']
     );
 
+  }
+
+  @override
+  List<Object> get props {
+    return [
+      id,
+      name,
+      lineUnitId,
+      lineUnit,
+      order,
+      type,
+    ];
   }
 }

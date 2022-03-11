@@ -5,16 +5,20 @@ part of 'open_production_data_cubit.dart';
 @immutable
 class OpenProductionDataState extends Equatable {
 
-  final List<ProductionBasicData> items;
+  final bool loadingItem;
+  final List<ProductionBasicData> loadedItems;
   
-  const OpenProductionDataState(this.items);
+  const OpenProductionDataState({required this.loadingItem, required this.loadedItems});
 
-  factory OpenProductionDataState.empty() => OpenProductionDataState(List.empty());
+  factory OpenProductionDataState.empty() => OpenProductionDataState(loadingItem: false, loadedItems: List.empty());
 
-  OpenProductionDataState copyWith({ List<ProductionBasicData>? items }) {
-    return OpenProductionDataState(items ?? this.items);
+  OpenProductionDataState copyWith({bool? loadingItem, List<ProductionBasicData>? loadedItems}) {
+    return OpenProductionDataState(
+      loadingItem: loadingItem ?? this.loadingItem,
+      loadedItems: loadedItems ?? this.loadedItems,
+    );
   }
 
   @override
-  List<Object> get props => [items];
+  List<Object> get props => [loadingItem, loadedItems];
 }

@@ -1,4 +1,6 @@
-class Loss {
+import 'package:equatable/equatable.dart';
+
+class Loss extends Equatable {
 
   final int id;
   final String? code;
@@ -29,5 +31,20 @@ class Loss {
       lossGridOption: json['lossGridOption'],
       lineUnitLoss: json['lineUnitLoss']?.map((x) => x['lineUnitId']).cast<int>().toList(),
     );
+  }
+
+
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      code,
+      name,
+      unit,
+      order,
+      lossGridOption,
+      lineUnitLoss,
+    ];
   }
 }

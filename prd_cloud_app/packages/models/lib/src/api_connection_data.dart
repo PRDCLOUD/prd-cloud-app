@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 import '../models.dart';
 
-class ApiConnectionData {
+class ApiConnectionData extends Equatable {
 
 
   final Tenant tenant;
@@ -9,4 +11,7 @@ class ApiConnectionData {
 
   ApiConnectionData(this.authority, this.tenant, this.getAccessToken);
 
+
+  @override
+  List<Object> get props => [tenant, authority, getAccessToken];
 }

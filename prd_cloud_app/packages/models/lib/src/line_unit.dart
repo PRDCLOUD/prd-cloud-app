@@ -1,6 +1,8 @@
+import 'package:equatable/equatable.dart';
+
 import '../models.dart';
 
-class LineUnit {
+class LineUnit extends Equatable {
 
   final String? code;
   final String? description;
@@ -34,6 +36,20 @@ class LineUnit {
       publicDiscriminator: json['publicDiscriminator'],
       products: json['productionLineProducts']?.map((x) => Product.fromJson(x['product'])).cast<Product>().toList()
     );
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      code,
+      description,
+      id,
+      name,
+      order,
+      productionLineId,
+      publicDiscriminator,
+      products,
+    ];
   }
   
 }

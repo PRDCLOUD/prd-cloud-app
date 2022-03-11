@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:models/src/production_line_unit.dart';
 import 'package:models/src/production_loss.dart';
 import 'package:models/src/production_stop.dart';
@@ -7,7 +8,7 @@ import 'loss.dart';
 
 enum ProductionDataStatus { concluded, opened, canceled }
 
-class ProductionBasicData {
+class ProductionBasicData extends Equatable {
 
   final int id;
 
@@ -63,5 +64,23 @@ class ProductionBasicData {
       losses: json['losses'].map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList(),
       lineUnits: json['lineUnits'].map((x) => ProductionLineUnit.fromJson(x)).cast<ProductionLineUnit>().toList(),
     );
+  }
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      begin,
+      end,
+      productId,
+      productionLineId,
+      lineUnits,
+      losses,
+      stops,
+      lossesOptions,
+      stopOptions,
+      comments,
+      status,
+    ];
   }
 }

@@ -1,6 +1,7 @@
+import 'package:equatable/equatable.dart';
 import 'package:models/src/line_unit.dart';
 
-class ProductionVariable {
+class ProductionVariable extends Equatable {
 
     final int id;
 
@@ -77,4 +78,29 @@ class ProductionVariable {
         width: json['width']
       );
     }
+
+  @override
+  List<Object?> get props {
+    return [
+      id,
+      definitionName,
+      implementationName,
+      implementationLabel,
+      lineUnitId,
+      lineUnit,
+      productionBasicDataId,
+      required,
+      typeVariableDefinition,
+      typeVariableImplementation,
+      variableCurrentImplementationId,
+      variableFormulaIdentifier,
+      decimalPlaces,
+      value,
+      text,
+      textOptions,
+      rowOrder,
+      columnOrder,
+      width,
+    ];
+  }
 }

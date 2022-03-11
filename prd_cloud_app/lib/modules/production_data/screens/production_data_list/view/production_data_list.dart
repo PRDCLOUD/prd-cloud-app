@@ -30,7 +30,7 @@ class ProductionDataListPage extends StatelessWidget {
                           height: 50,
                           child: Center(child: Text(state.loadedResult[index]['ProductionLine'])),
                         ),
-                        onTap: () => { context.read<OpenProductionDataCubit>().insertProductionData(state.loadedResult[index]['ID'])}
+                        onTap: () => { context.read<OpenProductionDataCubit>().loadProductionData(state.loadedResult[index]['ID'])}
                       );
                     }
                   );
