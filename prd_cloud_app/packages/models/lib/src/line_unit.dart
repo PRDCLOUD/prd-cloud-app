@@ -1,3 +1,5 @@
+import '../models.dart';
+
 class LineUnit {
 
   final String? code;
@@ -8,7 +10,18 @@ class LineUnit {
   final int? productionLineId;
   final String publicDiscriminator;
 
-  LineUnit({ required this.code, required this.description, required this.id, required this.name, required this.order, required this.productionLineId, required this.publicDiscriminator });
+  final List<Product>? products;
+
+  LineUnit({ 
+    required this.code, 
+    required this.description, 
+    required this.id, 
+    required this.name, 
+    required this.order, 
+    required this.productionLineId, 
+    required this.publicDiscriminator,
+    required this.products
+    });
 
   factory LineUnit.fromJson(Map<String, dynamic> json) {
     return LineUnit(
@@ -18,7 +31,8 @@ class LineUnit {
       name: json['name'],
       order: json['order'],
       productionLineId: json['productionLineId'],
-      publicDiscriminator: json['publicDiscriminator']
+      publicDiscriminator: json['publicDiscriminator'],
+      products: json['productionLineProducts']?.map((x) => Product.fromJson(x['product'])).cast<Product>().toList()
     );
   }
   

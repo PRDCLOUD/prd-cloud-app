@@ -1,5 +1,7 @@
 import 'package:models/src/line_unit.dart';
 
+import '../models.dart';
+
 class ProductionLineUnit {
 
   final int id;
@@ -20,14 +22,14 @@ class ProductionLineUnit {
 
   factory ProductionLineUnit.fromJson(Map<String, dynamic> json) {
 
-      return ProductionLineUnit(
-        id: json['id'],
-        lineUnit: LineUnit.fromJson(json['lineUnit']),
-        lineUnitId: json['lineUnitId'],
-        name: json['name'],
-        order: json['order'],
-        type: json['type']
-      );
+    return ProductionLineUnit(
+      id: json['id'],
+      lineUnit: LineUnit.fromJson(json['lineUnit']),
+      lineUnitId: json['lineUnitId'],
+      name: json['name'],
+      order: json['order'],
+      type: json['type']
+    );
 
-    }
+  }
 }
