@@ -21,4 +21,20 @@ class TenantInformation extends Equatable {
 
   @override
   List<Object> get props => [language, lossGeneralCurrency, lossGeneralUnit, lossGridOptions, timeZone];
+
+  TenantInformation copyWith({
+    String? language,
+    String? lossGeneralCurrency,
+    String? lossGeneralUnit,
+    List<String>? lossGridOptions,
+    String? timeZone,
+  }) {
+    return TenantInformation(
+      language: language ?? this.language,
+      lossGeneralCurrency: lossGeneralCurrency ?? this.lossGeneralCurrency,
+      lossGeneralUnit: lossGeneralUnit ?? this.lossGeneralUnit,
+      lossGridOptions: lossGridOptions ?? this.lossGridOptions,
+      timeZone: timeZone ?? this.timeZone,
+    );
+  }
 }

@@ -103,4 +103,48 @@ class ProductionVariable extends Equatable {
       width,
     ];
   }
+
+  ProductionVariable copyWith({
+    int? id,
+    String? definitionName,
+    String? implementationName,
+    String? implementationLabel,
+    int? lineUnitId,
+    LineUnit? lineUnit,
+    int? productionBasicDataId,
+    bool? required,
+    String? typeVariableDefinition,
+    String? typeVariableImplementation,
+    int? variableCurrentImplementationId,
+    String? variableFormulaIdentifier,
+    double? decimalPlaces,
+    double? value,
+    String? text,
+    String? textOptions,
+    int? rowOrder,
+    int? columnOrder,
+    int? width,
+  }) {
+    return ProductionVariable(
+      id: id ?? this.id,
+      definitionName: definitionName ?? this.definitionName,
+      implementationName: implementationName ?? this.implementationName,
+      implementationLabel: implementationLabel ?? this.implementationLabel,
+      lineUnitId: lineUnitId ?? this.lineUnitId,
+      lineUnit: lineUnit ?? this.lineUnit,
+      productionBasicDataId: productionBasicDataId ?? this.productionBasicDataId,
+      required: required ?? this.required,
+      typeVariableDefinition: typeVariableDefinition ?? this.typeVariableDefinition,
+      typeVariableImplementation: typeVariableImplementation ?? this.typeVariableImplementation,
+      variableCurrentImplementationId: variableCurrentImplementationId ?? this.variableCurrentImplementationId,
+      variableFormulaIdentifier: variableFormulaIdentifier ?? this.variableFormulaIdentifier,
+      decimalPlaces: decimalPlaces ?? this.decimalPlaces,
+      value: value ?? this.value,
+      text: text ?? this.text,
+      textOptions: textOptions ?? this.textOptions,
+      rowOrder: rowOrder ?? this.rowOrder,
+      columnOrder: columnOrder ?? this.columnOrder,
+      width: width ?? this.width,
+    );
+  }
 }

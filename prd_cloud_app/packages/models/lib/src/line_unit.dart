@@ -52,4 +52,26 @@ class LineUnit extends Equatable {
     ];
   }
   
+
+  LineUnit copyWith({
+    String? code,
+    String? description,
+    int? id,
+    String? name,
+    int? order,
+    int? productionLineId,
+    String? publicDiscriminator,
+    List<Product>? products,
+  }) {
+    return LineUnit(
+      code: code ?? this.code,
+      description: description ?? this.description,
+      id: id ?? this.id,
+      name: name ?? this.name,
+      order: order ?? this.order,
+      productionLineId: productionLineId ?? this.productionLineId,
+      publicDiscriminator: publicDiscriminator ?? this.publicDiscriminator,
+      products: products ?? this.products,
+    );
+  }
 }

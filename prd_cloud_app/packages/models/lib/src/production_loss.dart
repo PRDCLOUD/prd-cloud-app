@@ -54,4 +54,28 @@ class ProductionLoss extends Equatable {
       order,
     ];
   }
+
+  ProductionLoss copyWith({
+    int? id,
+    int? lineUnitId,
+    LineUnit? lineUnit,
+    int? lossCurrentDefinitionId,
+    String? code,
+    String? name,
+    String? unit,
+    double? numberValue,
+    int? order,
+  }) {
+    return ProductionLoss(
+      id: id ?? this.id,
+      lineUnitId: lineUnitId ?? this.lineUnitId,
+      lineUnit: lineUnit ?? this.lineUnit,
+      lossCurrentDefinitionId: lossCurrentDefinitionId ?? this.lossCurrentDefinitionId,
+      code: code ?? this.code,
+      name: name ?? this.name,
+      unit: unit ?? this.unit,
+      numberValue: numberValue ?? this.numberValue,
+      order: order ?? this.order,
+    );
+  }
 }

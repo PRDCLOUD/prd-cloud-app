@@ -83,4 +83,34 @@ class ProductionBasicData extends Equatable {
       status,
     ];
   }
+
+  ProductionBasicData copyWith({
+    int? id,
+    DateTime? begin,
+    DateTime? end,
+    int? productId,
+    int? productionLineId,
+    List<ProductionLineUnit>? lineUnits,
+    List<ProductionLoss>? losses,
+    List<ProductionStop>? stops,
+    List<Loss>? lossesOptions,
+    List<Stop>? stopOptions,
+    String? comments,
+    int? status,
+  }) {
+    return ProductionBasicData(
+      id: id ?? this.id,
+      begin: begin ?? this.begin,
+      end: end ?? this.end,
+      productId: productId ?? this.productId,
+      productionLineId: productionLineId ?? this.productionLineId,
+      lineUnits: lineUnits ?? this.lineUnits,
+      losses: losses ?? this.losses,
+      stops: stops ?? this.stops,
+      lossesOptions: lossesOptions ?? this.lossesOptions,
+      stopOptions: stopOptions ?? this.stopOptions,
+      comments: comments ?? this.comments,
+      status: status ?? this.status,
+    );
+  }
 }

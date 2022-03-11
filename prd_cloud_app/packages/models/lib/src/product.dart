@@ -19,4 +19,18 @@ class Product extends Equatable {
 
   @override
   List<Object?> get props => [id, code, productFamily, name];
+
+  Product copyWith({
+    int? id,
+    String? code,
+    String? productFamily,
+    String? name,
+  }) {
+    return Product(
+      id: id ?? this.id,
+      code: code ?? this.code,
+      productFamily: productFamily ?? this.productFamily,
+      name: name ?? this.name,
+    );
+  }
 }

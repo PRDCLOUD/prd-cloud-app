@@ -43,4 +43,22 @@ class ProductionLineUnit extends Equatable {
       type,
     ];
   }
+
+  ProductionLineUnit copyWith({
+    int? id,
+    String? name,
+    int? lineUnitId,
+    LineUnit? lineUnit,
+    int? order,
+    String? type,
+  }) {
+    return ProductionLineUnit(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      lineUnitId: lineUnitId ?? this.lineUnitId,
+      lineUnit: lineUnit ?? this.lineUnit,
+      order: order ?? this.order,
+      type: type ?? this.type,
+    );
+  }
 }

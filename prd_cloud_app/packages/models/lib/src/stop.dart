@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 
 class Stop extends Equatable {
+  
   final int id;
   final String? code;
   final String name;
@@ -51,6 +52,26 @@ class Stop extends Equatable {
       lineUnitStops,
       stopClaims,
     ];
+  }
+
+  Stop copyWith({
+    int? id,
+    String? code,
+    String? name,
+    int? typeOf,
+    double? averageTime,
+    List<int>? lineUnitStops,
+    List<StopClaim>? stopClaims,
+  }) {
+    return Stop(
+      id: id ?? this.id,
+      code: code ?? this.code,
+      name: name ?? this.name,
+      typeOf: typeOf ?? this.typeOf,
+      averageTime: averageTime ?? this.averageTime,
+      lineUnitStops: lineUnitStops ?? this.lineUnitStops,
+      stopClaims: stopClaims ?? this.stopClaims,
+    );
   }
 }
 
