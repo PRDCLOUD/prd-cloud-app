@@ -21,9 +21,11 @@ class ProductionOpenedBlocProvider extends StatelessWidget {
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => FieldBeginCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.begin))
+        BlocProvider(create: (context) => FieldBeginCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.begin)),
+        BlocProvider(create: (context) => FieldEndCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.begin)),
+        BlocProvider(create: (context) => FieldCommentsCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.comments))
       ], 
-      child: ProductionOpenedItemNavigation()
+      child: const ProductionOpenedItemNavigation()
     );
   }
 

@@ -38,32 +38,27 @@ class DateTimePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Row(
-          children: [
-            InkWell(
-              onTap: () => _selectDate(context),
-              child: Container(
-                width: 150,
-                height: 50,
-                alignment: Alignment.center,
-                decoration: BoxDecoration(color: Colors.grey[200]),
-                child: TextFormField(
-                  style: const TextStyle(fontSize: 14),
-                  textAlign: TextAlign.center,
-                  enabled: false,
-                  keyboardType: TextInputType.text,
-                  controller: _dateController,
-                  decoration: const InputDecoration(
-                      disabledBorder:
-                          UnderlineInputBorder(borderSide: BorderSide.none),
-                      // labelText: 'Time',
-                      contentPadding: EdgeInsets.only(top: 0.0)),
-                ),
-              ),
-            )
-          ],
+    return InkWell(
+      onTap: () => _selectDate(context),
+      child: Container(
+        width: 150,
+        height: 50,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(color: Colors.grey[200]),
+        child: TextFormField(
+          style: const TextStyle(fontSize: 14),
+          textAlign: TextAlign.center,
+          enabled: false,
+          keyboardType: TextInputType.text,
+          controller: _dateController,
+          decoration: const InputDecoration(
+              disabledBorder:
+                  UnderlineInputBorder(borderSide: BorderSide.none),
+              // labelText: 'Time',
+              contentPadding: EdgeInsets.only(top: 0.0)),
         ),
+      ),
     );
   }
+  
 }

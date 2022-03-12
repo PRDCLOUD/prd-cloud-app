@@ -4,6 +4,7 @@ import 'package:models/src/production_loss.dart';
 import 'package:models/src/production_stop.dart';
 import 'package:models/src/stop.dart';
 
+import '../models.dart';
 import 'loss.dart';
 
 enum ProductionDataStatus { concluded, opened, canceled }
@@ -30,6 +31,10 @@ class ProductionBasicData extends Equatable {
   final String? comments;
 
   final int status;
+
+  List<Product> get products {
+    return lineUnits.firstWhere((element) => element.type == 'ProductionLine').lineUnit.products ?? new List.empty();
+  }
 
   ProductionBasicData({
     required this.id, 

@@ -86,30 +86,38 @@ class OpenProductionDataRepository {
 
   updateBegin(int id, DateTime? begin) {
     var prdData = _getProductionBasicData(id);
-    prdData = prdData.copyWith(begin: begin);
-    emitProductionChange(id, prdData);
-    _updateBeginApi(prdData);
+    if (prdData.begin != begin) {
+      prdData = prdData.copyWith(begin: begin);
+      emitProductionChange(id, prdData);
+      _updateBeginApi(prdData);
+    }
   }
 
   updateEnd(int id, DateTime? end) {
     var prdData = _getProductionBasicData(id);
-    prdData = prdData.copyWith(end: end);
-    emitProductionChange(id, prdData);
-    unawaited(_updateEndApi(prdData));
+    if (prdData.end != end) {
+      prdData = prdData.copyWith(end: end);
+      emitProductionChange(id, prdData);
+      unawaited(_updateEndApi(prdData));
+    }
   }
 
   updateComments(int id, String? comments) {
     var prdData = _getProductionBasicData(id);
-    prdData = prdData.copyWith(comments: comments);
-    emitProductionChange(id, prdData);
-    unawaited(_updateCommentApis(prdData));
+    if (prdData.comments != comments) {
+      prdData = prdData.copyWith(comments: comments);
+      emitProductionChange(id, prdData);
+      unawaited(_updateCommentApis(prdData));
+    }
   }
 
   updateProduct(int id, int? productId) {
     var prdData = _getProductionBasicData(id);
-    prdData = prdData.copyWith(productId: productId);
-    emitProductionChange(id, prdData);
-    unawaited(_updateProductApis(prdData));
+    if (prdData.productId != productId) {
+      prdData = prdData.copyWith(productId: productId);
+      emitProductionChange(id, prdData);
+      unawaited(_updateProductApis(prdData));
+    }
   }
 
   void emitProductionChange(int id, ProductionBasicData prdData) {
