@@ -48,15 +48,15 @@ class _ProductionOpenedItemNavigation extends State<ProductionOpenedItemNavigati
                 items: const <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     icon: Icon(Icons.home),
-                    label: 'Home',
+                    label: 'Produção',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.business),
-                    label: 'Business',
+                    label: 'Perdas',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.school),
-                    label: 'School',
+                    label: 'Paradas',
                   ),
                 ],
                 currentIndex: _selectedIndex,

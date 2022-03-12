@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/production_opened_item_selected.dart';
+import 'production_opened_item_selection.dart';
 import 'production_summary.dart';
 
 class ProductionOpenedItemPage extends StatelessWidget {
@@ -15,12 +16,15 @@ class ProductionOpenedItemPage extends StatelessWidget {
           builder: (BuildContext context, state) {
             return Column(
               children: [
-                SelectedProductionDataSummary(state: state),
+                GestureDetector(
+                  child: SelectedProductionDataSummary(state: state),
+                  onTap: () => Navigator.of(context).push(ProductionOpenedItemSelectionPage.route(context.read<OpenProductionDataCubit>(), context.read<SelectedProductionDataCubit>()))
+                ),
                 Expanded(child: 
                   Container(
                     padding: const EdgeInsets.all(3.0),
                     decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-                    child: ProductionOpenedItemNavigation()
+                    child: const ProductionOpenedItemNavigation()
                   )
                 )
               ],
@@ -42,7 +46,7 @@ class SelectedProductionDataSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     if (state.selectedItem == null) {
       return GestureDetector(
-        child: Center(child: Text("Nenhum item selecionado")),
+        child: Center(child: Text("Nenhum item disponível")),
         onTap: () => {},
       );
     } else {
