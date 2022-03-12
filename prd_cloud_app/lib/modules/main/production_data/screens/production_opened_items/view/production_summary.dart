@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
-import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
 class ProductionSummary extends StatelessWidget {
   const ProductionSummary({Key? key, required ProductionBasicData productionData}) : _productionData = productionData, super(key: key);

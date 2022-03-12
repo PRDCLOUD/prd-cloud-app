@@ -1,14 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
 class ProductionDataListPage extends StatelessWidget {
   const ProductionDataListPage({Key? key}) : super(key: key);
 
   Future<void> loadProductionData(BuildContext context, int productionDataId) async {
-    var result = await context.read<OpenProductionDataCubit>().loadProductionData(productionDataId);
-    if (result != null) {
-      context.read<SelectedProductionDataCubit>().selectProductionData(result);
+    context.loaderOverlay.show();
+    try {
+      var result = await context.read<OpenProductionDataCubit>().loadProductionData(productionDataId);
+      if (result != null) {
+        context.read<SelectedProductionDataCubit>().selectProductionData(result);
+      }
+    } finally {
+      context.loaderOverlay.hide();
     }
   }
 

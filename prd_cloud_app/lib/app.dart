@@ -1,6 +1,7 @@
 import 'package:authentication_repository/authentication_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/authentication/authentication_bloc.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_options/tenant_options_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/tenant_selection_cubit.dart';
@@ -56,43 +57,45 @@ class _AppViewState extends State<AppView> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      navigatorKey: _navigatorKey,
-      builder: (context, child) {
-        
-        var initialTenantSelectionState = context.select((TenantSelectionCubit bloc) => bloc.state);
+    return GlobalLoaderOverlay(
+        child: MaterialApp(
+        navigatorKey: _navigatorKey,
+        builder: (context, child) {
+          
+          var initialTenantSelectionState = context.select((TenantSelectionCubit bloc) => bloc.state);
 
-        return BlocListener<TenantSelectionCubit, TenantSelectionState>(
-              listener: (context, state) {
-                tenantSelectionStateToView(state);
-              },
-              child: BlocListener<AuthenticationBloc, AuthenticationState>(
+          return BlocListener<TenantSelectionCubit, TenantSelectionState>(
                 listener: (context, state) {
-                  switch (state.status) {
-                    case AuthenticationStatus.authenticated:
-                      tenantSelectionStateToView(initialTenantSelectionState);
-                      break;
-                    case AuthenticationStatus.unauthenticated:
-                      _navigator.pushAndRemoveUntil<void>(
-                        LoginPage.route(),
-                        (route) => false,
-                      );
-                      break;
-                    case AuthenticationStatus.unknown:
-                      _navigator.pushAndRemoveUntil<void>(
-                        InitialLoadingPage.route(),
-                        (route) => false,
-                      );
-                      break;
-                    default:
-                      break;
-                  }
+                  tenantSelectionStateToView(state);
                 },
-                child: child,
-              ),
-            );
-      },
-      onGenerateRoute: (_) => SplashPage.route(),
+                child: BlocListener<AuthenticationBloc, AuthenticationState>(
+                  listener: (context, state) {
+                    switch (state.status) {
+                      case AuthenticationStatus.authenticated:
+                        tenantSelectionStateToView(initialTenantSelectionState);
+                        break;
+                      case AuthenticationStatus.unauthenticated:
+                        _navigator.pushAndRemoveUntil<void>(
+                          LoginPage.route(),
+                          (route) => false,
+                        );
+                        break;
+                      case AuthenticationStatus.unknown:
+                        _navigator.pushAndRemoveUntil<void>(
+                          InitialLoadingPage.route(),
+                          (route) => false,
+                        );
+                        break;
+                      default:
+                        break;
+                    }
+                  },
+                  child: child,
+                ),
+              );
+        },
+        onGenerateRoute: (_) => SplashPage.route(),
+      )
     );
   }
 
