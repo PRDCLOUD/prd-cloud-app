@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:prd_cloud_app/modules/main/production_data/bloc/main_bloc.dart';
-import 'package:prd_cloud_app/modules/main/production_data/screens/production_data_list/view/production_data_list.dart';
+import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_data_list/production_data_list.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/production_opened_items.dart';
 import 'package:production_data_repository/production_data_repository.dart';
 
 class DrawerMenuPage extends StatelessWidget {
@@ -13,12 +14,23 @@ class DrawerMenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context) => MenuItemSelectedCubit(), lazy: false,),
         BlocProvider(create: (context) => ProductionDataBloc(apontamentosRepository: context.read<ProductionDataRepository>())..add(ApontamentosRefreshEvent(take: 100))),
-        BlocProvider(create: (context) => OpenProductionDataCubit(productionDataRepository: context.read<ProductionDataRepository>()))
+        BlocProvider(create: (context) => OpenProductionDataCubit(productionDataRepository: context.read<ProductionDataRepository>()), lazy: false,),
+        BlocProvider(create: (context) => SelectedProductionDataCubit(), lazy: false,)
       ], child: Scaffold(
         appBar: AppBar(title: const Text('Home')),
         drawer: const DrawerMenuList(),
-        body: const ProductionDataListPage(),
+        body: BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
+          builder: (context, state) {
+            switch (state.menuItemSelected) {
+              case MenuItemSelected.productionOpenedItems:
+                return const ProductionOpenedItemSelectedPage();
+              default:
+                return const ProductionDataListPage();
+            }
+          },
+        ),
       )
     );
       
@@ -47,16 +59,14 @@ class DrawerMenuList extends StatelessWidget {
           ListTile(
             title: const Text('Item 12'),
             onTap: () {
-              // Update the state of the app.
-              // ...
-             Navigator.pop(context);
+              context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionDataList);
+              Navigator.pop(context);
             },
           ),
           ListTile(
             title: const Text('Item 2'),
             onTap: () {
-              // Update the state of the app.
-              // ...
+              context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionOpenedItems);
               Navigator.pop(context);
             },
           ),

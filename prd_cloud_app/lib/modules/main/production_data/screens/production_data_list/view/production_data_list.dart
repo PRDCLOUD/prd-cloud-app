@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:prd_cloud_app/modules/main/production_data/bloc/main_bloc.dart';
+import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
 class ProductionDataListPage extends StatelessWidget {
   const ProductionDataListPage({Key? key}) : super(key: key);
