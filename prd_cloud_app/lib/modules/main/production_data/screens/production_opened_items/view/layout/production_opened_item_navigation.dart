@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/production_edit/production_data_edit.dart';
 
 class ProductionOpenedItemNavigation extends StatefulWidget {
   const ProductionOpenedItemNavigation({Key? key}) : super(key: key);
@@ -15,10 +16,7 @@ class _ProductionOpenedItemNavigation extends State<ProductionOpenedItemNavigati
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
   
   static const List<Widget> _widgetOptions = <Widget>[
-    Text(
-      'Index 0: Home',
-      style: optionStyle,
-    ),
+    ProductionDataEdit(),
     Text(
       'Index 1: Business',
       style: optionStyle,
