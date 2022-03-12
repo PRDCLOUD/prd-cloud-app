@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
-import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/layout/production_opened_item_navigation.dart';
+import 'Production_opened_bloc_provider.dart';
 import 'production_opened_item_selection_list.dart';
 import 'production_summary.dart';
 
@@ -21,16 +21,33 @@ class ProductionOpenedItemLayoutPage extends StatelessWidget {
                   onTap: () => Navigator.of(context).push(ProductionOpenedItemSelectionListPage.route(context.read<OpenProductionDataCubit>(), context.read<SelectedProductionDataCubit>()))
                 ),
                 Expanded(child: 
-                  Container(
-                    padding: const EdgeInsets.all(3.0),
-                    decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-                    child: const ProductionOpenedItemNavigation()
-                  )
+                  _Bottom(selectedProductionBasicData: state.selectedItem)
                 )
               ],
             );
           })
         );
+  }
+}
+
+class _Bottom extends StatelessWidget {
+  const _Bottom({
+    Key? key,
+    required ProductionBasicData? selectedProductionBasicData
+  }) : _selectedProductionBasicData = selectedProductionBasicData, super(key: key);
+
+  final ProductionBasicData? _selectedProductionBasicData;
+
+  @override
+  Widget build(BuildContext context) {
+    if (_selectedProductionBasicData == null) {
+      return const Center(child: Text("No Data"));
+    }
+    return Container(
+      padding: const EdgeInsets.all(3.0),
+      decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+      child: ProductionOpenedBlocProvider(productionBasicDataId: _selectedProductionBasicData?.id as int)
+    );
   }
 }
 
