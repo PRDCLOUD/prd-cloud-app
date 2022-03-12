@@ -12,6 +12,7 @@ class OpenProductionDataRepository {
 
   final Map<int, ProductionBasicData> _openDataList = new Map();
 
+  final _errorsDataStreamController = StreamController<String>.broadcast();
   final _openDataStreamController = StreamController<List<ProductionBasicData>>.broadcast();
   final _productionDataStreamController = new Map<int, StreamController<ProductionBasicData>>();
 
@@ -25,7 +26,7 @@ class OpenProductionDataRepository {
   }
 
   Stream<List<ProductionBasicData>> openDataStream() async* {
-    yield List.empty();
+    yield _openDataList.values.toList();
     yield* _openDataStreamController.stream;
   }
 
@@ -44,32 +45,85 @@ class OpenProductionDataRepository {
     var productionBasicData = ProductionBasicData.fromJson(response.data[0], _tenantInformation.timeZone);
     _openDataList[productionBasicData.id] = productionBasicData;
 
-    _openDataStreamController.add(_openDataList.values.toList());
+    if(_openDataStreamController.hasListener) {
+      _openDataStreamController.add(_openDataList.values.toList());
+    }
     _productionDataStreamController[productionBasicData.id] = StreamController<ProductionBasicData>.broadcast();
+  }
+
+  // TODO create FIFO queue
+  Future _updateBeginApi(ProductionBasicData productionBasicData) async {
+    try {
+      await _http.patchProductionDataBegin(productionBasicData);
+    } catch (e) {
+      _errorsDataStreamController.add(e.toString());
+    }
+  }
+
+  Future _updateEndApi(ProductionBasicData productionBasicData) async {
+    try {
+      await _http.patchProductionDataEnd(productionBasicData);
+    } catch (e) {
+      _errorsDataStreamController.add(e.toString());
+    }
+  }
+
+  Future _updateCommentApis(ProductionBasicData productionBasicData) async {
+    try {
+      await _http.patchProductionDataComments(productionBasicData);
+    } catch (e) {
+      _errorsDataStreamController.add(e.toString());
+    }
+  }
+
+  Future _updateProductApis(ProductionBasicData productionBasicData) async {
+    try {
+      await _http.patchProductionDataProduct(productionBasicData);
+    } catch (e) {
+      _errorsDataStreamController.add(e.toString());
+    }
   }
 
   updateBegin(int id, DateTime? begin) {
     var prdData = _getProductionBasicData(id);
     prdData = prdData.copyWith(begin: begin);
     emitProductionChange(id, prdData);
+    _updateBeginApi(prdData);
   }
 
   updateEnd(int id, DateTime? end) {
     var prdData = _getProductionBasicData(id);
     prdData = prdData.copyWith(end: end);
     emitProductionChange(id, prdData);
+    unawaited(_updateEndApi(prdData));
   }
 
   updateComment(int id, String? comments) {
     var prdData = _getProductionBasicData(id);
     prdData = prdData.copyWith(comments: comments);
     emitProductionChange(id, prdData);
+    unawaited(_updateCommentApis(prdData));
+  }
+
+  updateProduct(int id, String? comments) {
+    var prdData = _getProductionBasicData(id);
+    prdData = prdData.copyWith(comments: comments);
+    emitProductionChange(id, prdData);
+    unawaited(_updateProductApis(prdData));
   }
 
   void emitProductionChange(int id, ProductionBasicData prdData) {
     _openDataList[id] = prdData;
-    _openDataStreamController.add(_openDataList.values.toList());
-    _productionDataStreamController[id]?.add(prdData);
+
+    if (_openDataStreamController.hasListener) {
+      _openDataStreamController.add(_openDataList.values.toList());
+    }
+    
+    var productionDataStreamController = _productionDataStreamController[id];
+    if (productionDataStreamController != null && productionDataStreamController.hasListener) {
+      productionDataStreamController.add(prdData);
+    }
+
   }
 
   void closeProductionData(int id) {
