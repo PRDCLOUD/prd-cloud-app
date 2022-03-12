@@ -16,7 +16,7 @@ class ProductionOpenedBlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    var productionData = context.read<SelectedProductionDataCubit>().state.selectedItem as ProductionBasicData;
+    var productionData = context.read<OpenProductionDataCubit>().state.loadedItems.firstWhere((element) => element.id == _productionBasicDataId);
     var openProductionDataRepository = context.read<OpenProductionDataRepository>();
 
     return MultiBlocProvider(

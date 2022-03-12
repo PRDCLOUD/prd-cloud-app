@@ -13,7 +13,7 @@ class ProductionDataListPage extends StatelessWidget {
       // This delay is required in order for the cubit update its state
       await Future.delayed(const Duration(milliseconds: 1));
       var prdData = context.read<OpenProductionDataCubit>().state.loadedItems.firstWhere((element) => element.id == productionDataId);
-      context.read<SelectedProductionDataCubit>().selectProductionData(prdData);
+      context.read<SelectedProductionDataCubit>().selectProductionData(prdData.id);
     } finally {
       context.loaderOverlay.hide();
     }

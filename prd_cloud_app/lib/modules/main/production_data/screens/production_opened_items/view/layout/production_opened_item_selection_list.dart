@@ -16,7 +16,7 @@ class ProductionOpenedItemSelectionListPage extends StatelessWidget {
   );
 
   selectProductionData(BuildContext context, ProductionBasicData productionBasicData) {
-    _selectedProductionDataCubit.selectProductionData(productionBasicData);
+    _selectedProductionDataCubit.selectProductionData(productionBasicData.id);
     Navigator.pop(context);
   } 
 

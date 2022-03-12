@@ -12,16 +12,17 @@ class ProductionOpenedItemLayoutPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<SelectedProductionDataCubit, SelectedProductionDataState>(
+      body: BlocBuilder<SelectedProductionDataCubit, int?>(
           builder: (BuildContext context, state) {
+            var selectedProductionData = context.read<OpenProductionDataCubit>().state.loadedItems.cast<ProductionBasicData?>().firstWhere((element) => element?.id == state, orElse: () => null);
             return Column(
               children: [
                 GestureDetector(
-                  child: SelectedProductionDataSummary(state: state),
+                  child: SelectedProductionDataSummary(productionData: selectedProductionData),
                   onTap: () => Navigator.of(context).push(ProductionOpenedItemSelectionListPage.route(context.read<OpenProductionDataCubit>(), context.read<SelectedProductionDataCubit>()))
                 ),
                 Expanded(child: 
-                  _Bottom(selectedProductionBasicData: state.selectedItem)
+                  _Bottom(selectedProductionBasicData: selectedProductionData)
                 )
               ],
             );
@@ -52,22 +53,19 @@ class _Bottom extends StatelessWidget {
 }
 
 class SelectedProductionDataSummary extends StatelessWidget {
-  const SelectedProductionDataSummary({
-    Key? key,
-    required this.state,
-  }) : super(key: key);
+  const SelectedProductionDataSummary({Key? key, required this.productionData}) : super(key: key);
 
-  final SelectedProductionDataState state;
+  final ProductionBasicData? productionData;
 
   @override
   Widget build(BuildContext context) {
-    if (state.selectedItem == null) {
+    if (productionData == null) {
       return GestureDetector(
         child: const Center(child: Text("Nenhum item disponível")),
         onTap: () => {},
       );
     } else {
-      return ProductionSummary(productionData: state.selectedItem as ProductionBasicData);
+      return ProductionSummary(productionData: productionData!);
     }
   }
 }

@@ -36,7 +36,7 @@ class _ProductionOpenedItemNavigation extends State<ProductionOpenedItemNavigati
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<SelectedProductionDataCubit, SelectedProductionDataState>(
+      body: BlocBuilder<SelectedProductionDataCubit, int?>(
           builder: (BuildContext context, state) {
             return Scaffold(
               body: Center(
