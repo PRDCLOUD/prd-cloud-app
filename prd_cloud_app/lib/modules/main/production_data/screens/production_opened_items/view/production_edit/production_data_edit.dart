@@ -17,3 +17,31 @@ class ProductionDataEdit extends StatelessWidget {
         );
   }
 }
+
+class _Begin extends StatelessWidget {
+  const _Begin({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocBuilder<FieldBeginCubit, FieldBeginState>(
+          builder: (BuildContext context, state) {
+            return DateTimePicker(date: state.fieldValue, onChange: (newValue) => context.read<FieldBeginCubit>().updateField(newValue));
+          })
+        );
+  }
+}
+
+class _End extends StatelessWidget {
+  const _Begin({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: BlocBuilder<FieldBeginCubit, FieldBeginState>(
+          builder: (BuildContext context, state) {
+            return DateTimePicker(date: state.fieldValue, onChange: (newValue) => context.read<FieldBeginCubit>().updateField(newValue));
+          })
+        );
+  }
+}

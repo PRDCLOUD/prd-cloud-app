@@ -16,7 +16,6 @@ class ProductionBasicData extends Equatable {
   final DateTime? end;
 
   final int? productId;
-  // product: Product;
 
   final int? productionLineId;
 

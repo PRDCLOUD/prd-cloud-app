@@ -98,16 +98,16 @@ class OpenProductionDataRepository {
     unawaited(_updateEndApi(prdData));
   }
 
-  updateComment(int id, String? comments) {
+  updateComments(int id, String? comments) {
     var prdData = _getProductionBasicData(id);
     prdData = prdData.copyWith(comments: comments);
     emitProductionChange(id, prdData);
     unawaited(_updateCommentApis(prdData));
   }
 
-  updateProduct(int id, String? comments) {
+  updateProduct(int id, int? productId) {
     var prdData = _getProductionBasicData(id);
-    prdData = prdData.copyWith(comments: comments);
+    prdData = prdData.copyWith(productId: productId);
     emitProductionChange(id, prdData);
     unawaited(_updateProductApis(prdData));
   }
