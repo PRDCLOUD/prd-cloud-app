@@ -25,7 +25,7 @@ class DrawerMenuPage extends StatelessWidget {
           builder: (context, state) {
             switch (state.menuItemSelected) {
               case MenuItemSelected.productionOpenedItems:
-                return const ProductionOpenedItemPage();
+                return const ProductionOpenedItemLayoutPage();
               default:
                 return const ProductionDataListPage();
             }

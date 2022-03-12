@@ -4,15 +4,15 @@ import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
 import 'production_summary.dart';
 
-class ProductionOpenedItemSelectionPage extends StatelessWidget {
-  const ProductionOpenedItemSelectionPage({Key? key, required OpenProductionDataCubit openProductionDataCubit, required SelectedProductionDataCubit selectedProductionDataCubit}) 
+class ProductionOpenedItemSelectionListPage extends StatelessWidget {
+  const ProductionOpenedItemSelectionListPage({Key? key, required OpenProductionDataCubit openProductionDataCubit, required SelectedProductionDataCubit selectedProductionDataCubit}) 
     : _openProductionDataCubit = openProductionDataCubit, _selectedProductionDataCubit = selectedProductionDataCubit, super(key: key);
 
   final OpenProductionDataCubit _openProductionDataCubit;
   final SelectedProductionDataCubit _selectedProductionDataCubit;
 
   static MaterialPageRoute<void> route(OpenProductionDataCubit openProductionDataCubit, SelectedProductionDataCubit selectedProductionDataCubit) => MaterialPageRoute(
-    builder: (_) => ProductionOpenedItemSelectionPage(openProductionDataCubit: openProductionDataCubit, selectedProductionDataCubit: selectedProductionDataCubit),
+    builder: (_) => ProductionOpenedItemSelectionListPage(openProductionDataCubit: openProductionDataCubit, selectedProductionDataCubit: selectedProductionDataCubit),
   );
 
   selectProductionData(BuildContext context, ProductionBasicData productionBasicData) {

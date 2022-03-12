@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
-import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/layout/production_opened_item_selected.dart';
-import 'production_opened_item_selection.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/layout/production_opened_item_navigation.dart';
+import 'production_opened_item_selection_list.dart';
 import 'production_summary.dart';
 
-class ProductionOpenedItemPage extends StatelessWidget {
-  const ProductionOpenedItemPage({Key? key}) : super(key: key);
+class ProductionOpenedItemLayoutPage extends StatelessWidget {
+  const ProductionOpenedItemLayoutPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +18,7 @@ class ProductionOpenedItemPage extends StatelessWidget {
               children: [
                 GestureDetector(
                   child: SelectedProductionDataSummary(state: state),
-                  onTap: () => Navigator.of(context).push(ProductionOpenedItemSelectionPage.route(context.read<OpenProductionDataCubit>(), context.read<SelectedProductionDataCubit>()))
+                  onTap: () => Navigator.of(context).push(ProductionOpenedItemSelectionListPage.route(context.read<OpenProductionDataCubit>(), context.read<SelectedProductionDataCubit>()))
                 ),
                 Expanded(child: 
                   Container(
