@@ -12,8 +12,8 @@ class ProductionOpenedItemSelectedPage extends StatefulWidget {
 class _ProductionOpenedItemSelectedPageState extends State<ProductionOpenedItemSelectedPage> {
   int _selectedIndex = 0;
 
-  static const TextStyle optionStyle =
-      TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
+  
   static const List<Widget> _widgetOptions = <Widget>[
     Text(
       'Index 0: Home',
@@ -28,6 +28,7 @@ class _ProductionOpenedItemSelectedPageState extends State<ProductionOpenedItemS
       style: optionStyle,
     ),
   ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
