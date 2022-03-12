@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
-class ProductionOpenedItemSelectionPage extends StatelessWidget {
-  const ProductionOpenedItemSelectionPage({Key? key}) : super(key: key);
+class ProductionOpenedItemSelectionListPage extends StatelessWidget {
+  const ProductionOpenedItemSelectionListPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,9 +15,9 @@ class ProductionOpenedItemSelectionPage extends StatelessWidget {
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
                   onTap: context.read<OpenProductionDataCubit>().selectProductionData(state.loadedItems[index].id),
-                  child: const SizedBox(
+                  child: SizedBox(
                     height: 50,
-                    child: ProductionOpenedItemSelectionPage()
+                    child: Center(child: Text(state.loadedItems[index].begin?.toIso8601String() ?? "null"))
                   )
                 );
               }

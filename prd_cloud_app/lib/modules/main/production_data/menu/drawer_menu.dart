@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_data_list/production_data_list.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/production_opened_items.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/production_opened_item_selection_list.dart';
 import 'package:production_data_repository/production_data_repository.dart';
 
 class DrawerMenuPage extends StatelessWidget {
@@ -25,7 +26,7 @@ class DrawerMenuPage extends StatelessWidget {
           builder: (context, state) {
             switch (state.menuItemSelected) {
               case MenuItemSelected.productionOpenedItems:
-                return const ProductionOpenedItemSelectedPage();
+                return const ProductionOpenedItemSelectionListPage();
               default:
                 return const ProductionDataListPage();
             }
