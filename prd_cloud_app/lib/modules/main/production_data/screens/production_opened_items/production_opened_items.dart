@@ -1,2 +1,1 @@
-export 'view/production_opened_item_selected.dart';
-export 'view/production_opened_item.dart';
+export 'view/layout/production_opened_item.dart';
