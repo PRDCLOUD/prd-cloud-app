@@ -2,8 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
-class ProductionOpenedItemSelectionListPage extends StatelessWidget {
-  const ProductionOpenedItemSelectionListPage({Key? key}) : super(key: key);
+class ProductionOpenedItemSelectionPage extends StatelessWidget {
+  const ProductionOpenedItemSelectionPage({Key? key}) : super(key: key);
+
+  Future<void> loadProductionData(BuildContext context, int productionDataId) async {
+    var result = await context.read<OpenProductionDataCubit>().loadProductionData(productionDataId);
+    if (result != null) {
+      context.read<SelectedProductionDataCubit>().selectProductionData(result);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +21,7 @@ class ProductionOpenedItemSelectionListPage extends StatelessWidget {
               itemCount: state.loadedItems.length,
               itemBuilder: (BuildContext context, int index) {
                 return GestureDetector(
-                  onTap: context.read<OpenProductionDataCubit>().selectProductionData(state.loadedItems[index].id),
+                  onTap: () => { loadProductionData(context, state.loadedItems[index].id) },
                   child: SizedBox(
                     height: 50,
                     child: Center(child: Text(state.loadedItems[index].begin?.toIso8601String() ?? "null"))
@@ -22,7 +29,8 @@ class ProductionOpenedItemSelectionListPage extends StatelessWidget {
                 );
               }
             );
-          })
-        );
+          }
+        )
+      );
   }
 }

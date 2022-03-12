@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/production_opened_item_selected.dart';
 import 'production_summary.dart';
 
 class ProductionOpenedItemPage extends StatelessWidget {
@@ -14,8 +15,14 @@ class ProductionOpenedItemPage extends StatelessWidget {
           builder: (BuildContext context, state) {
             return Column(
               children: [
-                SelectedProductionDataSummary(state: state)
-
+                SelectedProductionDataSummary(state: state),
+                Expanded(child: 
+                  Container(
+                    padding: const EdgeInsets.all(3.0),
+                    decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
+                    child: ProductionOpenedItemNavigation()
+                  )
+                )
               ],
             );
           })

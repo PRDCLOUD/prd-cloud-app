@@ -5,6 +5,13 @@ import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 class ProductionDataListPage extends StatelessWidget {
   const ProductionDataListPage({Key? key}) : super(key: key);
 
+  Future<void> loadProductionData(BuildContext context, int productionDataId) async {
+    var result = await context.read<OpenProductionDataCubit>().loadProductionData(productionDataId);
+    if (result != null) {
+      context.read<SelectedProductionDataCubit>().selectProductionData(result);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +29,7 @@ class ProductionDataListPage extends StatelessWidget {
                         height: 50,
                         child: Center(child: Text(state.loadedResult[index]['ProductionLine'])),
                       ),
-                      onTap: () => { context.read<OpenProductionDataCubit>().loadProductionData(state.loadedResult[index]['ID'])}
+                      onTap: () => { loadProductionData(context, state.loadedResult[index]['ID']) }
                     );
                   }
                 );

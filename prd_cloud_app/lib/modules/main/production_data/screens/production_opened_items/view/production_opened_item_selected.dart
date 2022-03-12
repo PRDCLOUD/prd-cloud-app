@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
-class ProductionOpenedItemSelectedPage extends StatefulWidget {
-  const ProductionOpenedItemSelectedPage({Key? key}) : super(key: key);
+class ProductionOpenedItemNavigation extends StatefulWidget {
+  const ProductionOpenedItemNavigation({Key? key}) : super(key: key);
 
   @override
-  State<ProductionOpenedItemSelectedPage> createState() => _ProductionOpenedItemSelectedPageState();
+  State<ProductionOpenedItemNavigation> createState() => _ProductionOpenedItemNavigation();
 }
 
-class _ProductionOpenedItemSelectedPageState extends State<ProductionOpenedItemSelectedPage> {
+class _ProductionOpenedItemNavigation extends State<ProductionOpenedItemNavigation> {
   int _selectedIndex = 0;
 
   static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
