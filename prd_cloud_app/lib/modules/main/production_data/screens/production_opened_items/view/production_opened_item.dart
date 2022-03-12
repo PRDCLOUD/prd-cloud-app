@@ -14,12 +14,32 @@ class ProductionOpenedItemPage extends StatelessWidget {
           builder: (BuildContext context, state) {
             return Column(
               children: [
-                selectedProductionDataSummary(state)
+                SelectedProductionDataSummary(state: state)
+
               ],
             );
           })
         );
   }
+}
 
-  StatelessWidget selectedProductionDataSummary(SelectedProductionDataState state) => state.selectedItem == null ? const ProductionSummaryNoItem() : ProductionSummary(productionData: state.selectedItem as ProductionBasicData);
+class SelectedProductionDataSummary extends StatelessWidget {
+  const SelectedProductionDataSummary({
+    Key? key,
+    required this.state,
+  }) : super(key: key);
+
+  final SelectedProductionDataState state;
+
+  @override
+  Widget build(BuildContext context) {
+    if (state.selectedItem == null) {
+      return GestureDetector(
+        child: Center(child: Text("Nenhum item selecionado")),
+        onTap: () => {},
+      );
+    } else {
+      return ProductionSummary(productionData: state.selectedItem as ProductionBasicData);
+    }
+  }
 }

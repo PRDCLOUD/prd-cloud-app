@@ -10,36 +10,17 @@ class ProductionSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<SelectedProductionDataCubit, SelectedProductionDataState>(
-        builder: (BuildContext context, state) {
-          return Column(
-            children: [
-              Text(_productionData.id.toString()),
-              Row(children: [                
-                Text("Begin: " + (_productionData.begin?.toIso8601String() ?? "")),
-                Text("End: " + (_productionData.end?.toIso8601String() ?? ""))],
-              ),
-              Row(children: [
-                Text(_productionData.lineUnits.first.name)
-              ])
-            ],
-          );
-        })
-      );
-  }
-}
-
-class ProductionSummaryNoItem extends StatelessWidget {
-  const ProductionSummaryNoItem({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<SelectedProductionDataCubit, SelectedProductionDataState>(
-        builder: (BuildContext context, state) {
-          return const Text("Nenhum item selecionado");
-        })
-      );
+    return Column(
+      children: [
+        Text(_productionData.id.toString()),
+        Row(children: [                
+          Text("Begin: " + (_productionData.begin?.toIso8601String() ?? "")),
+          Text("End: " + (_productionData.end?.toIso8601String() ?? ""))],
+        ),
+        Row(children: [
+          Text(_productionData.lineUnits.first.name)
+        ])
+      ],
+    );
   }
 }

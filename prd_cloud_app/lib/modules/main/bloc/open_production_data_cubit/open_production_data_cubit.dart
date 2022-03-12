@@ -11,37 +11,26 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
 
   final ProductionDataRepository _productionDataRepository;
 
-  Future loadProductionData(int id) async {
+  Future<ProductionBasicData?> loadProductionData(int id) async {
 
-    if (state.loadingItem) return;
-    if (state.loadedItems.any((element) => element.id == id)) return;
+    if (state.loadingItem) return null;
+    if (state.loadedItems.any((element) => element.id == id)) return null;
 
     try {
-      emit(state.copyWith(loadingItem: true, selectedItem: state.selectedItem));
+      emit(state.copyWith(loadingItem: true));
 
       var productionData = await _productionDataRepository.getApontamento(id);
 
-      emit(state.copyWith(loadingItem: false, loadedItems: state.loadedItems..add(productionData), selectedItem: productionData));      
+      emit(state.copyWith(loadingItem: false, loadedItems: state.loadedItems..add(productionData)));      
+      return productionData;
     } catch (e) {
-      emit(state.copyWith(loadingItem: false, selectedItem: state.selectedItem));
+      emit(state.copyWith(loadingItem: false));
+      return null;
     }
-  }
-
-  selectProductionData(int id) {
-    var selectedItem = state.loadedItems.firstWhere((x) => x.id == id);
-    emit(state.copyWith(selectedItem: selectedItem));
   }
 
   void closeProductionData(int id) {
     var itemToRemove = state.loadedItems.firstWhere((x) => x.id == id);
-    ProductionBasicData? nextItemToSelect = state.selectedItem;
-    if (itemToRemove == state.selectedItem) {
-      if (state.loadedItems.length > 1) {
-        nextItemToSelect = state.loadedItems.firstWhere((element) => element != state.selectedItem);
-      } else {
-        nextItemToSelect = null;
-      }
-    } 
-    emit(state.copyWith(loadedItems: state.loadedItems..remove(itemToRemove), selectedItem: nextItemToSelect));
+    emit(state.copyWith(loadedItems: state.loadedItems..remove(itemToRemove)));
   }
 }
