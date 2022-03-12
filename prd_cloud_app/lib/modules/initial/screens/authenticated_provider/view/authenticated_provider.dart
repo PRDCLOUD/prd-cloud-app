@@ -82,7 +82,8 @@ class MainRepositoryProviderPage extends StatelessWidget {
     var authenticatedHttpClient = context.read<AuthenticatedHttpClient>();
     var tenantInformation = (context.read<TenantInformationCubit>().state as TenantInformationLoaded).tenantInformation;
     return MultiRepositoryProvider(providers: [
-            RepositoryProvider(create: (context) =>  ProductionDataRepository(authenticatedHttpClient, tenantInformation), lazy: false)
+            RepositoryProvider(create: (context) => ProductionDataRepository(authenticatedHttpClient, tenantInformation), lazy: false),
+            RepositoryProvider(create: (context) => OpenProductionDataRepository(authenticatedHttpClient, tenantInformation), lazy: false)
           ], 
           child: Builder(
             builder: (context) {

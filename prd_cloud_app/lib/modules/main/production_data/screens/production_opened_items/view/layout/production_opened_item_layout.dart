@@ -46,7 +46,7 @@ class SelectedProductionDataSummary extends StatelessWidget {
   Widget build(BuildContext context) {
     if (state.selectedItem == null) {
       return GestureDetector(
-        child: Center(child: Text("Nenhum item disponível")),
+        child: const Center(child: Text("Nenhum item disponível")),
         onTap: () => {},
       );
     } else {

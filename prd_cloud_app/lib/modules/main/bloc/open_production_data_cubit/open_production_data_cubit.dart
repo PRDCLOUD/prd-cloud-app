@@ -7,22 +7,25 @@ import 'package:production_data_repository/production_data_repository.dart';
 part 'open_production_data_state.dart';
 
 class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
-  OpenProductionDataCubit({required ProductionDataRepository productionDataRepository}) : _productionDataRepository = productionDataRepository, super(OpenProductionDataState.empty());
+  OpenProductionDataCubit({required OpenProductionDataRepository openProductionDataRepository}) : _openProductionDataRepository = openProductionDataRepository, super(OpenProductionDataState.empty()) {
+    _openProductionDataRepository.openDataStream().listen((items) {
+      emit(state.copyWith(loadedItems: items));
+    });
+  }
 
-  final ProductionDataRepository _productionDataRepository;
+  final OpenProductionDataRepository _openProductionDataRepository;
 
-  Future<ProductionBasicData?> loadProductionData(int id) async {
+  
+
+  Future loadProductionData(int id) async {
 
     if (state.loadingItem) return null;
     if (state.loadedItems.any((element) => element.id == id)) return null;
 
     try {
       emit(state.copyWith(loadingItem: true));
-
-      var productionData = await _productionDataRepository.getApontamento(id);
-
-      emit(state.copyWith(loadingItem: false, loadedItems: state.loadedItems..add(productionData)));      
-      return productionData;
+      await _openProductionDataRepository.loadProductionData(id);
+      emit(state.copyWith(loadingItem: false));
     } catch (e) {
       emit(state.copyWith(loadingItem: false));
       return null;

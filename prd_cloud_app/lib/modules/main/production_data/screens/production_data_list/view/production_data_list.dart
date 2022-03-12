@@ -9,10 +9,11 @@ class ProductionDataListPage extends StatelessWidget {
   Future<void> loadProductionData(BuildContext context, int productionDataId) async {
     context.loaderOverlay.show();
     try {
-      var result = await context.read<OpenProductionDataCubit>().loadProductionData(productionDataId);
-      if (result != null) {
-        context.read<SelectedProductionDataCubit>().selectProductionData(result);
-      }
+      await context.read<OpenProductionDataCubit>().loadProductionData(productionDataId);
+      // This delay is required in order for the cubit update its state
+      await Future.delayed(const Duration(milliseconds: 1));
+      var prdData = context.read<OpenProductionDataCubit>().state.loadedItems.firstWhere((element) => element.id == productionDataId);
+      context.read<SelectedProductionDataCubit>().selectProductionData(prdData);
     } finally {
       context.loaderOverlay.hide();
     }

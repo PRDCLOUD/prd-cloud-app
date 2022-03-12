@@ -8,15 +8,13 @@ import 'package:production_data_repository/production_data_repository.dart';
 class DrawerMenuPage extends StatelessWidget {
   const DrawerMenuPage({Key? key}) : super(key: key);
 
-  
-
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => MenuItemSelectedCubit(), lazy: false,),
         BlocProvider(create: (context) => ProductionDataBloc(apontamentosRepository: context.read<ProductionDataRepository>())..add(ApontamentosRefreshEvent(take: 100))),
-        BlocProvider(create: (context) => OpenProductionDataCubit(productionDataRepository: context.read<ProductionDataRepository>()), lazy: false,),
+        BlocProvider(create: (context) => OpenProductionDataCubit(openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false,),
         BlocProvider(create: (context) => SelectedProductionDataCubit(), lazy: false,)
       ], child: Scaffold(
         appBar: AppBar(title: const Text('Home')),

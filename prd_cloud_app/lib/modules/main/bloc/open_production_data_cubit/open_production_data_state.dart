@@ -10,7 +10,7 @@ class OpenProductionDataState extends Equatable {
   
   const OpenProductionDataState({required this.loadingItem, required this.loadedItems });
 
-  factory OpenProductionDataState.empty() => OpenProductionDataState(loadingItem: false, loadedItems: List.empty(growable: true));
+  factory OpenProductionDataState.empty() => OpenProductionDataState(loadingItem: false, loadedItems: List.empty());
 
   OpenProductionDataState copyWith({bool? loadingItem, List<ProductionBasicData>? loadedItems}) {
     return OpenProductionDataState(
