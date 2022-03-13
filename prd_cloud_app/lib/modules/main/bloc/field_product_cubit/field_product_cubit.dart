@@ -14,7 +14,7 @@ class FieldProductCubit extends Cubit<FieldProductState> {
 
   final OpenProductionDataRepository _openProductionDataRepository;
 
-  updateField(int? newValue) {
+  void updateField(int? newValue) {
     _openProductionDataRepository.updateProduct(state.productionBasicDataId, newValue);
     emit(state.copyWith(fieldValue: newValue));
   }
