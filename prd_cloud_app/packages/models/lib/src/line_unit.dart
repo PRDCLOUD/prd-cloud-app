@@ -1,6 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:models/src/production_variable.dart';
-
 import '../models.dart';
 
 class LineUnit extends Equatable {

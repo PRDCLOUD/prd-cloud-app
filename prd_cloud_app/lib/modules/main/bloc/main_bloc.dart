@@ -6,3 +6,5 @@ export './field_begin_cubit/field_begin_cubit.dart';
 export './field_end_cubit/field_end_cubit.dart';
 export './field_comments_cubit/field_comments_cubit.dart';
 export './field_product_cubit/field_product_cubit.dart';
+export './field_variable_text_cubit/field_variable_text_cubit.dart';
+export './field_variable_numeric_cubit/field_variable_numeric_cubit.dart';

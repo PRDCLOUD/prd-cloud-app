@@ -168,6 +168,45 @@ class OpenProductionDataRepository {
     }
   }
 
+  updateVariableText(int id, int variableId, String? newValue) {
+    var prdData = _getProductionBasicData(id);
+
+    ProductionLineUnit? productionLineUnit;
+    int? productionLineUnitIndex;
+    ProductionVariable? productionVariable;
+    int? productionVariableIndex;
+
+    prdData.lineUnits.asMap().forEach((indexProductionLineUnit, lineUnit) {
+      lineUnit.lineUnit.productionVariables.asMap().forEach((indexVariable, variable) {
+        if (variable.id == variableId) {
+          productionLineUnit = lineUnit;
+          productionLineUnitIndex = indexProductionLineUnit;
+          productionVariable = variable;
+          productionVariableIndex = indexVariable;
+        }
+      });
+    });
+
+    if (productionLineUnit != null && productionVariable != null) {
+      if (productionVariable!.value != newValue) {
+        var newVariable = productionVariable!.copyWith(text: newValue);
+
+        var newVariablesList = productionLineUnit!.lineUnit.productionVariables.toList();
+        newVariablesList[productionVariableIndex!] = newVariable;
+
+        var newLineUnit = productionLineUnit!.lineUnit.copyWith(productionVariables: newVariablesList);
+        var newProcutionLineUnit = productionLineUnit!.copyWith(lineUnit: newLineUnit);
+
+        var newProcutionLineUnitList = prdData.lineUnits.toList();
+        newProcutionLineUnitList[productionLineUnitIndex!] = newProcutionLineUnit;
+
+        prdData = prdData.copyWith(lineUnits: newProcutionLineUnitList);
+        emitProductionChange(id, prdData);
+        EasyDebounce.debounce(id.toString() + '-updateVariable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+      }
+    }
+  }
+
   void emitProductionChange(int id, ProductionBasicData prdData) {
     _openDataList[id] = prdData;
 
