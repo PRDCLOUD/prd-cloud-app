@@ -75,10 +75,7 @@ class ProductionDataEdit extends StatelessWidget {
         for(var column in row.columns) {
           columnWidgets.add(
             ResponsiveGridCol(
-              child: ProductionVariableEdit(
-                productionBasicDataId: column.productionVariable.productionBasicDataId, 
-                productionVariableId: column.productionVariable.id
-              )
+              child: ProductionVariableEdit(productionVariable: column.productionVariable)
             )
           );
         }

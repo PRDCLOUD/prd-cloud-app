@@ -56,6 +56,7 @@ class LineUnit extends Equatable {
       productionLineId,
       publicDiscriminator,
       products,
+      productionVariables
     ];
   }
   
