@@ -36,6 +36,7 @@ class ProductionVariableEdit extends StatelessWidget {
               productionBasicDataId: _productionBasicDataId,
               variableDataId: _productionVariableId,
               label: variable.implementationLabel,
+              decimals: variable.decimalPlaces ?? 0,
               initialValue: variable.value,
               openProductionDataRepository: openProductionDataRepository),
           child: const _NumericVariable(),
@@ -63,7 +64,8 @@ class _NumericVariable extends StatelessWidget {
       builder: (context, state) {
         return NumberInput(
           label: state.label,
-          value: state.fieldValue.toString(), 
+          allowDecimal: state.decimals > 0,
+          value: state.fieldValue?.toString().replaceAll(",", "."), 
           onChanged: (newValue) => context.read<FieldVariableNumericCubit>().updateField(newValue == null || newValue == "" ? null : double.parse(newValue)),
         )          ;
       },

@@ -11,8 +11,9 @@ class FieldVariableNumericCubit extends Cubit<FieldVariableNumericState> {
     required int productionBasicDataId, 
     required int variableDataId,
     required String label, 
+    required int decimals,
     required double? initialValue,
-  }) : _openProductionDataRepository = openProductionDataRepository, super(FieldVariableNumericState(productionBasicDataId: productionBasicDataId, variableDataId: variableDataId, label: label, fieldValue: initialValue));
+  }) : _openProductionDataRepository = openProductionDataRepository, super(FieldVariableNumericState(productionBasicDataId: productionBasicDataId, variableDataId: variableDataId, label: label, decimals: decimals, fieldValue: initialValue));
 
   final OpenProductionDataRepository _openProductionDataRepository;
 

@@ -1,5 +1,4 @@
 import 'package:equatable/equatable.dart';
-import 'package:models/src/line_unit.dart';
 
 class ProductionVariable extends Equatable {
 
@@ -9,7 +8,6 @@ class ProductionVariable extends Equatable {
     final String implementationName;
     final String implementationLabel;
     final int lineUnitId;
-    final LineUnit lineUnit;
     final int productionBasicDataId;
     final bool required;
     final String typeVariableDefinition;
@@ -17,7 +15,7 @@ class ProductionVariable extends Equatable {
     final int variableCurrentImplementationId;
     final String variableFormulaIdentifier;
 
-    final double decimalPlaces;
+    final int? decimalPlaces;
     final double? value;
     
     final String? text;
@@ -37,7 +35,6 @@ class ProductionVariable extends Equatable {
       required this.implementationName, 
       required this.implementationLabel, 
       required this.lineUnitId, 
-      required this.lineUnit, 
       required this.productionBasicDataId, 
       required this.required, 
       required this.typeVariableDefinition, 
@@ -63,7 +60,6 @@ class ProductionVariable extends Equatable {
         definitionName: json['definitionName'],
         implementationLabel: json['implementationLabel'] != Null ? json['implementationLabel'] : json['implementationName'],
         implementationName: json['implementationName'],
-        lineUnit: LineUnit.fromJson(json['lineUnit']),
         lineUnitId: json['lineUnitId'],
         productionBasicDataId: json['productionBasicDataId'],
         required: json['required'],
@@ -87,7 +83,6 @@ class ProductionVariable extends Equatable {
       implementationName,
       implementationLabel,
       lineUnitId,
-      lineUnit,
       productionBasicDataId,
       required,
       typeVariableDefinition,
@@ -110,14 +105,13 @@ class ProductionVariable extends Equatable {
     String? implementationName,
     String? implementationLabel,
     int? lineUnitId,
-    LineUnit? lineUnit,
     int? productionBasicDataId,
     bool? required,
     String? typeVariableDefinition,
     String? typeVariableImplementation,
     int? variableCurrentImplementationId,
     String? variableFormulaIdentifier,
-    double? decimalPlaces,
+    int? decimalPlaces,
     double? value,
     String? text,
     String? textOptions,
@@ -131,7 +125,6 @@ class ProductionVariable extends Equatable {
       implementationName: implementationName ?? this.implementationName,
       implementationLabel: implementationLabel ?? this.implementationLabel,
       lineUnitId: lineUnitId ?? this.lineUnitId,
-      lineUnit: lineUnit ?? this.lineUnit,
       productionBasicDataId: productionBasicDataId ?? this.productionBasicDataId,
       required: required ?? this.required,
       typeVariableDefinition: typeVariableDefinition ?? this.typeVariableDefinition,

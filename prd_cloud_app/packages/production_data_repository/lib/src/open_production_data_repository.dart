@@ -46,7 +46,7 @@ class OpenProductionDataRepository {
     var productionBasicData = ProductionBasicData.fromJson(response.data[0], _tenantInformation.timeZone);
     _openDataList[productionBasicData.id] = productionBasicData;
 
-    if(_openDataStreamController.hasListener) {
+    if (_openDataStreamController.hasListener) {
       _openDataStreamController.add(_openDataList.values.toList());
     }
     _productionDataStreamController[productionBasicData.id] = StreamController<ProductionBasicData>.broadcast();
@@ -116,7 +116,7 @@ class OpenProductionDataRepository {
     if ((prdData.comments?.trim() ?? "") != (comments?.trim() ?? "")) {
       prdData = prdData.copyWith(comments: comments);
       emitProductionChange(id, prdData);
-      EasyDebounce.debounce(id.toString() + '-updateComments', Duration(seconds: 1), () => unawaited(_updateCommentsApi(prdData)));
+      EasyDebounce.debounce(id.toString() + '-update-comments', Duration(seconds: 1), () => unawaited(_updateCommentsApi(prdData)));
     }
   }
 
@@ -163,7 +163,7 @@ class OpenProductionDataRepository {
 
         prdData = prdData.copyWith(lineUnits: newProcutionLineUnitList);
         emitProductionChange(id, prdData);
-        EasyDebounce.debounce(id.toString() + '-updateVariable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+        EasyDebounce.debounce(id.toString() + '-update-variable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
       }
     }
   }

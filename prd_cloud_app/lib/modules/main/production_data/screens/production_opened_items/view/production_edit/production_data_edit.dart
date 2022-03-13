@@ -6,6 +6,8 @@ import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/widgets/widgets.dart';
 import 'package:responsive_grid/responsive_grid.dart';
 
+import 'production_variable_edit.dart';
+
 class ProductionDataEdit extends StatelessWidget {
   const ProductionDataEdit({Key? key}) : super(key: key);
 
@@ -27,7 +29,8 @@ class ProductionDataEdit extends StatelessWidget {
                   _End(),
                 ]),
                 const _Comments(),
-                const _Products()
+                const _Products(),
+                ...getVariableWidgets(context)
               ],
             ),
           ),
@@ -52,17 +55,30 @@ class ProductionDataEdit extends StatelessWidget {
     return variablesLineUnit;
   }
 
-  List<Widget> getVariableWidgets(BuildContext context, List<_VariableLineUnit> variableLineUnit) {
+  List<Widget> getVariableWidgets(BuildContext context) {
+
+    var productionDataId = context.read<SelectedProductionDataCubit>().state as int;
+
+    var productionData = context
+        .read<OpenProductionDataCubit>()
+        .state
+        .loadedItems
+        .firstWhere((element) => element.id == productionDataId);
+
+    var variableLineUnits = getVariables(productionData);
 
     var widgetRows = List<Widget>.empty(growable: true);
 
-    for(var lineUnits in variableLineUnit) {
+    for(var lineUnits in variableLineUnits) {
       for(var row in lineUnits.rows) {
         List<ResponsiveGridCol> columnWidgets = List.empty(growable: true);
         for(var column in row.columns) {
           columnWidgets.add(
             ResponsiveGridCol(
-              child: 
+              child: ProductionVariableEdit(
+                productionBasicDataId: column.productionVariable.productionBasicDataId, 
+                productionVariableId: column.productionVariable.id
+              )
             )
           );
         }
@@ -72,7 +88,6 @@ class ProductionDataEdit extends StatelessWidget {
 
     return widgetRows;
   }
-
 }
 
 class _Begin extends StatelessWidget {
