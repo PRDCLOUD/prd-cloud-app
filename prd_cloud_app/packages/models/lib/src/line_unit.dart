@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:models/src/production_variable.dart';
 
 import '../models.dart';
 
@@ -13,6 +14,7 @@ class LineUnit extends Equatable {
   final String publicDiscriminator;
 
   final List<Product>? products;
+  final List<ProductionVariable> productionVariables;
 
   LineUnit({ 
     required this.code, 
@@ -22,10 +24,14 @@ class LineUnit extends Equatable {
     required this.order, 
     required this.productionLineId, 
     required this.publicDiscriminator,
-    required this.products
+    required this.products,
+    required this.productionVariables
     });
 
   factory LineUnit.fromJson(Map<String, dynamic> json) {
+
+    var productionVariables = (json['productionVariables']?.map((x) => ProductionVariable.fromJson(x)).cast<ProductionVariable>().toList() ?? List.empty()) as List<ProductionVariable>;
+        
     return LineUnit(
       code: json['code'],
       description: json['description'],
@@ -34,7 +40,8 @@ class LineUnit extends Equatable {
       order: json['order'],
       productionLineId: json['productionLineId'],
       publicDiscriminator: json['publicDiscriminator'],
-      products: json['productionLineProducts']?.map((x) => Product.fromJson(x['product'])).cast<Product>().toList()
+      products: json['productionLineProducts']?.map((x) => Product.fromJson(x['product'])).cast<Product>().toList(),
+      productionVariables: productionVariables
     );
   }
 
@@ -62,6 +69,7 @@ class LineUnit extends Equatable {
     int? productionLineId,
     String? publicDiscriminator,
     List<Product>? products,
+    List<ProductionVariable>? productionVariables
   }) {
     return LineUnit(
       code: code ?? this.code,
@@ -72,6 +80,7 @@ class LineUnit extends Equatable {
       productionLineId: productionLineId ?? this.productionLineId,
       publicDiscriminator: publicDiscriminator ?? this.publicDiscriminator,
       products: products ?? this.products,
+      productionVariables: productionVariables ?? this.productionVariables
     );
   }
 }

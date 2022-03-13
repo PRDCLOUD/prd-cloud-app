@@ -10,6 +10,14 @@ class Stop extends Equatable {
   final List<int> lineUnitStops;
   final List<StopClaim> stopClaims;
 
+  String get codeName {
+    if (code != null) {
+      return '(' + code! + ') ' + name;
+    } else {
+      return name;
+    }
+  }
+
   Stop({
     required this.id, 
     required this.code, 

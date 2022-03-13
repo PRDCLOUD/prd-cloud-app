@@ -51,6 +51,21 @@ class ProductionBasicData extends Equatable {
 
   factory ProductionBasicData.fromJson(Map<String, dynamic> json, String timezone) {
 
+    var stops = json['stops'].map((x) => ProductionStop.fromJson(x)).cast<ProductionStop>().toList() as List<ProductionStop>;
+    stops.sort(((a, b) => a.codeName.toLowerCase().compareTo(b.codeName.toLowerCase())));
+
+    var losssesOptions = json['lossesOptions'].map((x) => Loss.fromJson(x)).cast<Loss>().toList() as List<Loss>;
+    losssesOptions.sort(((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase())));
+
+    var stopOptions = json['stopsOptions'].map((x) => Stop.fromJson(x)).cast<Stop>().toList() as List<Stop>;
+    stopOptions.sort(((a, b) => a.codeName.toLowerCase().compareTo(b.codeName.toLowerCase())));
+
+    var losses = json['losses'].map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList() as List<ProductionLoss>;
+    losses.sort(((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase())));
+
+    var lineUnits = json['lineUnits'].map((x) => ProductionLineUnit.fromJson(x)).cast<ProductionLineUnit>().toList() as List<ProductionLineUnit>;
+    lineUnits.sort((a, b) => a.order - b.order);
+
     return ProductionBasicData(
       begin: DateTime.parse(json['begin']).toLocal(),
       end: DateTime.parse(json['end']).toLocal(),
@@ -59,11 +74,11 @@ class ProductionBasicData extends Equatable {
       id: json['id'],
       productionLineId: json['productionLineId'],
       status: json['status'],
-      stopOptions: json['stopsOptions'].map((x) => Stop.fromJson(x)).cast<Stop>().toList(),
-      stops: json['stops'].map((x) => ProductionStop.fromJson(x)).cast<ProductionStop>().toList(),
-      lossesOptions: json['lossesOptions'].map((x) => Loss.fromJson(x)).cast<Loss>().toList(),
-      losses: json['losses'].map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList(),
-      lineUnits: json['lineUnits'].map((x) => ProductionLineUnit.fromJson(x)).cast<ProductionLineUnit>().toList(),
+      stopOptions: stopOptions,
+      stops: stops,
+      lossesOptions: losssesOptions,
+      losses: losses,
+      lineUnits: lineUnits,
     );
   }
 

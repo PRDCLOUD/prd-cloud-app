@@ -8,11 +8,19 @@ abstract class ProductionStop extends Equatable {
   final LineUnit lineUnit;
   final int stopCurrentDefinitionId;
   final String? code;
-  final String? name;
+  final String name;
   final String? typeProductionStop;
   final double totalTime;
 
   final List<ProductionStopClaim>? claims;
+
+  String get codeName {
+    if (code != null) {
+      return '(' + code! + ') ' + name;
+    } else {
+      return name;
+    }
+  }
 
   ProductionStop({ 
     required this.id, 
@@ -122,7 +130,7 @@ class ProductionStopBeginEnd extends ProductionStop {
     required LineUnit lineUnit, 
     required int stopCurrentDefinitionId, 
     required String? code, 
-    required String? name, 
+    required String name, 
     required String? typeProductionStop, 
     required List<ProductionStopClaim>? claims,
     required double totalTime,
@@ -172,7 +180,7 @@ class ProductionStopBeginAndTimeSpan extends ProductionStop{
     required LineUnit lineUnit, 
     required int stopCurrentDefinitionId, 
     required String? code, 
-    required String? name, 
+    required String name, 
     required String? typeProductionStop, 
     required List<ProductionStopClaim>? claims,
     required double totalTime,
@@ -222,7 +230,7 @@ class ProductionStopQtyAverageTime extends ProductionStop{
     required LineUnit lineUnit, 
     required int stopCurrentDefinitionId, 
     required String? code, 
-    required String? name, 
+    required String name, 
     required String? typeProductionStop, 
     required List<ProductionStopClaim>? claims,
     required double totalTime,
@@ -272,7 +280,7 @@ class ProductionStopQtyTotalTime extends ProductionStop{
     required LineUnit lineUnit, 
     required int stopCurrentDefinitionId, 
     required String? code, 
-    required String? name, 
+    required String name, 
     required String? typeProductionStop, 
     required List<ProductionStopClaim>? claims,
     required double totalTime,
@@ -322,7 +330,7 @@ class ProductionStopTimePerStop extends ProductionStop{
     required LineUnit lineUnit, 
     required int stopCurrentDefinitionId, 
     required String? code, 
-    required String? name, 
+    required String name, 
     required String? typeProductionStop, 
     required List<ProductionStopClaim>? claims,
     required double totalTime,

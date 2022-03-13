@@ -101,4 +101,16 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/product/' + productionBasicData.id.toString(), data);
   }
 
+  Future<Response<dynamic>> patchProductionVariable(ProductionVariable variable) async {
+    var data = { 
+      'definitionName': variable.definitionName,
+      'productionBasicDataId': variable.productionBasicDataId,
+      'text': variable.text,
+      'id': variable.id,
+      'value': variable.value,
+      'type': variable.typeVariableDefinition.toLowerCase()
+    };
+    return await _patchRequest('api/production/variable/' + variable.typeVariableDefinition.toLowerCase() + '/' + variable.id.toString(), data);
+  }
+
 }

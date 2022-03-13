@@ -69,7 +69,7 @@ class OpenProductionDataRepository {
     }
   }
 
-  Future _updateCommentApis(ProductionBasicData productionBasicData) async {
+  Future _updateCommentsApi(ProductionBasicData productionBasicData) async {
     try {
       await _http.patchProductionDataComments(productionBasicData);
     } catch (e) {
@@ -77,9 +77,17 @@ class OpenProductionDataRepository {
     }
   }
 
-  Future _updateProductApis(ProductionBasicData productionBasicData) async {
+  Future _updateProductApi(ProductionBasicData productionBasicData) async {
     try {
       await _http.patchProductionDataProduct(productionBasicData);
+    } catch (e) {
+      _errorsDataStreamController.add(e.toString());
+    }
+  }
+
+  Future _updateVariableApi(ProductionVariable variable) async {
+    try {
+      await _http.patchProductionVariable(variable);
     } catch (e) {
       _errorsDataStreamController.add(e.toString());
     }
@@ -108,7 +116,7 @@ class OpenProductionDataRepository {
     if ((prdData.comments?.trim() ?? "") != (comments?.trim() ?? "")) {
       prdData = prdData.copyWith(comments: comments);
       emitProductionChange(id, prdData);
-      EasyDebounce.debounce('updateComments', Duration(seconds: 2), () => unawaited(_updateCommentApis(prdData)));
+      EasyDebounce.debounce(id.toString() + '-updateComments', Duration(seconds: 1), () => unawaited(_updateCommentsApi(prdData)));
     }
   }
 
@@ -117,7 +125,46 @@ class OpenProductionDataRepository {
     if (prdData.productId != productId) {
       prdData = prdData.copyWith(productId: productId);
       emitProductionChange(id, prdData);
-      unawaited(_updateProductApis(prdData));
+      unawaited(_updateProductApi(prdData));
+    }
+  }
+
+  updateVariableNumeric(int id, int variableId, double? newValue) {
+    var prdData = _getProductionBasicData(id);
+
+    ProductionLineUnit? productionLineUnit;
+    int? productionLineUnitIndex;
+    ProductionVariable? productionVariable;
+    int? productionVariableIndex;
+
+    prdData.lineUnits.asMap().forEach((indexProductionLineUnit, lineUnit) {
+      lineUnit.lineUnit.productionVariables.asMap().forEach((indexVariable, variable) {
+        if (variable.id == variableId) {
+          productionLineUnit = lineUnit;
+          productionLineUnitIndex = indexProductionLineUnit;
+          productionVariable = variable;
+          productionVariableIndex = indexVariable;
+        }
+      });
+    });
+
+    if (productionLineUnit != null && productionVariable != null) {
+      if (productionVariable!.value != newValue) {
+        var newVariable = productionVariable!.copyWith(value: newValue);
+
+        var newVariablesList = productionLineUnit!.lineUnit.productionVariables.toList();
+        newVariablesList[productionVariableIndex!] = newVariable;
+
+        var newLineUnit = productionLineUnit!.lineUnit.copyWith(productionVariables: newVariablesList);
+        var newProcutionLineUnit = productionLineUnit!.copyWith(lineUnit: newLineUnit);
+
+        var newProcutionLineUnitList = prdData.lineUnits.toList();
+        newProcutionLineUnitList[productionLineUnitIndex!] = newProcutionLineUnit;
+
+        prdData = prdData.copyWith(lineUnits: newProcutionLineUnitList);
+        emitProductionChange(id, prdData);
+        EasyDebounce.debounce(id.toString() + '-updateVariable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+      }
     }
   }
 

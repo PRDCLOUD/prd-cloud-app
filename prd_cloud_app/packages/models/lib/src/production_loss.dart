@@ -9,7 +9,7 @@ class ProductionLoss extends Equatable {
   final LineUnit lineUnit;
   final int lossCurrentDefinitionId;
   final String? code;
-  final String? name;
+  final String name;
   final String? unit;
   final double? numberValue;
   final int order;
