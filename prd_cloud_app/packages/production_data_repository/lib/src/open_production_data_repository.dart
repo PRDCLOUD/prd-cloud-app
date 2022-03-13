@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:easy_debounce/easy_debounce.dart';
 import 'package:http_connections/http_connections.dart';
 import 'package:models/models.dart';
 
@@ -104,10 +105,10 @@ class OpenProductionDataRepository {
 
   updateComments(int id, String? comments) {
     var prdData = _getProductionBasicData(id);
-    if (prdData.comments != comments) {
+    if ((prdData.comments?.trim() ?? "") != (comments?.trim() ?? "")) {
       prdData = prdData.copyWith(comments: comments);
       emitProductionChange(id, prdData);
-      unawaited(_updateCommentApis(prdData));
+      EasyDebounce.debounce('updateComments', Duration(seconds: 2), () => unawaited(_updateCommentApis(prdData)));
     }
   }
 

@@ -24,8 +24,8 @@ class ProductionDataEdit extends StatelessWidget {
                   _Begin(),
                   _End(),
                 ]),
-                _Comments(),
-                _Products()
+                const _Comments(),
+                const _Products()
               ],
             ),
           ),

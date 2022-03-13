@@ -2,10 +2,7 @@ import 'package:equatable/equatable.dart';
 import 'package:models/src/production_line_unit.dart';
 import 'package:models/src/production_loss.dart';
 import 'package:models/src/production_stop.dart';
-import 'package:models/src/stop.dart';
-
 import '../models.dart';
-import 'loss.dart';
 
 enum ProductionDataStatus { concluded, opened, canceled }
 
