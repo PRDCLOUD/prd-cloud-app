@@ -12,11 +12,13 @@ class DrawerMenuPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => MenuItemSelectedCubit(), lazy: false,),
+        BlocProvider(create: (context) => MenuItemSelectedCubit(), lazy: false),
         BlocProvider(create: (context) => ProductionDataBloc(apontamentosRepository: context.read<ProductionDataRepository>())..add(ApontamentosRefreshEvent(take: 100))),
-        BlocProvider(create: (context) => OpenProductionDataCubit(openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false,),
-        BlocProvider(create: (context) => SelectedProductionDataCubit(), lazy: false,)
-      ], child: Scaffold(
+        BlocProvider(create: (context) => OpenProductionDataCubit(openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false),
+        BlocProvider(create: (context) => SelectedProductionDataCubit(), lazy: false),
+        BlocProvider(create: (context) => ErrorCubit(openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false)
+      ], 
+      child: Scaffold(
         appBar: AppBar(title: const Text('Home')),
         drawer: const DrawerMenuList(),
         body: BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(

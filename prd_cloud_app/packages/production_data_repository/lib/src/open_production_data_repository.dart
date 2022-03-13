@@ -26,6 +26,11 @@ class OpenProductionDataRepository {
     }
   }
 
+  Stream<String?> errorStream() async* {
+    yield null;
+    yield* _errorsDataStreamController.stream;
+  }
+
   Stream<List<ProductionBasicData>> openDataStream() async* {
     yield _openDataList.values.toList();
     yield* _openDataStreamController.stream;

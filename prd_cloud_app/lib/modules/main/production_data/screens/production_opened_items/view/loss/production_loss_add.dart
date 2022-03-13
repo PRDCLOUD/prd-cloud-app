@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:models/models.dart';
+import 'package:prd_cloud_app/modules/main/widgets/number_input.dart';
 
 enum LossAddStates { lossSelection, lineUnitSelection, valueFill }
 
-class LossAdd extends StatefulWidget {
-  const LossAdd({ Key? key, required this.lossOptions, required this.lineUnits }) : super(key: key);
+typedef LossAdder = Future<void> Function(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId);
 
+class LossAdd extends StatefulWidget {
+  const LossAdd({ Key? key, required this.lossOptions, required this.lineUnits, required this.lossAdder, required this.productionBasicId }) : super(key: key);
+
+  final int productionBasicId;
   final List<Loss> lossOptions;
   final List<LineUnit> lineUnits;
+  final LossAdder lossAdder;
 
   @override
   State<LossAdd> createState() => _LossAddState();
@@ -69,7 +74,21 @@ class _LossAddState extends State<LossAdd> {
         return Column(
           children: [
             Row(children: [ const Text("Perda: "), Text(selectedLoss!.name)]),
-            Row(children: [ const Text("Local: "), Text(selectedLineUnit!.name)])
+            Row(children: [ const Text("Local: "), Text(selectedLineUnit!.name)]),
+            NumberInput(
+              label: "Quantidade", 
+              value: lossValue, 
+              onChanged: (newValue) => setState(() {
+                lossValue = newValue;
+              })
+            ),
+            ElevatedButton(
+              child: const Text("Adicionar"),
+              onPressed: () async {
+                await widget.lossAdder(selectedLoss!.id, selectedLineUnit!.id, 1, widget.productionBasicId);
+                Navigator.pop(context);
+              }
+            )
           ],
         );
 
