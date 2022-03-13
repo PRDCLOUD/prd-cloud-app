@@ -9,7 +9,7 @@ import 'package:prd_cloud_app/modules/main/production_data/screens/production_op
 class ProductionLossMain extends StatelessWidget {
   const ProductionLossMain({Key? key}) : super(key: key);
 
-  Future<void> lossAddDialog(BuildContext context, List<Loss> lossOptions, List<LineUnit> lineUnits, LossAdder lossAdder, int productionBasicId) async {
+  Future<void> lossAddDialog(BuildContext context, List<Loss> lossOptions, List<LineUnit> lineUnits, LossAddCallback lossAddCallback, int productionBasicId) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -18,7 +18,7 @@ class ProductionLossMain extends StatelessWidget {
             productionBasicId: productionBasicId,
             lossOptions: lossOptions, 
             lineUnits: lineUnits, 
-            lossAdder: lossAdder
+            lossAddCallback: lossAddCallback
           ),
         );
       }

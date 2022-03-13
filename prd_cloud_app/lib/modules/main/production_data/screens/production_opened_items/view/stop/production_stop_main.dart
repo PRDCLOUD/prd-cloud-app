@@ -9,7 +9,7 @@ import 'production_stop_add.dart';
 class ProductionStopMain extends StatelessWidget {
   const ProductionStopMain({Key? key}) : super(key: key);
 
-  Future<void> stopAddDialog(BuildContext context, List<Stop> stopOptions, List<LineUnit> lineUnits, StopAdder stopAdder, int productionBasicId) async {
+  Future<void> stopAddDialog(BuildContext context, List<Stop> stopOptions, List<LineUnit> lineUnits, StopAddCallback stopAddCallback, int productionBasicId) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -18,7 +18,7 @@ class ProductionStopMain extends StatelessWidget {
             productionBasicId: productionBasicId,
             stopOptions: stopOptions, 
             lineUnits: lineUnits, 
-            stopAdder: stopAdder
+            stopAddCallback: stopAddCallback
           ),
         );
       }

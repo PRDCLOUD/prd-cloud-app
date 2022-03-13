@@ -4,7 +4,7 @@ import 'package:prd_cloud_app/modules/main/widgets/number_input.dart';
 
 enum StopAddStates { stopSelection, lineUnitSelection, valueFill }
 
-typedef StopAdder = Future<bool> Function({
+typedef StopAddCallback = Future<bool> Function({
     required int productionBasicDataId, 
     required int lineUnitId, 
     required int stopCurrentDefinitionId,
@@ -22,12 +22,12 @@ typedef StopAdder = Future<bool> Function({
   });
 
 class StopAdd extends StatefulWidget {
-  const StopAdd({ Key? key, required this.stopOptions, required this.lineUnits, required this.stopAdder, required this.productionBasicId }) : super(key: key);
+  const StopAdd({ Key? key, required this.stopOptions, required this.lineUnits, required this.stopAddCallback, required this.productionBasicId }) : super(key: key);
 
   final int productionBasicId;
   final List<Stop> stopOptions;
   final List<LineUnit> lineUnits;
-  final StopAdder stopAdder;
+  final StopAddCallback stopAddCallback;
 
   @override
   State<StopAdd> createState() => _StopAddState();
@@ -35,7 +35,7 @@ class StopAdd extends StatefulWidget {
 
 class _StopAddState extends State<StopAdd> {
 
-  StopAddStates lossAddStates = StopAddStates.stopSelection;
+  StopAddStates stopAddStates = StopAddStates.stopSelection;
 
   Stop? selectedStop;
   LineUnit? selectedLineUnit;
@@ -44,14 +44,14 @@ class _StopAddState extends State<StopAdd> {
   void selectStop(Stop stop) {
     setState(() {
       selectedStop = stop;
-      lossAddStates = StopAddStates.lineUnitSelection;
+      stopAddStates = StopAddStates.lineUnitSelection;
     });
   }
 
   void selectLineUnit(LineUnit lineUnit) {
     setState(() {
       selectedLineUnit = lineUnit;
-      lossAddStates = StopAddStates.valueFill;
+      stopAddStates = StopAddStates.valueFill;
     });
   }
 
@@ -61,7 +61,7 @@ class _StopAddState extends State<StopAdd> {
 
   @override
   Widget build(BuildContext context) {
-    switch (lossAddStates) {
+    switch (stopAddStates) {
       case StopAddStates.stopSelection:
         return ListView.builder(
           shrinkWrap: true,
@@ -104,7 +104,7 @@ class _StopAddState extends State<StopAdd> {
               onPressed: lossValue == null ? 
                 null : 
                 () async {
-                // var result = await widget.stopAdder(widget.productionBasicId, selectedLoss!.id, lossValue!, selectedLineUnit!.id);
+                // var result = await widget.stopAddCallback(widget.productionBasicId, selectedLoss!.id, lossValue!, selectedLineUnit!.id);
                 // if (result) {
                   Navigator.pop(context);
                 // }

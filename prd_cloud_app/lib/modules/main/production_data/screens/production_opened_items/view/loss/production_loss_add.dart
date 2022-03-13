@@ -4,15 +4,15 @@ import 'package:prd_cloud_app/modules/main/widgets/number_input.dart';
 
 enum LossAddStates { lossSelection, lineUnitSelection, valueFill }
 
-typedef LossAdder = Future<bool> Function(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId);
+typedef LossAddCallback = Future<bool> Function(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId);
 
 class LossAdd extends StatefulWidget {
-  const LossAdd({ Key? key, required this.lossOptions, required this.lineUnits, required this.lossAdder, required this.productionBasicId }) : super(key: key);
+  const LossAdd({ Key? key, required this.lossOptions, required this.lineUnits, required this.lossAddCallback, required this.productionBasicId }) : super(key: key);
 
   final int productionBasicId;
   final List<Loss> lossOptions;
   final List<LineUnit> lineUnits;
-  final LossAdder lossAdder;
+  final LossAddCallback lossAddCallback;
 
   @override
   State<LossAdd> createState() => _LossAddState();
@@ -89,7 +89,7 @@ class _LossAddState extends State<LossAdd> {
               onPressed: lossValue == null ? 
                 null : 
                 () async {
-                var result = await widget.lossAdder(widget.productionBasicId, selectedLoss!.id, lossValue!, selectedLineUnit!.id);
+                var result = await widget.lossAddCallback(widget.productionBasicId, selectedLoss!.id, lossValue!, selectedLineUnit!.id);
                 if (result) {
                   Navigator.pop(context);
                 }
