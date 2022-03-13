@@ -10,7 +10,7 @@ class ErrorCubit extends Cubit<ErrorState> {
     required OpenProductionDataRepository openProductionDataRepository, 
   }) : _openProductionDataRepository = openProductionDataRepository, super(const ErrorState(null)) {
     _openProductionDataRepository.errorStream().listen((event) {
-      emit(ErrorState(event.toString()));
+      emit(ErrorState(event));
     });
   }
 

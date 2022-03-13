@@ -13,7 +13,7 @@ class OpenProductionDataRepository {
 
   final Map<int, ProductionBasicData> _openDataList = new Map();
 
-  final _errorsDataStreamController = StreamController<String>.broadcast();
+  final _errorsDataStreamController = StreamController<dynamic>.broadcast();
   final _openDataStreamController = StreamController<List<ProductionBasicData>>.broadcast();
   final _productionDataStreamController = new Map<int, StreamController<ProductionBasicData>>();
 
@@ -26,7 +26,7 @@ class OpenProductionDataRepository {
     }
   }
 
-  Stream<String?> errorStream() async* {
+  Stream<dynamic> errorStream() async* {
     yield null;
     yield* _errorsDataStreamController.stream;
   }
@@ -62,7 +62,7 @@ class OpenProductionDataRepository {
     try {
       await _http.patchProductionDataBegin(productionBasicData);
     } catch (e) {
-      _errorsDataStreamController.add(e.toString());
+      _errorsDataStreamController.add(e);
     }
   }
 
@@ -70,7 +70,7 @@ class OpenProductionDataRepository {
     try {
       await _http.patchProductionDataEnd(productionBasicData);
     } catch (e) {
-      _errorsDataStreamController.add(e.toString());
+      _errorsDataStreamController.add(e);
     }
   }
 
@@ -78,7 +78,7 @@ class OpenProductionDataRepository {
     try {
       await _http.patchProductionDataComments(productionBasicData);
     } catch (e) {
-      _errorsDataStreamController.add(e.toString());
+      _errorsDataStreamController.add(e);
     }
   }
 
@@ -86,7 +86,7 @@ class OpenProductionDataRepository {
     try {
       await _http.patchProductionDataProduct(productionBasicData);
     } catch (e) {
-      _errorsDataStreamController.add(e.toString());
+      _errorsDataStreamController.add(e);
     }
   }
 
@@ -94,7 +94,7 @@ class OpenProductionDataRepository {
     try {
       await _http.patchProductionVariable(variable);
     } catch (e) {
-      _errorsDataStreamController.add(e.toString());
+      _errorsDataStreamController.add(e);
     }
   }
 

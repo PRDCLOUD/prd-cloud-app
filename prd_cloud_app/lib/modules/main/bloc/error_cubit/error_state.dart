@@ -1,13 +1,10 @@
 part of 'error_cubit.dart';
 
 @immutable
-class ErrorState extends Equatable {
+class ErrorState {
 
-  final String? errorMessage;
+  final dynamic errorObject;
 
-  const ErrorState(this.errorMessage);
-  
-  @override
-  List<Object?> get props => [errorMessage];
+  const ErrorState(this.errorObject);
 
 }

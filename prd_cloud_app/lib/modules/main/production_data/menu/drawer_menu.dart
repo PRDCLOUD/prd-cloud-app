@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
@@ -19,17 +20,39 @@ class DrawerMenuPage extends StatelessWidget {
         BlocProvider(create: (context) => ErrorCubit(openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false)
       ], 
       child: Scaffold(
-        appBar: AppBar(title: const Text('Home')),
+        appBar: AppBar(title: const Text('Apontamentos')),
         drawer: const DrawerMenuList(),
-        body: BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
-          builder: (context, state) {
-            switch (state.menuItemSelected) {
-              case MenuItemSelected.productionOpenedItems:
-                return const ProductionOpenedItemLayoutPage();
-              default:
-                return const ProductionDataListPage();
+        body: BlocListener<ErrorCubit, ErrorState>(
+          listener: (context, state) {
+            String? errorToShow;
+            if (state.errorObject != null) {
+              if (state is String) {
+                errorToShow = state as String;
+              } else if (state.errorObject is DioError) {
+                var dioError = state.errorObject as DioError;
+                if (dioError.response?.statusCode != null && dioError.response!.statusCode == 400 && dioError.response?.data is Map) {
+                  errorToShow = (dioError.response!.data as Map)['errorMessage'];
+                }
+              }
+              if (errorToShow != null && errorToShow.isNotEmpty) {
+                final snackBar = SnackBar(
+                  content: Text(errorToShow!)
+                );
+
+                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+              }
             }
           },
+          child: BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
+                  builder: (context, state) {
+                    switch (state.menuItemSelected) {
+                      case MenuItemSelected.productionOpenedItems:
+                        return const ProductionOpenedItemLayoutPage();
+                      default:
+                        return const ProductionDataListPage();
+                    }
+                  },
+                ),
         ),
       )
     );
