@@ -9,4 +9,5 @@ export './field_product_cubit/field_product_cubit.dart';
 export './field_variable_text_cubit/field_variable_text_cubit.dart';
 export './field_variable_numeric_cubit/field_variable_numeric_cubit.dart';
 export './production_loss_cubit/production_loss_cubit.dart';
+export './production_stop_cubit/production_stop_cubit.dart';
 export './error_cubit/error_cubit.dart';

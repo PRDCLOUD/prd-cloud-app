@@ -3,22 +3,22 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
-import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/loss/production_loss_add.dart';
+import 'production_stop_add.dart';
 
 
-class ProductionLossMain extends StatelessWidget {
-  const ProductionLossMain({Key? key}) : super(key: key);
+class ProductionStopMain extends StatelessWidget {
+  const ProductionStopMain({Key? key}) : super(key: key);
 
-  Future<void> lossAddDialog(BuildContext context, List<Loss> lossOptions, List<LineUnit> lineUnits, LossAdder lossAdder, int productionBasicId) async {
+  Future<void> stopAddDialog(BuildContext context, List<Stop> stopOptions, List<LineUnit> lineUnits, StopAdder stopAdder, int productionBasicId) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) {
         return Dialog(
-          child: LossAdd(
+          child: StopAdd(
             productionBasicId: productionBasicId,
-            lossOptions: lossOptions, 
+            stopOptions: stopOptions, 
             lineUnits: lineUnits, 
-            lossAdder: lossAdder
+            stopAdder: stopAdder
           ),
         );
       }
@@ -35,12 +35,12 @@ class ProductionLossMain extends StatelessWidget {
         .loadedItems
         .firstWhere((element) => element.id == productionDataId);
     
-    var lossesOptions = productionData.lossesOptions;
+    var stopOptions = productionData.stopOptions;
     var lineUnits = productionData.lineUnits.map((e) => e.lineUnit).toList();
 
-    return BlocConsumer<ProductionLossCubit, ProductionLossState>(
+    return BlocConsumer<ProductionStopCubit, ProductionStopState>(
       listener: (context, state) => { 
-        if (state.status == ProductionLossStatus.adding || state.status == ProductionLossStatus.deleting) {
+        if (state.status == ProductionStopStatus.adding || state.status == ProductionStopStatus.deleting) {
           context.loaderOverlay.show()
         } else {
           context.loaderOverlay.hide()
@@ -54,15 +54,15 @@ class ProductionLossMain extends StatelessWidget {
 
           backgroundColor: Colors.green,
           onPressed: () {
-            lossAddDialog(context, lossesOptions, lineUnits, context.read<ProductionLossCubit>().addLoss, productionDataId);
+            stopAddDialog(context, stopOptions, lineUnits, context.read<ProductionStopCubit>().addStop, productionDataId);
           },
         ),
           body: ListView.builder(
             shrinkWrap: true,
-            itemCount: state.losses.length,
+            itemCount: state.stops.length,
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
-                title: Text(state.losses[index].name),
+                title: Text(state.stops[index].name),
               );
             },
           ),

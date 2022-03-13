@@ -31,19 +31,50 @@ class ProductionStopCubit extends Cubit<ProductionStopState> {
     }
   }
   
-
   late OpenProductionDataRepository _openProductionDataRepository;
 
-  Future<bool> addStop(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
+  Future<bool> addStop({
+    required int productionBasicDataId, 
+    required int lineUnitId, 
+    required int stopCurrentDefinitionId,
+    required String stopType,
+    required List<StopClaim> claims, 
+    double? averageTimeAtStopQtyAverageTime, 
+    int? qtyAtStopQtyAverageTime,
+    DateTime? beginAtStopBeginAndTimeSpan,
+    double? timeSpanAtStopBeginAndTimeSpan,
+    DateTime? beginAtStopBeginEnd,
+    DateTime? endAtStopBeginEnd,
+    int? qtyAtStopQtyTotalTime,
+    double? totalTimeAtStopQtyTotalTime,
+    double? stopTimeAtStopTimePerStop
+  }) async {
     emit(state.copyWith(status: ProductionStopStatus.adding));
-    var result = await _openProductionDataRepository.addLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
+
+    var result = await _openProductionDataRepository.addStop(
+      productionBasicDataId: productionBasicDataId,
+      lineUnitId: lineUnitId,
+      stopCurrentDefinitionId: stopCurrentDefinitionId,
+      stopType: stopType,
+      claims: claims,
+      averageTimeAtStopQtyAverageTime: averageTimeAtStopQtyAverageTime,
+      qtyAtStopQtyAverageTime: qtyAtStopQtyAverageTime,
+      beginAtStopBeginAndTimeSpan: beginAtStopBeginAndTimeSpan,
+      timeSpanAtStopBeginAndTimeSpan: timeSpanAtStopBeginAndTimeSpan,
+      beginAtStopBeginEnd: beginAtStopBeginEnd,
+      endAtStopBeginEnd: endAtStopBeginEnd,
+      qtyAtStopQtyTotalTime: qtyAtStopQtyTotalTime,
+      totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime,
+      stopTimeAtStopTimePerStop: stopTimeAtStopTimePerStop
+    );
+
     emit(state.copyWith(status: ProductionStopStatus.updated));
     return result;
   }
 
   Future<void> removeStop(int productionBasicDataId, int productionStopId) async {
     emit(state.copyWith(status: ProductionStopStatus.deleting));
-    await _openProductionDataRepository.deleteLoss(productionBasicDataId, productionStopId);
+    await _openProductionDataRepository.deleteStop(productionBasicDataId, productionStopId);
     emit(state.copyWith(status: ProductionStopStatus.updated));
   }
 
