@@ -60,7 +60,7 @@ class OpenProductionDataRepository {
   // TODO create FIFO queue
   Future _updateBeginApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataBegin(productionBasicData);
+      await _http.patchProductionDataBegin(productionBasicData, _tenantInformation.timeZone);
     } catch (e) {
       _errorsDataStreamController.add(e);
     }
@@ -68,7 +68,7 @@ class OpenProductionDataRepository {
 
   Future _updateEndApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataEnd(productionBasicData);
+      await _http.patchProductionDataEnd(productionBasicData, _tenantInformation.timeZone);
     } catch (e) {
       _errorsDataStreamController.add(e);
     }
@@ -76,7 +76,7 @@ class OpenProductionDataRepository {
 
   Future _updateCommentsApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataComments(productionBasicData);
+      await _http.patchProductionDataComments(productionBasicData, _tenantInformation.timeZone);
     } catch (e) {
       _errorsDataStreamController.add(e);
     }
@@ -84,7 +84,7 @@ class OpenProductionDataRepository {
 
   Future _updateProductApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataProduct(productionBasicData);
+      await _http.patchProductionDataProduct(productionBasicData, _tenantInformation.timeZone);
     } catch (e) {
       _errorsDataStreamController.add(e);
     }
@@ -221,15 +221,17 @@ class OpenProductionDataRepository {
     }
   }
 
-  Future<void> updateLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
+  Future<bool> addLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
     try {
       var newLosses = await _addLossApi(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
       var prdData = _getProductionBasicData(productionBasicDataId);
       var oldLosses = prdData.losses; 
       var allLosses = List<ProductionLoss>.from(oldLosses)..addAll(newLosses);
       emitProductionChange(productionBasicDataId, prdData.copyWith(losses: allLosses));
+      return true;
     } catch (e) {
-      _errorsDataStreamController.add(e.toString());
+      _errorsDataStreamController.add(e);
+      return false;
     }
   }
 

@@ -4,7 +4,7 @@ import 'package:prd_cloud_app/modules/main/widgets/number_input.dart';
 
 enum LossAddStates { lossSelection, lineUnitSelection, valueFill }
 
-typedef LossAdder = Future<void> Function(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId);
+typedef LossAdder = Future<bool> Function(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId);
 
 class LossAdd extends StatefulWidget {
   const LossAdd({ Key? key, required this.lossOptions, required this.lineUnits, required this.lossAdder, required this.productionBasicId }) : super(key: key);
@@ -85,8 +85,10 @@ class _LossAddState extends State<LossAdd> {
             ElevatedButton(
               child: const Text("Adicionar"),
               onPressed: () async {
-                await widget.lossAdder(selectedLoss!.id, selectedLineUnit!.id, 1, widget.productionBasicId);
-                Navigator.pop(context);
+                var result = await widget.lossAdder(selectedLoss!.id, selectedLineUnit!.id, 1, widget.productionBasicId);
+                if (result) {
+                  Navigator.pop(context);
+                }
               }
             )
           ],

@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
 import 'package:models/models.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class AuthenticatedHttpClient {
   
@@ -41,6 +42,21 @@ class AuthenticatedHttpClient {
     return response;  
   }
 
+  Future<Response> _postRequest(String path, [ dynamic data = null ]) async {
+
+    var accessToken = await _getAccessToken();
+
+    var response = await _dio.postUri(Uri.https(_authority, _tenant.name + '/' + path), data: data, options: Options(
+      contentType: Headers.jsonContentType,
+      responseType: ResponseType.json,
+      headers: {
+        'Authorization': 'Bearer ' + accessToken
+      })
+    );
+
+    return response;  
+  }
+
   Future<Response> _deleteRequest(String path, [ dynamic data = null ]) async {
 
     var accessToken = await _getAccessToken();
@@ -61,7 +77,7 @@ class AuthenticatedHttpClient {
   }  
 
   Future<Response> getProductionDataList(int take) async {
-    return (await _getRequest('api/production/concluded', 
+    return (await _getRequest('api/production/open', 
     { 
       'type': 'all', 
       'take': take.toString() 
@@ -72,10 +88,10 @@ class AuthenticatedHttpClient {
     return await _getRequest('api/production/' + id.toString());
   }
 
-  Future<Response<dynamic>> patchProductionDataBegin(ProductionBasicData productionBasicData) async {
+  Future<Response<dynamic>> patchProductionDataBegin(ProductionBasicData productionBasicData, String timeZone) async {
     var data = { 
-      'begin': productionBasicData.begin?.toIso8601String(),
-      'end': productionBasicData.end?.toIso8601String(),
+      'begin': dateToString(productionBasicData.begin, timeZone),
+      'end': dateToString(productionBasicData.end, timeZone),
       'comments': productionBasicData.comments,
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
@@ -83,10 +99,10 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/begin/' + productionBasicData.id.toString(), data);
   }
 
-  Future<Response<dynamic>> patchProductionDataEnd(ProductionBasicData productionBasicData) async {
+  Future<Response<dynamic>> patchProductionDataEnd(ProductionBasicData productionBasicData, String timeZone) async {
     var data = { 
-      'begin': productionBasicData.begin?.toIso8601String(),
-      'end': productionBasicData.end?.toIso8601String(),
+      'begin': dateToString(productionBasicData.begin, timeZone),
+      'end': dateToString(productionBasicData.end, timeZone),
       'comments': productionBasicData.comments,
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
@@ -94,10 +110,10 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/end/' + productionBasicData.id.toString(), data);
   }
 
-  Future<Response<dynamic>> patchProductionDataComments(ProductionBasicData productionBasicData) async {
+  Future<Response<dynamic>> patchProductionDataComments(ProductionBasicData productionBasicData, String timeZone) async {
     var data = { 
-      'begin': productionBasicData.begin?.toIso8601String(),
-      'end': productionBasicData.end?.toIso8601String(),
+      'begin': dateToString(productionBasicData.begin, timeZone),
+      'end': dateToString(productionBasicData.end, timeZone),
       'comments': productionBasicData.comments,
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
@@ -105,10 +121,10 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/comment/' + productionBasicData.id.toString(), data);
   }
 
-  Future<Response<dynamic>> patchProductionDataProduct(ProductionBasicData productionBasicData) async {
+  Future<Response<dynamic>> patchProductionDataProduct(ProductionBasicData productionBasicData, String timeZone) async {
     var data = { 
-      'begin': productionBasicData.begin?.toIso8601String(),
-      'end': productionBasicData.end?.toIso8601String(),
+      'begin': dateToString(productionBasicData.begin, timeZone),
+      'end': dateToString(productionBasicData.end, timeZone),
       'comments': productionBasicData.comments,
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
@@ -138,11 +154,21 @@ class AuthenticatedHttpClient {
         'productionBasicDataId': productionBasicDataId
       },
     };
-    return await _patchRequest('api/production/loss', data);
+    return await _postRequest('api/production/loss', data);
   }
 
   Future<Response<dynamic>> deleteProductionLoss(int productionLossId) async {
     return await _deleteRequest('api/production/loss/' + productionLossId.toString());
+  }
+
+  String? dateToString(DateTime? date, String locationName) {
+    if (date == null) {
+      return null;
+    } else {
+      var timezone = tz.getLocation(locationName);
+      var dateOnLocal = tz.TZDateTime(timezone, date.year, date.month, date.day, date.hour, date.minute, date.second);
+      return dateOnLocal.toIso8601String();
+    }
   }
 
 }

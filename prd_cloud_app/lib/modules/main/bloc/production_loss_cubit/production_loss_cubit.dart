@@ -34,10 +34,11 @@ class ProductionLossCubit extends Cubit<ProductionLossState> {
 
   late OpenProductionDataRepository _openProductionDataRepository;
 
-  Future<void> addLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
+  Future<bool> addLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
     emit(state.copyWith(status: ProductionLossStatus.adding));
-    await _openProductionDataRepository.updateLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
+    var result = await _openProductionDataRepository.addLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
     emit(state.copyWith(status: ProductionLossStatus.updated));
+    return result;
   }
 
   Future<void> removeLoss(int productionBasicDataId, int productionLossId) async {
