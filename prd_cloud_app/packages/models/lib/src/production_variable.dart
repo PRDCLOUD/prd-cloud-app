@@ -25,8 +25,23 @@ class ProductionVariable extends Equatable {
     final int columnOrder;
     final int width;
 
-    List<String> get textOptionsList {
-      return textOptions?.split(';') ?? List.empty();
+    List<String>? get textOptionsList {
+      if (textOptions == null || textOptions == "") {
+        return null;
+      } else {
+        var list = textOptions!.split(';').toList();
+        if (text != null && !list.contains(text)) {
+          list.add(text!);
+        }
+        return list;
+      }
+    }
+
+    bool get isReadOnly {
+      return typeVariableImplementation == 'Default numeric value' || 
+              typeVariableImplementation == 'Default text value' ||
+              typeVariableImplementation == 'Numeric Per Product' ||
+              typeVariableImplementation == 'Text Per Product';
     }
 
     ProductionVariable({ 

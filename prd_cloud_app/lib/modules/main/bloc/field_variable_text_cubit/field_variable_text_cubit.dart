@@ -10,9 +10,19 @@ class FieldVariableTextCubit extends Cubit<FieldVariableTextState> {
     required OpenProductionDataRepository openProductionDataRepository, 
     required int productionBasicDataId, 
     required int variableDataId, 
+    required bool enabled,
     required String label,
+    required List<String>? options,
     required String? initialValue,
-  }) : _openProductionDataRepository = openProductionDataRepository, super(FieldVariableTextState(productionBasicDataId: productionBasicDataId, variableDataId: variableDataId, label: label, fieldValue: initialValue));
+  }) : _openProductionDataRepository = openProductionDataRepository, 
+    super(FieldVariableTextState(
+      productionBasicDataId: productionBasicDataId, 
+      variableDataId: variableDataId, 
+      label: label, 
+      options: options, 
+      fieldValue: initialValue, 
+      enabled: enabled)
+    );
 
   final OpenProductionDataRepository _openProductionDataRepository;
 
