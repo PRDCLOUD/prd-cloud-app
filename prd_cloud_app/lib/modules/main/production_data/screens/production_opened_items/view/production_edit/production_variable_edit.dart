@@ -53,12 +53,8 @@ class _NumericVariable extends StatelessWidget {
         return NumberInput(
           label: state.label,
           allowDecimal: state.decimals > 0,
-          value: state.fieldValue?.toString().replaceAll(",", "."),
-          onChanged: (newValue) => context
-              .read<FieldVariableNumericCubit>()
-              .updateField(newValue == null || newValue == ""
-                  ? null
-                  : double.parse(newValue)),
+          value: state.fieldValue,
+          onChanged: (newValue) => context.read<FieldVariableNumericCubit>().updateField(newValue),
         );
       },
     );

@@ -12,7 +12,7 @@ class ProductionLossMain extends StatelessWidget {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.add),
+          child: const Icon(Icons.add),
 
           backgroundColor: Colors.green,
           onPressed: () {
@@ -31,4 +31,8 @@ class ProductionLossMain extends StatelessWidget {
       },
     );
   }
+
+  
+  
+
 }

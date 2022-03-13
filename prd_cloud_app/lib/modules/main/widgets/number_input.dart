@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
+typedef NumberInputChanged = void Function(double? newValue);
 class NumberInput extends StatelessWidget {
   const NumberInput({
     Key? key,
@@ -15,20 +17,41 @@ class NumberInput extends StatelessWidget {
   }) : super(key: key);
 
   final TextEditingController? controller;
-  final String? value;
+  final double? value;
   final String label;
-  final Function? onChanged;
+  final NumberInputChanged? onChanged;
   final String? error;
   final Widget? icon;
   final bool allowDecimal;
   final bool disabled;
   
+  void onChangedParse(String? newValue) {
+    if (onChanged != null) {
+      if (newValue == null || newValue == "") {
+        onChanged!(null);
+      } else {
+        var format = NumberFormat("###.0#", "en_US");
+        var newValueDouble = format.parse(newValue);
+        onChanged!(newValueDouble.toDouble());
+      }
+    }
+  }
+
+  String? setterParse(double? value) {
+    if (value == null) {
+      return null;
+    } else {
+      var format = NumberFormat("##0.##", "en_US");
+      return format.format(value);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      initialValue: value,
-      onChanged: onChanged as void Function(String)?,
+      initialValue: setterParse(value),
+      onChanged: onChangedParse,
       readOnly: disabled,
       keyboardType: TextInputType.numberWithOptions(decimal: allowDecimal),
       inputFormatters: <TextInputFormatter>[
