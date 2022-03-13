@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/loss/production_loss_main.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/production_edit/production_data_edit.dart';
 
 class ProductionOpenedItemNavigation extends StatefulWidget {
@@ -17,10 +18,7 @@ class _ProductionOpenedItemNavigation extends State<ProductionOpenedItemNavigati
   
   static const List<Widget> _widgetOptions = <Widget>[
     ProductionDataEdit(),
-    Text(
-      'Index 1: Business',
-      style: optionStyle,
-    ),
+    ProductionLossMain(),
     Text(
       'Index 2: School',
       style: optionStyle,

@@ -93,6 +93,15 @@ class OpenProductionDataRepository {
     }
   }
 
+  Future<List<ProductionLoss>> _addLossApi(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
+    var response = await _http.postProductionLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
+    return response.data.map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList();
+  }
+
+  Future _deleteLossApi(int productionLossId) async {
+    await _http.deleteProductionLoss(productionLossId);
+  }
+
   updateBegin(int id, DateTime? begin) {
     var prdData = _getProductionBasicData(id);
     if (prdData.begin != begin) {
@@ -204,6 +213,29 @@ class OpenProductionDataRepository {
         emitProductionChange(id, prdData);
         EasyDebounce.debounce(id.toString() + '-updateVariable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
       }
+    }
+  }
+
+  Future<void> updateLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
+    try {
+      var newLosses = await _addLossApi(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
+      var prdData = _getProductionBasicData(productionBasicDataId);
+      var oldLosses = prdData.losses; 
+      var allLosses = List<ProductionLoss>.from(oldLosses)..addAll(newLosses);
+      emitProductionChange(productionBasicDataId, prdData.copyWith(losses: allLosses));
+    } catch (e) {
+      _errorsDataStreamController.add(e.toString());
+    }
+  }
+
+  Future<void> deleteLoss(int productionBasicDataId, int productionLossId) async {
+    try {
+      await _deleteLossApi(productionLossId);
+      var prdData = _getProductionBasicData(productionBasicDataId);
+      var filteredLosses = prdData.losses.where((e) => e.id != productionLossId).toList(); 
+      emitProductionChange(productionBasicDataId, prdData.copyWith(losses: filteredLosses));
+    } catch (e) {
+      _errorsDataStreamController.add(e.toString());
     }
   }
 

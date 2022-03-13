@@ -41,6 +41,21 @@ class AuthenticatedHttpClient {
     return response;  
   }
 
+  Future<Response> _deleteRequest(String path, [ dynamic data = null ]) async {
+
+    var accessToken = await _getAccessToken();
+
+    var response = await _dio.deleteUri(Uri.https(_authority, _tenant.name + '/' + path), data: data, options: Options(
+      contentType: Headers.jsonContentType,
+      responseType: ResponseType.json,
+      headers: {
+        'Authorization': 'Bearer ' + accessToken
+      })
+    );
+
+    return response;  
+  }
+
   Future<Response> getTenantInformation() async {
     return await _getRequest('api/tenant/claims');
   }  
@@ -111,6 +126,23 @@ class AuthenticatedHttpClient {
       'type': variable.typeVariableDefinition.toLowerCase()
     };
     return await _patchRequest('api/production/variable/' + variable.typeVariableDefinition.toLowerCase() + '/' + variable.id.toString(), data);
+  }
+
+  Future<Response<dynamic>> postProductionLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
+    var data = { 
+      'lineUnitIds': [ lineUnitId ],
+      'productionLoss': {
+        'lineUnitId': lineUnitId,
+        'lossCurrentDefinitionId': lossCurrentDefinitionId,
+        'lossValue': lossValue,
+        'productionBasicDataId': productionBasicDataId
+      },
+    };
+    return await _patchRequest('api/production/loss', data);
+  }
+
+  Future<Response<dynamic>> deleteProductionLoss(int productionLossId) async {
+    return await _deleteRequest('api/production/loss/' + productionLossId.toString());
   }
 
 }
