@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class TenantInformation extends Equatable {
 
@@ -7,6 +8,14 @@ class TenantInformation extends Equatable {
   final String lossGeneralUnit;
   final List<String> lossGridOptions;
   final String timeZone;
+
+  tz.Location? _location;
+  tz.Location get location {
+    if (_location == null) {
+      _location = tz.getLocation(timeZone);
+    }
+    return _location!;
+  }
 
   TenantInformation({ required this.language, required  this.lossGeneralCurrency, required  this.lossGeneralUnit, required  this.lossGridOptions, required  this.timeZone });
 

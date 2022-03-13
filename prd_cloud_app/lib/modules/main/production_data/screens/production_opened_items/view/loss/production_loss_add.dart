@@ -78,14 +78,18 @@ class _LossAddState extends State<LossAdd> {
             NumberInput(
               label: "Quantidade", 
               value: lossValue, 
+              allowDecimal: true,
               onChanged: (newValue) => setState(() {
                 lossValue = newValue;
               })
             ),
             ElevatedButton(
               child: const Text("Adicionar"),
-              onPressed: () async {
-                var result = await widget.lossAdder(selectedLoss!.id, selectedLineUnit!.id, 1, widget.productionBasicId);
+              style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
+              onPressed: lossValue == null ? 
+                null : 
+                () async {
+                var result = await widget.lossAdder(widget.productionBasicId, selectedLoss!.id, lossValue!, selectedLineUnit!.id);
                 if (result) {
                   Navigator.pop(context);
                 }

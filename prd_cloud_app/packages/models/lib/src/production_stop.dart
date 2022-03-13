@@ -1,11 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:models/src/line_unit.dart';
 
 abstract class ProductionStop extends Equatable {
   final int id;
   final int? productionBasicDataId;
   final int lineUnitId;
-  final LineUnit lineUnit;
   final int stopCurrentDefinitionId;
   final String? code;
   final String name;
@@ -26,7 +24,6 @@ abstract class ProductionStop extends Equatable {
     required this.id, 
     required this.productionBasicDataId, 
     required this.lineUnitId, 
-    required this.lineUnit, 
     required this.stopCurrentDefinitionId, 
     required this.code, 
     required this.name, 
@@ -41,7 +38,6 @@ abstract class ProductionStop extends Equatable {
         return ProductionStopBeginEnd(
           id: json['id'],
           code: json['code'],
-          lineUnit: LineUnit.fromJson(json['lineUnit']),
           name: json['name'],
           lineUnitId: json['lineUnitId'],
           productionBasicDataId: json['productionBasicDataId'],
@@ -56,7 +52,6 @@ abstract class ProductionStop extends Equatable {
         return ProductionStopBeginAndTimeSpan(
           id: json['id'],
           code: json['code'],
-          lineUnit: LineUnit.fromJson(json['lineUnit']),
           name: json['name'],
           lineUnitId: json['lineUnitId'],
           productionBasicDataId: json['productionBasicDataId'],
@@ -71,7 +66,6 @@ abstract class ProductionStop extends Equatable {
         return ProductionStopQtyAverageTime(
           id: json['id'],
           code: json['code'],
-          lineUnit: LineUnit.fromJson(json['lineUnit']),
           name: json['name'],
           lineUnitId: json['lineUnitId'],
           productionBasicDataId: json['productionBasicDataId'],
@@ -86,7 +80,6 @@ abstract class ProductionStop extends Equatable {
         return ProductionStopQtyTotalTime(
           id: json['id'],
           code: json['code'],
-          lineUnit: LineUnit.fromJson(json['lineUnit']),
           name: json['name'],
           lineUnitId: json['lineUnitId'],
           productionBasicDataId: json['productionBasicDataId'],
@@ -101,7 +94,6 @@ abstract class ProductionStop extends Equatable {
         return ProductionStopTimePerStop(
           id: json['id'],
           code: json['code'],
-          lineUnit: LineUnit.fromJson(json['lineUnit']),
           name: json['name'],
           lineUnitId: json['lineUnitId'],
           productionBasicDataId: json['productionBasicDataId'],
@@ -127,7 +119,6 @@ class ProductionStopBeginEnd extends ProductionStop {
     required int id, 
     required int? productionBasicDataId, 
     required int lineUnitId, 
-    required LineUnit lineUnit, 
     required int stopCurrentDefinitionId, 
     required String? code, 
     required String name, 
@@ -140,7 +131,6 @@ class ProductionStopBeginEnd extends ProductionStop {
     claims: claims, 
     code: code, 
     id: id, 
-    lineUnit: lineUnit, 
     lineUnitId: lineUnitId, 
     name: name, 
     totalTime: totalTime,
@@ -155,7 +145,6 @@ class ProductionStopBeginEnd extends ProductionStop {
       id,
       productionBasicDataId,
       lineUnitId,
-      lineUnit,
       stopCurrentDefinitionId,
       code,
       name,
@@ -177,7 +166,6 @@ class ProductionStopBeginAndTimeSpan extends ProductionStop{
     required int id, 
     required int? productionBasicDataId, 
     required int lineUnitId, 
-    required LineUnit lineUnit, 
     required int stopCurrentDefinitionId, 
     required String? code, 
     required String name, 
@@ -190,7 +178,6 @@ class ProductionStopBeginAndTimeSpan extends ProductionStop{
     claims: claims, 
     code: code, 
     id: id, 
-    lineUnit: lineUnit, 
     lineUnitId: lineUnitId, 
     name: name, 
     productionBasicDataId: productionBasicDataId, 
@@ -205,7 +192,6 @@ class ProductionStopBeginAndTimeSpan extends ProductionStop{
       id,
       productionBasicDataId,
       lineUnitId,
-      lineUnit,
       stopCurrentDefinitionId,
       code,
       name,
@@ -227,7 +213,6 @@ class ProductionStopQtyAverageTime extends ProductionStop{
     required int id, 
     required int? productionBasicDataId, 
     required int lineUnitId, 
-    required LineUnit lineUnit, 
     required int stopCurrentDefinitionId, 
     required String? code, 
     required String name, 
@@ -240,7 +225,6 @@ class ProductionStopQtyAverageTime extends ProductionStop{
     claims: claims, 
     code: code, 
     id: id, 
-    lineUnit: lineUnit, 
     lineUnitId: lineUnitId, 
     name: name, 
     productionBasicDataId: productionBasicDataId, 
@@ -255,7 +239,6 @@ class ProductionStopQtyAverageTime extends ProductionStop{
       id,
       productionBasicDataId,
       lineUnitId,
-      lineUnit,
       stopCurrentDefinitionId,
       code,
       name,
@@ -277,7 +260,6 @@ class ProductionStopQtyTotalTime extends ProductionStop{
     required int id, 
     required int? productionBasicDataId, 
     required int lineUnitId, 
-    required LineUnit lineUnit, 
     required int stopCurrentDefinitionId, 
     required String? code, 
     required String name, 
@@ -291,7 +273,6 @@ class ProductionStopQtyTotalTime extends ProductionStop{
     claims: claims, 
     code: code, 
     id: id, 
-    lineUnit: lineUnit, 
     lineUnitId: lineUnitId, 
     name: name, 
     productionBasicDataId: productionBasicDataId, 
@@ -306,7 +287,6 @@ class ProductionStopQtyTotalTime extends ProductionStop{
       id,
       productionBasicDataId,
       lineUnitId,
-      lineUnit,
       stopCurrentDefinitionId,
       code,
       name,
@@ -327,7 +307,6 @@ class ProductionStopTimePerStop extends ProductionStop{
     required int id, 
     required int? productionBasicDataId, 
     required int lineUnitId, 
-    required LineUnit lineUnit, 
     required int stopCurrentDefinitionId, 
     required String? code, 
     required String name, 
@@ -339,7 +318,6 @@ class ProductionStopTimePerStop extends ProductionStop{
     claims: claims, 
     code: code, 
     id: id, 
-    lineUnit: lineUnit, 
     lineUnitId: lineUnitId, 
     name: name, 
     productionBasicDataId: productionBasicDataId, 
@@ -354,7 +332,6 @@ class ProductionStopTimePerStop extends ProductionStop{
       id,
       productionBasicDataId,
       lineUnitId,
-      lineUnit,
       stopCurrentDefinitionId,
       code,
       name,

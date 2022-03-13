@@ -19,7 +19,7 @@ class ProductionVariableEdit extends StatelessWidget {
             productionBasicDataId: productionVariable.productionBasicDataId,
             variableDataId: productionVariable.id,
             label: productionVariable.implementationLabel,
-            enabled: productionVariable.isReadOnly,
+            enabled: !productionVariable.isReadOnly,
             decimals: productionVariable.decimalPlaces ?? 0,
             initialValue: productionVariable.value,
             openProductionDataRepository:
@@ -32,7 +32,7 @@ class ProductionVariableEdit extends StatelessWidget {
             productionBasicDataId: productionVariable.productionBasicDataId,
             variableDataId: productionVariable.id,
             label: productionVariable.implementationLabel,
-            enabled: productionVariable.isReadOnly,
+            enabled: !productionVariable.isReadOnly,
             options: productionVariable.textOptionsList,
             initialValue: productionVariable.text,
             openProductionDataRepository:

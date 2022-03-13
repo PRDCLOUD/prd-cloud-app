@@ -48,7 +48,7 @@ class OpenProductionDataRepository {
 
   Future<void> loadProductionData(int id) async {
     var response = await _http.getProductionDataById(id);
-    var productionBasicData = ProductionBasicData.fromJson(response.data[0], _tenantInformation.timeZone);
+    var productionBasicData = ProductionBasicData.fromJson(response.data[0], _tenantInformation.location);
     _openDataList[productionBasicData.id] = productionBasicData;
 
     if (_openDataStreamController.hasListener) {

@@ -6,7 +6,6 @@ class ProductionLoss extends Equatable {
 
   final int id;
   final int lineUnitId;
-  final LineUnit lineUnit;
   final int lossCurrentDefinitionId;
   final String? code;
   final String name;
@@ -17,7 +16,6 @@ class ProductionLoss extends Equatable {
   ProductionLoss({ 
     required this.id, 
     required this.lineUnitId, 
-    required this.lineUnit, 
     required this.lossCurrentDefinitionId, 
     required this.code, 
     required this.name, 
@@ -30,7 +28,6 @@ class ProductionLoss extends Equatable {
     return ProductionLoss(
       id: json['id'], 
       lineUnitId: json['lineUnitId'], 
-      lineUnit: LineUnit.fromJson(json['lineUnit']), 
       lossCurrentDefinitionId: json['lossCurrentDefinitionId'], 
       code: json['code'], 
       name: json['name'], 
@@ -45,7 +42,6 @@ class ProductionLoss extends Equatable {
     return [
       id,
       lineUnitId,
-      lineUnit,
       lossCurrentDefinitionId,
       code,
       name,
@@ -69,7 +65,6 @@ class ProductionLoss extends Equatable {
     return ProductionLoss(
       id: id ?? this.id,
       lineUnitId: lineUnitId ?? this.lineUnitId,
-      lineUnit: lineUnit ?? this.lineUnit,
       lossCurrentDefinitionId: lossCurrentDefinitionId ?? this.lossCurrentDefinitionId,
       code: code ?? this.code,
       name: name ?? this.name,

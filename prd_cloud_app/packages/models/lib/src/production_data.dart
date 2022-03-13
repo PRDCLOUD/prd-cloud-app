@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../models.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 enum ProductionDataStatus { concluded, opened, canceled }
 
@@ -26,6 +27,14 @@ class ProductionBasicData extends Equatable {
 
   final int status;
 
+  Map<int, LineUnit>? _lineUnitDict;
+  Map<int, LineUnit> get lineUnitDict {
+    if (_lineUnitDict == null) {
+      _lineUnitDict = Map.fromIterable(lineUnits, key: (x) => x.lineUnit.id, value: (x) => x.lineUnit); 
+    }
+    return _lineUnitDict!;
+  }
+
   List<Product> get products {
     return lineUnits.firstWhere((element) => element.type == 'ProductionLine').lineUnit.products ?? new List.empty();
   }
@@ -46,7 +55,7 @@ class ProductionBasicData extends Equatable {
   });
 
 
-  factory ProductionBasicData.fromJson(Map<String, dynamic> json, String timezone) {
+  factory ProductionBasicData.fromJson(Map<String, dynamic> json, tz.Location location) {
 
     var stops = json['stops'].map((x) => ProductionStop.fromJson(x)).cast<ProductionStop>().toList() as List<ProductionStop>;
     stops.sort(((a, b) => a.codeName.toLowerCase().compareTo(b.codeName.toLowerCase())));
@@ -64,8 +73,8 @@ class ProductionBasicData extends Equatable {
     lineUnits.sort((a, b) => a.order - b.order);
 
     return ProductionBasicData(
-      begin: DateTime.parse(json['begin']).toLocal(),
-      end: DateTime.parse(json['end']).toLocal(),
+      begin: ProductionBasicData._formatDateTime(json['begin'] as String?, location),
+      end: ProductionBasicData._formatDateTime(json['end'] as String?, location),
       comments: json['comments'],
       productId: json['productId'],
       id: json['id'],
@@ -125,5 +134,16 @@ class ProductionBasicData extends Equatable {
       comments: comments ?? this.comments,
       status: status ?? this.status,
     );
+  }
+
+  static DateTime? _formatDateTime(String? input, tz.Location location) {
+    if (input == null || input.isEmpty) {
+      return null;
+    } else {
+      var utc = DateTime.parse(input);
+      var utcTz = tz.TZDateTime.utc(utc.year, utc.month, utc.day, utc.hour, utc.minute, utc.second);
+      var dateAtLocation = tz.TZDateTime.from(utcTz, location);
+      return DateTime(dateAtLocation.year, dateAtLocation.month, dateAtLocation.day, dateAtLocation.hour, dateAtLocation.minute, dateAtLocation.second);
+    }
   }
 }

@@ -8,6 +8,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.15.0"
+  date_format:
+    dependency: "direct main"
+    description:
+      name: date_format
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.5"
   equatable:
     dependency: "direct main"
     description:
@@ -22,5 +29,19 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.7.0"
+  path:
+    dependency: transitive
+    description:
+      name: path
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.8.1"
+  timezone:
+    dependency: "direct main"
+    description:
+      name: timezone
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.8.0"
 sdks:
   dart: ">=2.16.0 <3.0.0"
