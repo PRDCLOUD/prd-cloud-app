@@ -97,7 +97,7 @@ class StopClaim extends Equatable {
   factory StopClaim.fromJson(String claim, Map<String, dynamic> json) {
     return StopClaim(
       claim: claim,
-      claimValue: json['value'],
+      claimValue: json['value'] ?? json['defaultValue'],
       onTheFly: json['onTheFly'],
       valueList: json['valueList'],
       defaultValue: json['defaultValue'],
@@ -115,6 +115,15 @@ class StopClaim extends Equatable {
       onTheFly,
       required,
     ];
+  }
+
+  dynamic toJson() {
+    return {
+      'onTheFly': onTheFly,
+      'required': required,
+      'value': claimValue,
+      'valueList': valueList
+    };
   }
 }
 

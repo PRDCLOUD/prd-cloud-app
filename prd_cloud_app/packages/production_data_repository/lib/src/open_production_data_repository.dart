@@ -98,15 +98,6 @@ class OpenProductionDataRepository {
     }
   }
 
-  Future<List<ProductionLoss>> _addLossApi(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
-    var response = await _http.postProductionLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
-    return response.data.map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList();
-  }
-
-  Future _deleteLossApi(int productionLossId) async {
-    await _http.deleteProductionLoss(productionLossId);
-  }
-
   updateBegin(int id, DateTime? begin) {
     var prdData = _getProductionBasicData(id);
     if (prdData.begin != begin) {
@@ -223,7 +214,8 @@ class OpenProductionDataRepository {
 
   Future<bool> addLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
     try {
-      var newLosses = await _addLossApi(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
+      var response = await _http.postProductionLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
+      var newLosses = response.data.map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList();
       var prdData = _getProductionBasicData(productionBasicDataId);
       var oldLosses = prdData.losses; 
       var allLosses = List<ProductionLoss>.from(oldLosses)..addAll(newLosses);
@@ -237,7 +229,7 @@ class OpenProductionDataRepository {
 
   Future<void> deleteLoss(int productionBasicDataId, int productionLossId) async {
     try {
-      await _deleteLossApi(productionLossId);
+      await _http.deleteProductionLoss(productionLossId);
       var prdData = _getProductionBasicData(productionBasicDataId);
       var filteredLosses = prdData.losses.where((e) => e.id != productionLossId).toList(); 
       emitProductionChange(productionBasicDataId, prdData.copyWith(losses: filteredLosses));
@@ -245,6 +237,63 @@ class OpenProductionDataRepository {
       _errorsDataStreamController.add(e.toString());
     }
   }
+
+  Future<bool> addStop({
+    required int productionBasicDataId, 
+    required int lineUnitId, 
+    required int stopCurrentDefinitionId,
+    required String stopType,
+    required List<StopClaim> claims, 
+    double? averageTimeAtStopQtyAverageTime, 
+    int? qtyAtStopQtyAverageTime,
+    DateTime? beginAtStopBeginAndTimeSpan,
+    double? timeSpanAtStopBeginAndTimeSpan,
+    DateTime? beginAtStopBeginEnd,
+    DateTime? endAtStopBeginEnd,
+    int? qtyAtStopQtyTotalTime,
+    double? totalTimeAtStopQtyTotalTime,
+    double? stopTimeAtStopTimePerStop
+  }) async {
+    try {
+      var response = await _http.postProductionStop(
+        productionBasicDataId: productionBasicDataId,
+        lineUnitId: lineUnitId,
+        stopCurrentDefinitionId: stopCurrentDefinitionId,
+        stopType: stopType,
+        claims: claims,
+        averageTimeAtStopQtyAverageTime: averageTimeAtStopQtyAverageTime,
+        qtyAtStopQtyAverageTime: qtyAtStopQtyAverageTime,
+        beginAtStopBeginAndTimeSpan: beginAtStopBeginAndTimeSpan,
+        timeSpanAtStopBeginAndTimeSpan: timeSpanAtStopBeginAndTimeSpan,
+        beginAtStopBeginEnd: beginAtStopBeginEnd,
+        endAtStopBeginEnd: endAtStopBeginEnd,
+        qtyAtStopQtyTotalTime: qtyAtStopQtyTotalTime,
+        totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime,
+        stopTimeAtStopTimePerStop: stopTimeAtStopTimePerStop,
+      );
+      var newStops = response.data.map((x) => ProductionStop.fromJson(x)).cast<ProductionStop>().toList();
+      var prdData = _getProductionBasicData(productionBasicDataId);
+      var oldStops = prdData.stops; 
+      var allStops = List<ProductionStop>.from(oldStops)..addAll(newStops);
+      emitProductionChange(productionBasicDataId, prdData.copyWith(stops: allStops));
+      return true;
+    } catch (e) {
+      _errorsDataStreamController.add(e);
+      return false;
+    }
+  }
+
+  Future<void> deleteStop(int productionBasicDataId, int productionLossId) async {
+    try {
+      await _http.deleteProductionStop(productionLossId);
+      var prdData = _getProductionBasicData(productionBasicDataId);
+      var filteredLosses = prdData.losses.where((e) => e.id != productionLossId).toList(); 
+      emitProductionChange(productionBasicDataId, prdData.copyWith(losses: filteredLosses));
+    } catch (e) {
+      _errorsDataStreamController.add(e.toString());
+    }
+  }
+
 
   void emitProductionChange(int id, ProductionBasicData prdData) {
     _openDataList[id] = prdData;

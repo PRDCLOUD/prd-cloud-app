@@ -161,6 +161,52 @@ class AuthenticatedHttpClient {
     return await _deleteRequest('api/production/loss/' + productionLossId.toString());
   }
 
+  Future<Response<dynamic>> postProductionStop({
+    required int productionBasicDataId, 
+    required int lineUnitId, 
+    required int stopCurrentDefinitionId,
+    required String stopType,
+    required List<StopClaim> claims, 
+    double? averageTimeAtStopQtyAverageTime, 
+    int? qtyAtStopQtyAverageTime,
+    DateTime? beginAtStopBeginAndTimeSpan,
+    double? timeSpanAtStopBeginAndTimeSpan,
+    DateTime? beginAtStopBeginEnd,
+    DateTime? endAtStopBeginEnd,
+    int? qtyAtStopQtyTotalTime,
+    double? totalTimeAtStopQtyTotalTime,
+    double? stopTimeAtStopTimePerStop
+  }) async {
+      var data = { 
+      'lineUnitIds': [ lineUnitId ],
+      'productionBasicDataIds': [ productionBasicDataId ],
+      'productionStop': {
+        'stopCurrentDefinitionId': stopCurrentDefinitionId,
+
+        'averageTimeAtStopQtyAverageTime': averageTimeAtStopQtyAverageTime, // StopQtyAverageTime
+        'qtyAtStopQtyAverageTime': qtyAtStopQtyAverageTime, // StopQtyAverageTime
+
+        'beginAtStopBeginAndTimeSpan': beginAtStopBeginAndTimeSpan, // StopBeginAndTimeSpan
+        'timeSpanAtStopBeginAndTimeSpan': timeSpanAtStopBeginAndTimeSpan, // StopBeginAndTimeSpan
+        
+        'beginAtStopBeginEnd': beginAtStopBeginEnd, // StopBeginEnd
+        'endAtStopBeginEnd': endAtStopBeginEnd, // StopBeginEnd
+
+        'qtyAtStopQtyTotalTime': qtyAtStopQtyTotalTime, // StopQtyTotalTime
+        'totalTimeAtStopQtyTotalTime': totalTimeAtStopQtyTotalTime, // StopQtyTotalTie
+
+        'stopTimeAtStopTimePerStop': stopTimeAtStopTimePerStop, // StopTimePerStop
+
+        'claims': Map<String, dynamic>.fromIterable(claims, key: (x) => x.claim.toString(), value: (x) => x.toJson())
+      },
+    };
+    return await _postRequest('api/production/stop/' + stopType, data);
+  }
+
+  Future<Response<dynamic>> deleteProductionStop(int productionStopId) async {
+    return await _deleteRequest('api/production/stop/' + productionStopId.toString());
+  }
+
   String? dateToString(DateTime? date, String locationName) {
     if (date == null) {
       return null;

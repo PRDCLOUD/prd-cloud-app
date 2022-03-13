@@ -4,20 +4,20 @@ import 'package:flutter/cupertino.dart';
 import 'package:models/models.dart';
 import 'package:production_data_repository/production_data_repository.dart';
 
-part 'production_loss_state.dart';
+part 'production_stop_state.dart';
 
-class ProductionLossCubit extends Cubit<ProductionLossState> {
+class ProductionStopCubit extends Cubit<ProductionStopState> {
 
-  ProductionLossCubit({
+  ProductionStopCubit({
     required OpenProductionDataRepository openProductionDataRepository,
     required int productionBasicDataId,
-    required List<ProductionLoss> initialValue
+    required List<ProductionStop> initialValue
     }
   ) : 
-    super(ProductionLossState(
+    super(ProductionStopState(
       productionBasicDataId: productionBasicDataId, 
-      losses: initialValue, 
-      status: ProductionLossStatus.updated
+      stops: initialValue, 
+      status: ProductionStopStatus.updated
       )
     ) {
       _openProductionDataRepository = openProductionDataRepository;
@@ -26,25 +26,25 @@ class ProductionLossCubit extends Cubit<ProductionLossState> {
 
   void checkProductionDataAndUpdateLosses(items) {
     var prdData = items.firstWhere((element) => element.id == state.productionBasicDataId);
-    if (state.losses != prdData.stops) {
-      emit(state.copyWith(losses: prdData.stops));
+    if (state.stops != prdData.stops) {
+      emit(state.copyWith(stops: prdData.stops));
     }
   }
   
 
   late OpenProductionDataRepository _openProductionDataRepository;
 
-  Future<bool> addLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
-    emit(state.copyWith(status: ProductionLossStatus.adding));
+  Future<bool> addStop(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
+    emit(state.copyWith(status: ProductionStopStatus.adding));
     var result = await _openProductionDataRepository.addLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
-    emit(state.copyWith(status: ProductionLossStatus.updated));
+    emit(state.copyWith(status: ProductionStopStatus.updated));
     return result;
   }
 
-  Future<void> removeLoss(int productionBasicDataId, int productionLossId) async {
-    emit(state.copyWith(status: ProductionLossStatus.deleting));
-    await _openProductionDataRepository.deleteLoss(productionBasicDataId, productionLossId);
-    emit(state.copyWith(status: ProductionLossStatus.updated));
+  Future<void> removeStop(int productionBasicDataId, int productionStopId) async {
+    emit(state.copyWith(status: ProductionStopStatus.deleting));
+    await _openProductionDataRepository.deleteLoss(productionBasicDataId, productionStopId);
+    emit(state.copyWith(status: ProductionStopStatus.updated));
   }
 
 }
