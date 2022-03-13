@@ -1,8 +1,10 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/widgets/widgets.dart';
+import 'package:responsive_grid/responsive_grid.dart';
 
 class ProductionDataEdit extends StatelessWidget {
   const ProductionDataEdit({Key? key}) : super(key: key);
@@ -33,6 +35,44 @@ class ProductionDataEdit extends StatelessWidget {
       },
     );
   }
+
+  List<_VariableLineUnit> getVariables(ProductionBasicData productionBasicData) {
+    var variablesLineUnit = List<_VariableLineUnit>.empty(growable: true);
+    for (var productionLineUnit in productionBasicData.lineUnits) { 
+      if (productionLineUnit.lineUnit.productionVariables.isNotEmpty) {
+        var rows = groupBy(productionLineUnit.lineUnit.productionVariables, (ProductionVariable x) => x.rowOrder)
+                        .entries.map((rowItem) { 
+                          var columns = rowItem.value.map((e) => _ColumnVariableLineUnit(e.columnOrder, e.width, e)).toList();
+                          return _RowVariableLineUnit(rowItem.key, productionLineUnit, columns);
+                        }).toList();
+
+        variablesLineUnit.add(_VariableLineUnit(productionLineUnit, rows));
+      }
+    }
+    return variablesLineUnit;
+  }
+
+  List<Widget> getVariableWidgets(BuildContext context, List<_VariableLineUnit> variableLineUnit) {
+
+    var widgetRows = List<Widget>.empty(growable: true);
+
+    for(var lineUnits in variableLineUnit) {
+      for(var row in lineUnits.rows) {
+        List<ResponsiveGridCol> columnWidgets = List.empty(growable: true);
+        for(var column in row.columns) {
+          columnWidgets.add(
+            ResponsiveGridCol(
+              child: 
+            )
+          );
+        }
+        widgetRows.add(ResponsiveGridRow(children: columnWidgets));
+      }
+    }
+
+    return widgetRows;
+  }
+
 }
 
 class _Begin extends StatelessWidget {
@@ -141,4 +181,28 @@ class _Products extends StatelessWidget {
       ),
     );
   }
+}
+
+
+class _VariableLineUnit {
+  final ProductionLineUnit productionLineUnit;
+  final List<_RowVariableLineUnit> rows;
+
+  _VariableLineUnit(this.productionLineUnit, this.rows);
+}
+
+class _RowVariableLineUnit {
+  final int row;
+  final ProductionLineUnit productionLineUnit;
+  final List<_ColumnVariableLineUnit> columns;
+
+  _RowVariableLineUnit(this.row, this.productionLineUnit, this.columns);
+}
+
+class _ColumnVariableLineUnit {
+  final int column;
+  final int width;
+  final ProductionVariable productionVariable;
+
+  _ColumnVariableLineUnit(this.column, this.width, this.productionVariable);
 }

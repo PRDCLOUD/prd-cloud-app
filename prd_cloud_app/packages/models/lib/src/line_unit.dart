@@ -29,7 +29,8 @@ class LineUnit extends Equatable {
   factory LineUnit.fromJson(Map<String, dynamic> json) {
 
     var productionVariables = (json['productionVariables']?.map((x) => ProductionVariable.fromJson(x)).cast<ProductionVariable>().toList() ?? List.empty()) as List<ProductionVariable>;
-        
+    productionVariables.sort((a, b) => (a.rowOrder - b.rowOrder) != 0 ? (a.rowOrder - b.rowOrder) : (a.columnOrder - b.columnOrder));
+
     return LineUnit(
       code: json['code'],
       description: json['description'],
