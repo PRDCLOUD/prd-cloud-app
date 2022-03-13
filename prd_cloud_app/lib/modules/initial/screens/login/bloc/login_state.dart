@@ -1,15 +1,13 @@
 part of 'login_bloc.dart';
 
+enum SubmissionStatus { none, submissionInProgress, submissionSuccess, submissionFailure }
+
 class LoginState extends Equatable {
-  const LoginState({
-    this.status = FormzStatus.pure,
-  });
+  const LoginState({this.status = SubmissionStatus.none});
 
-  final FormzStatus status;
+  final SubmissionStatus status;
 
-  LoginState copyWith({
-    FormzStatus? status,
-  }) {
+  LoginState copyWith({SubmissionStatus? status}) {
     return LoginState(
       status: status ?? this.status,
     );
