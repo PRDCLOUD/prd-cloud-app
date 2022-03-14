@@ -1,4 +1,5 @@
 
+import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
@@ -16,6 +17,7 @@ class ProductionOpenedBlocProvider extends StatelessWidget {
 
     var productionData = context.read<OpenProductionDataCubit>().state.loadedItems.firstWhere((element) => element.id == _productionBasicDataId);
     var openProductionDataRepository = context.read<OpenProductionDataRepository>();
+    var errorRepository = context.read<ErrorRepository>();
 
     return MultiBlocProvider(
       providers: [
@@ -23,8 +25,8 @@ class ProductionOpenedBlocProvider extends StatelessWidget {
         BlocProvider(create: (context) => FieldEndCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.begin)),
         BlocProvider(create: (context) => FieldCommentsCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.comments)),
         BlocProvider(create: (context) => FieldProductCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.productId)),
-        BlocProvider(create: (context) => ProductionLossCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.losses)),
-        BlocProvider(create: (context) => ProductionStopCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.stops))
+        BlocProvider(create: (context) => ProductionLossCubit(errorRepository: errorRepository, openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.losses)),
+        BlocProvider(create: (context) => ProductionStopCubit(errorRepository: errorRepository, openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.stops))
       ], 
       child: const ProductionOpenedItemNavigation()
     );

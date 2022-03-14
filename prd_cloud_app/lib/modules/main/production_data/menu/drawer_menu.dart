@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
@@ -14,10 +15,10 @@ class DrawerMenuPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => MenuItemSelectedCubit(), lazy: false),
-        BlocProvider(create: (context) => ProductionDataBloc(apontamentosRepository: context.read<ProductionDataRepository>())..add(ApontamentosRefreshEvent(take: 100))),
-        BlocProvider(create: (context) => OpenProductionDataCubit(openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false),
+        BlocProvider(create: (context) => ProductionDataBloc(errorRepository: context.read<ErrorRepository>(), apontamentosRepository: context.read<ProductionDataRepository>())..add(ApontamentosRefreshEvent(take: 100))),
+        BlocProvider(create: (context) => OpenProductionDataCubit(errorRepository: context.read<ErrorRepository>(), openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false),
         BlocProvider(create: (context) => SelectedProductionDataCubit(), lazy: false),
-        BlocProvider(create: (context) => ErrorCubit(openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false)
+        BlocProvider(create: (context) => ErrorCubit(errorRepository: context.read<ErrorRepository>()), lazy: false)
       ], 
       child: Scaffold(
         appBar: AppBar(title: const Text('Apontamentos')),

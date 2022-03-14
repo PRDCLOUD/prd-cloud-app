@@ -1,19 +1,27 @@
 import 'dart:async';
 
 import 'package:easy_debounce/easy_debounce.dart';
+import 'package:error_repository/error_repository.dart';
 import 'package:http_connections/http_connections.dart';
 import 'package:models/models.dart';
 
 class OpenProductionDataRepository {
 
-  OpenProductionDataRepository(this._http, this._tenantInformation);
+  OpenProductionDataRepository({
+    required AuthenticatedHttpClient authenticatedHttpClient, 
+    required TenantInformation tenantInformation,
+    required ErrorRepository errorRepository
+  }) : 
+    _authHttpClient = authenticatedHttpClient,
+    _tenantInformation = tenantInformation,
+    _errorRepository = errorRepository;
 
-  final AuthenticatedHttpClient _http;
+  final ErrorRepository _errorRepository;
+  final AuthenticatedHttpClient _authHttpClient;
   final TenantInformation _tenantInformation;
 
   final Map<int, ProductionBasicData> _openDataList = new Map();
 
-  final _errorsDataStreamController = StreamController<dynamic>.broadcast();
   final _openDataStreamController = StreamController<List<ProductionBasicData>>.broadcast();
   final _productionDataStreamController = new Map<int, StreamController<ProductionBasicData>>();
 
@@ -24,11 +32,6 @@ class OpenProductionDataRepository {
     } else {
       return prdData;
     }
-  }
-
-  Stream<dynamic> errorStream() async* {
-    yield null;
-    yield* _errorsDataStreamController.stream;
   }
 
   Stream<List<ProductionBasicData>> openDataStream() async* {
@@ -47,7 +50,7 @@ class OpenProductionDataRepository {
   }
 
   Future<void> loadProductionData(int id) async {
-    var response = await _http.getProductionDataById(id);
+    var response = await _authHttpClient.getProductionDataById(id);
     var productionBasicData = ProductionBasicData.fromJson(response.data[0], _tenantInformation.location);
     _openDataList[productionBasicData.id] = productionBasicData;
 
@@ -60,41 +63,41 @@ class OpenProductionDataRepository {
   // TODO create FIFO queue
   Future _updateBeginApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataBegin(productionBasicData, _tenantInformation.location);
+      await _authHttpClient.patchProductionDataBegin(productionBasicData, _tenantInformation.location);
     } catch (e) {
-      _errorsDataStreamController.add(e);
+      _errorRepository.communicateError(e);
     }
   }
 
   Future _updateEndApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataEnd(productionBasicData, _tenantInformation.location);
+      await _authHttpClient.patchProductionDataEnd(productionBasicData, _tenantInformation.location);
     } catch (e) {
-      _errorsDataStreamController.add(e);
+      _errorRepository.communicateError(e);
     }
   }
 
   Future _updateCommentsApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataComments(productionBasicData, _tenantInformation.location);
+      await _authHttpClient.patchProductionDataComments(productionBasicData, _tenantInformation.location);
     } catch (e) {
-      _errorsDataStreamController.add(e);
+      _errorRepository.communicateError(e);
     }
   }
 
   Future _updateProductApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataProduct(productionBasicData, _tenantInformation.location);
+      await _authHttpClient.patchProductionDataProduct(productionBasicData, _tenantInformation.location);
     } catch (e) {
-      _errorsDataStreamController.add(e);
+      _errorRepository.communicateError(e);
     }
   }
 
   Future _updateVariableApi(ProductionVariable variable) async {
     try {
-      await _http.patchProductionVariable(variable);
+      await _authHttpClient.patchProductionVariable(variable);
     } catch (e) {
-      _errorsDataStreamController.add(e);
+      _errorRepository.communicateError(e);
     }
   }
 
@@ -103,7 +106,7 @@ class OpenProductionDataRepository {
     if (prdData.begin != begin) {
       prdData = prdData.copyWith(begin: begin);
       emitProductionChange(id, prdData);
-      _updateBeginApi(prdData);
+      unawaited(_updateBeginApi(prdData));
     }
   }
 
@@ -212,33 +215,24 @@ class OpenProductionDataRepository {
     }
   }
 
-  Future<bool> addLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
-    try {
-      var response = await _http.postProductionLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
-      var newLosses = response.data.map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList();
-      var prdData = _getProductionBasicData(productionBasicDataId);
-      var oldLosses = prdData.losses; 
-      var allLosses = List<ProductionLoss>.from(oldLosses)..addAll(newLosses);
-      emitProductionChange(productionBasicDataId, prdData.copyWith(losses: allLosses));
-      return true;
-    } catch (e) {
-      _errorsDataStreamController.add(e);
-      return false;
-    }
+  Future<void> addLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
+    var response = await _authHttpClient.postProductionLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
+    var newLosses = response.data.map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList();
+    var prdData = _getProductionBasicData(productionBasicDataId);
+    var oldLosses = prdData.losses; 
+    var allLosses = List<ProductionLoss>.from(oldLosses)..addAll(newLosses);
+    emitProductionChange(productionBasicDataId, prdData.copyWith(losses: allLosses));
+
   }
 
   Future<void> deleteLoss(int productionBasicDataId, int productionLossId) async {
-    try {
-      await _http.deleteProductionLoss(productionLossId);
-      var prdData = _getProductionBasicData(productionBasicDataId);
-      var filteredLosses = prdData.losses.where((e) => e.id != productionLossId).toList(); 
-      emitProductionChange(productionBasicDataId, prdData.copyWith(losses: filteredLosses));
-    } catch (e) {
-      _errorsDataStreamController.add(e.toString());
-    }
+    await _authHttpClient.deleteProductionLoss(productionLossId);
+    var prdData = _getProductionBasicData(productionBasicDataId);
+    var filteredLosses = prdData.losses.where((e) => e.id != productionLossId).toList(); 
+    emitProductionChange(productionBasicDataId, prdData.copyWith(losses: filteredLosses));
   }
 
-  Future<bool> addStop({
+  Future<void> addStop({
     required int productionBasicDataId, 
     required int lineUnitId, 
     required int stopCurrentDefinitionId,
@@ -254,45 +248,36 @@ class OpenProductionDataRepository {
     double? totalTimeAtStopQtyTotalTime,
     double? stopTimeAtStopTimePerStop
   }) async {
-    try {
-      var response = await _http.postProductionStop(
-        location: _tenantInformation.location,
-        productionBasicDataId: productionBasicDataId,
-        lineUnitId: lineUnitId,
-        stopCurrentDefinitionId: stopCurrentDefinitionId,
-        stopType: stopType,
-        claims: claims,
-        averageTimeAtStopQtyAverageTime: averageTimeAtStopQtyAverageTime,
-        qtyAtStopQtyAverageTime: qtyAtStopQtyAverageTime,
-        beginAtStopBeginAndTimeSpan: beginAtStopBeginAndTimeSpan,
-        timeSpanAtStopBeginAndTimeSpan: timeSpanAtStopBeginAndTimeSpan,
-        beginAtStopBeginEnd: beginAtStopBeginEnd,
-        endAtStopBeginEnd: endAtStopBeginEnd,
-        qtyAtStopQtyTotalTime: qtyAtStopQtyTotalTime,
-        totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime,
-        stopTimeAtStopTimePerStop: stopTimeAtStopTimePerStop,
-      );
-      var newStops = response.data.map((x) => ProductionStop.fromJson(x)).cast<ProductionStop>().toList();
-      var prdData = _getProductionBasicData(productionBasicDataId);
-      var oldStops = prdData.stops; 
-      var allStops = List<ProductionStop>.from(oldStops)..addAll(newStops);
-      emitProductionChange(productionBasicDataId, prdData.copyWith(stops: allStops));
-      return true;
-    } catch (e) {
-      _errorsDataStreamController.add(e);
-      return false;
-    }
+
+    var response = await _authHttpClient.postProductionStop(
+      location: _tenantInformation.location,
+      productionBasicDataId: productionBasicDataId,
+      lineUnitId: lineUnitId,
+      stopCurrentDefinitionId: stopCurrentDefinitionId,
+      stopType: stopType,
+      claims: claims,
+      averageTimeAtStopQtyAverageTime: averageTimeAtStopQtyAverageTime,
+      qtyAtStopQtyAverageTime: qtyAtStopQtyAverageTime,
+      beginAtStopBeginAndTimeSpan: beginAtStopBeginAndTimeSpan,
+      timeSpanAtStopBeginAndTimeSpan: timeSpanAtStopBeginAndTimeSpan,
+      beginAtStopBeginEnd: beginAtStopBeginEnd,
+      endAtStopBeginEnd: endAtStopBeginEnd,
+      qtyAtStopQtyTotalTime: qtyAtStopQtyTotalTime,
+      totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime,
+      stopTimeAtStopTimePerStop: stopTimeAtStopTimePerStop,
+    );
+    var newStops = response.data.map((x) => ProductionStop.fromJson(x)).cast<ProductionStop>().toList();
+    var prdData = _getProductionBasicData(productionBasicDataId);
+    var oldStops = prdData.stops; 
+    var allStops = List<ProductionStop>.from(oldStops)..addAll(newStops);
+    emitProductionChange(productionBasicDataId, prdData.copyWith(stops: allStops));
   }
 
   Future<void> deleteStop(int productionBasicDataId, int productionStopId) async {
-    try {
-      await _http.deleteProductionStop(productionStopId);
-      var prdData = _getProductionBasicData(productionBasicDataId);
-      var filteredStops = prdData.stops.where((e) => e.id != productionStopId).toList(); 
-      emitProductionChange(productionBasicDataId, prdData.copyWith(stops: filteredStops));
-    } catch (e) {
-      _errorsDataStreamController.add(e.toString());
-    }
+    await _authHttpClient.deleteProductionStop(productionStopId);
+    var prdData = _getProductionBasicData(productionBasicDataId);
+    var filteredStops = prdData.stops.where((e) => e.id != productionStopId).toList(); 
+    emitProductionChange(productionBasicDataId, prdData.copyWith(stops: filteredStops));
   }
 
 

@@ -15,3 +15,5 @@ dependencies:
     path: ../models
   http_connections:
     path: ../http_connections
+  error_repository:
+    path: ../error_repository

@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http_connections/http_connections.dart';
@@ -81,9 +82,10 @@ class MainRepositoryProviderPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var authenticatedHttpClient = context.read<AuthenticatedHttpClient>();
     var tenantInformation = (context.read<TenantInformationCubit>().state as TenantInformationLoaded).tenantInformation;
+    var errorRepository = context.read<ErrorRepository>();
     return MultiRepositoryProvider(providers: [
             RepositoryProvider(create: (context) => ProductionDataRepository(authenticatedHttpClient, tenantInformation), lazy: false),
-            RepositoryProvider(create: (context) => OpenProductionDataRepository(authenticatedHttpClient, tenantInformation), lazy: false)
+            RepositoryProvider(create: (context) => OpenProductionDataRepository(authenticatedHttpClient: authenticatedHttpClient, tenantInformation: tenantInformation, errorRepository: errorRepository), lazy: false)
           ], 
           child: Builder(
             builder: (context) {

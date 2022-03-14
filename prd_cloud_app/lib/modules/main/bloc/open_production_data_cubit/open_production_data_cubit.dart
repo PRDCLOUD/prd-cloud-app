@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:error_repository/error_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:models/models.dart';
 import 'package:production_data_repository/production_data_repository.dart';
@@ -7,12 +8,20 @@ import 'package:production_data_repository/production_data_repository.dart';
 part 'open_production_data_state.dart';
 
 class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
-  OpenProductionDataCubit({required OpenProductionDataRepository openProductionDataRepository}) : _openProductionDataRepository = openProductionDataRepository, super(OpenProductionDataState.empty()) {
+  OpenProductionDataCubit({
+    required OpenProductionDataRepository openProductionDataRepository,
+    required ErrorRepository errorRepository
+  }) : 
+    
+    _openProductionDataRepository = openProductionDataRepository, 
+    _errorRespository = errorRepository,
+    super(OpenProductionDataState.empty()) {
     _openProductionDataRepository.openDataStream().listen((items) {
       emit(state.copyWith(loadedItems: items));
     });
   }
 
+  final ErrorRepository _errorRespository;
   final OpenProductionDataRepository _openProductionDataRepository;
 
   
@@ -24,11 +33,17 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
 
     try {
       emit(state.copyWith(loadingItem: true));
-      await _openProductionDataRepository.loadProductionData(id);
-      emit(state.copyWith(loadingItem: false));
+      
+      try {
+        await _openProductionDataRepository.loadProductionData(id); 
+      } catch (e) {
+        _errorRespository.communicateError(e);
+      }
+
     } catch (e) {
-      emit(state.copyWith(loadingItem: false));
       return null;
+    } finally {
+      emit(state.copyWith(loadingItem: false));
     }
   }
 

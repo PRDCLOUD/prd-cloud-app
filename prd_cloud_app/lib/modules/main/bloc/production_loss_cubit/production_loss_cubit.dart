@@ -1,5 +1,6 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:error_repository/error_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:models/models.dart';
 import 'package:production_data_repository/production_data_repository.dart';
@@ -9,11 +10,13 @@ part 'production_loss_state.dart';
 class ProductionLossCubit extends Cubit<ProductionLossState> {
 
   ProductionLossCubit({
+    required ErrorRepository errorRepository,
     required OpenProductionDataRepository openProductionDataRepository,
     required int productionBasicDataId,
     required List<ProductionLoss> initialValue
     }
   ) : 
+    _errorRepository = errorRepository,
     super(ProductionLossState(
       productionBasicDataId: productionBasicDataId, 
       losses: initialValue, 
@@ -31,20 +34,31 @@ class ProductionLossCubit extends Cubit<ProductionLossState> {
     }
   }
   
-
+  final ErrorRepository _errorRepository;
   late OpenProductionDataRepository _openProductionDataRepository;
 
   Future<bool> addLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
     emit(state.copyWith(status: ProductionLossStatus.adding));
-    var result = await _openProductionDataRepository.addLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
-    emit(state.copyWith(status: ProductionLossStatus.updated));
-    return result;
+    try {
+      await _openProductionDataRepository.addLoss(productionBasicDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
+      return true;
+    } catch (e) {
+      _errorRepository.communicateError(e);
+      return false;
+    } finally {
+      emit(state.copyWith(status: ProductionLossStatus.updated));
+    }
   }
 
   Future<void> removeLoss(int productionBasicDataId, int productionLossId) async {
     emit(state.copyWith(status: ProductionLossStatus.deleting));
-    await _openProductionDataRepository.deleteLoss(productionBasicDataId, productionLossId);
-    emit(state.copyWith(status: ProductionLossStatus.updated));
+    try {
+      await _openProductionDataRepository.deleteLoss(productionBasicDataId, productionLossId);
+    } catch (e) {
+      _errorRepository.communicateError(e);
+    } finally {
+      emit(state.copyWith(status: ProductionLossStatus.updated));
+    }
   }
 
 }
