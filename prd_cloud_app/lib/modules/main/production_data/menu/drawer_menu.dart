@@ -19,13 +19,8 @@ class DrawerMenuPage extends StatelessWidget {
         BlocProvider(create: (context) => MenuItemSelectedCubit(), lazy: false),
         BlocProvider(create: (context) => ProductionDataBloc(
           errorRepository: context.read<ErrorRepository>(), 
-          apontamentosRepository: context.read<ProductionDataRepository>())..add(
-            ApontamentosRefreshEvent(
-              status: ProductionDataStatus.opened, 
-              take: 100, 
-              prdLines: const ['24']
-            )
-          )
+          apontamentosRepository: context.read<ProductionDataRepository>()
+        )
         ),
         BlocProvider(create: (context) => OpenProductionDataCubit(errorRepository: context.read<ErrorRepository>(), openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false),
         BlocProvider(create: (context) => SelectedProductionDataCubit(), lazy: false),

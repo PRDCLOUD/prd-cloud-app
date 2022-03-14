@@ -23,10 +23,10 @@ class ProductionDataBloc extends Bloc<ProductionDataEvent, ProductionDataState> 
   final ProductionDataRepository _apontamentosRepository;
 
   void _onAuthenticationStatusChanged(ApontamentosRefreshEvent event, Emitter<ProductionDataState> emit) async {
-    emit(ProductionDataState.loading());
+    emit(ProductionDataState.loading(event.filter));
     try {
-      var result = await _apontamentosRepository.getApontamentos(event.status, event.take, event.prdLines);
-      emit(ProductionDataState.loaded(result));
+      var result = await _apontamentosRepository.getApontamentos(event.filter);
+      emit(ProductionDataState.loaded(result, event.filter));
     } catch(e) {
       _errorRepository.communicateError(e);
       emit(ProductionDataState.notLoaded());

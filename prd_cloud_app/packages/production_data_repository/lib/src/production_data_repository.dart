@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:dio/dio.dart';
 import 'package:http_connections/http_connections.dart';
 import 'package:models/models.dart';
 
@@ -12,8 +11,8 @@ class ProductionDataRepository {
 
   ProductionDataRepository(this._http, this._tenantInformation);
 
-  Future<List<dynamic>> getApontamentos(ProductionDataStatus status, int take, List<String> prdLines) async {
-    return await _http.getProductionDataList(status, take, prdLines);
+  Future<List<dynamic>> getApontamentos(ProductionDataFilter filter) async {
+    return await _http.getProductionDataList(filter.status, filter.take, filter.prdLines);
   }
 
   Future<ProductionBasicData> getApontamento(int id) async {

@@ -4,9 +4,7 @@ part of 'production_data_bloc.dart';
 abstract class ProductionDataEvent {}
 
 class ApontamentosRefreshEvent extends ProductionDataEvent {
-  final int take;
-  final List<String> prdLines;
-  final ProductionDataStatus status;
+  final ProductionDataFilter filter;
 
-  ApontamentosRefreshEvent({required this.prdLines, required this.status, required this.take});
+  ApontamentosRefreshEvent({required this.filter});
 }
