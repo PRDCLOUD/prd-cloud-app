@@ -54,7 +54,7 @@ class _StopBeginTimeState extends State<StopBeginTime> {
         ElevatedButton(
           child: const Text("Adicionar"),
           style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
-          onPressed: beginAtStopBeginAndTimeSpan == null && timeSpanAtStopBeginAndTimeSpan != null && timeSpanAtStopBeginAndTimeSpan! > 0 ? 
+          onPressed: (beginAtStopBeginAndTimeSpan == null || timeSpanAtStopBeginAndTimeSpan == null || timeSpanAtStopBeginAndTimeSpan! == 0) ? 
             null : 
             () async {
               var result = await widget.stopAddCallback(

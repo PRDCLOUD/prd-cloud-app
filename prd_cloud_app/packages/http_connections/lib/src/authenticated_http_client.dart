@@ -193,11 +193,11 @@ class AuthenticatedHttpClient {
         'averageTimeAtStopQtyAverageTime': averageTimeAtStopQtyAverageTime, // StopQtyAverageTime
         'qtyAtStopQtyAverageTime': qtyAtStopQtyAverageTime, // StopQtyAverageTime
 
-        'beginAtStopBeginAndTimeSpan': beginAtStopBeginAndTimeSpan, // StopBeginAndTimeSpan
+        'beginAtStopBeginAndTimeSpan': dateToString(beginAtStopBeginAndTimeSpan, location), // StopBeginAndTimeSpan
         'timeSpanAtStopBeginAndTimeSpan': timeSpanAtStopBeginAndTimeSpan, // StopBeginAndTimeSpan
         
         'beginAtStopBeginEnd': dateToString(beginAtStopBeginEnd, location), // StopBeginEnd
-        'endAtStopBeginEnd': endAtStopBeginEnd, // StopBeginEnd
+        'endAtStopBeginEnd': dateToString(endAtStopBeginEnd, location), // StopBeginEnd
 
         'qtyAtStopQtyTotalTime': qtyAtStopQtyTotalTime, // StopQtyTotalTime
         'totalTimeAtStopQtyTotalTime': totalTimeAtStopQtyTotalTime, // StopQtyTotalTie

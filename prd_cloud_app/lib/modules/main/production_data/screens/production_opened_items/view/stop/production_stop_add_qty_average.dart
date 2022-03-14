@@ -17,7 +17,7 @@ class StopQtyAverageTime extends StatefulWidget {
   final Stop selectedStop;
   final LineUnit selectedLineUnit;
   final StopAddCallback stopAddCallback;
-
+  
   @override
   State<StopQtyAverageTime> createState() => _StopQtyAverageTimeState();
 }

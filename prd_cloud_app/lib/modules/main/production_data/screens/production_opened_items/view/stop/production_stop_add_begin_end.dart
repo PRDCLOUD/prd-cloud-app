@@ -3,20 +3,25 @@ import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/widgets/widgets.dart';
 
 import 'production_stop_add.dart';
+import 'production_stop_claim.dart';
 
 class StopBeginEnd extends StatefulWidget {
-  const StopBeginEnd({ 
+  StopBeginEnd({ 
     Key? key, 
     required this.productionBasicId,
     required this.selectedStop,
     required this.selectedLineUnit,
     required this.stopAddCallback
-  }) : super(key: key);
+  }) : super(key: key) {
+    editableStopClaim = selectedStop.stopClaims.map((e) => EditableStopClaim(e)).toList();
+  }
 
   final int productionBasicId;
   final Stop selectedStop;
   final LineUnit selectedLineUnit;
   final StopAddCallback stopAddCallback;
+
+  late List<EditableStopClaim> editableStopClaim;
 
   @override
   State<StopBeginEnd> createState() => _StopBeginEndState();
@@ -52,7 +57,7 @@ class _StopBeginEndState extends State<StopBeginEnd> {
         ElevatedButton(
           child: const Text("Adicionar"),
           style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
-          onPressed: beginAtStopBeginEnd == null && endAtStopBeginEnd != null && beginAtStopBeginEnd!.isBefore(endAtStopBeginEnd!) ? 
+          onPressed: (beginAtStopBeginEnd == null || endAtStopBeginEnd == null || endAtStopBeginEnd!.isAtSameMomentAs(beginAtStopBeginEnd!) || endAtStopBeginEnd!.isBefore(beginAtStopBeginEnd!)) ? 
             null : 
             () async {
               var result = await widget.stopAddCallback(
@@ -73,4 +78,5 @@ class _StopBeginEndState extends State<StopBeginEnd> {
       ],
     );
   }
+
 }

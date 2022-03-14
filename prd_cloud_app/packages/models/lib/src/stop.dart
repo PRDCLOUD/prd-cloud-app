@@ -117,7 +117,7 @@ class StopClaim extends Equatable {
       claim: claim,
       claimValue: json['value'] ?? json['defaultValue'],
       onTheFly: json['onTheFly'],
-      valueList: json['valueList']?.map((x) => x.toString()).toList(),
+      valueList: json['valueList']?.map((x) => x.toString()).cast<String>().toList(),
       defaultValue: json['defaultValue'],
       required: json['required'],
     );
@@ -142,6 +142,24 @@ class StopClaim extends Equatable {
       'value': claimValue,
       'valueList': valueList
     };
+  }
+
+  StopClaim copyWith({
+    String? claim,
+    String? claimValue,
+    String? defaultValue,
+    List<String>? valueList,
+    bool? onTheFly,
+    bool? required,
+  }) {
+    return StopClaim(
+      claim: claim ?? this.claim,
+      claimValue: claimValue ?? this.claimValue,
+      defaultValue: defaultValue ?? this.defaultValue,
+      valueList: valueList ?? this.valueList,
+      onTheFly: onTheFly ?? this.onTheFly,
+      required: required ?? this.required,
+    );
   }
 }
 
