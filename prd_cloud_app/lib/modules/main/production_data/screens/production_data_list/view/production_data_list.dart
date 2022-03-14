@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
 class ProductionDataListPage extends StatelessWidget {
@@ -9,11 +10,19 @@ class ProductionDataListPage extends StatelessWidget {
   Future<void> loadProductionData(BuildContext context, int productionDataId) async {
     context.loaderOverlay.show();
     try {
-      await context.read<OpenProductionDataCubit>().loadProductionData(productionDataId);
+      await context
+          .read<OpenProductionDataCubit>()
+          .loadProductionData(productionDataId);
       // This delay is required in order for the cubit update its state
       await Future.delayed(const Duration(milliseconds: 15));
-      var prdData = context.read<OpenProductionDataCubit>().state.loadedItems.firstWhere((element) => element.id == productionDataId);
-      context.read<SelectedProductionDataCubit>().selectProductionData(prdData.id);
+      var prdData = context
+          .read<OpenProductionDataCubit>()
+          .state
+          .loadedItems
+          .firstWhere((element) => element.id == productionDataId);
+      context
+          .read<SelectedProductionDataCubit>()
+          .selectProductionData(prdData.id);
     } finally {
       context.loaderOverlay.hide();
     }
@@ -22,29 +31,38 @@ class ProductionDataListPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocBuilder<ProductionDataBloc, ProductionDataState>(
+      body: BlocListener<ProductionListFilterCubit, ProductionDataFilter>(
+        listener: (context, state) {
+          if (state != context.read<ProductionDataBloc>().state.filter) {
+            context.read<ProductionDataBloc>().
+          }
+        },
+        child: BlocBuilder<ProductionDataBloc, ProductionDataState>(
           builder: (BuildContext context, state) {
             switch (state.status) {
               case ProductionDataLoadState.loading:
                 return const Text("loading");
               case ProductionDataLoadState.loaded:
                 return ListView.builder(
-                  itemCount: state.loadedResult.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return GestureDetector(
-                      child: SizedBox(
-                        height: 50,
-                        child: Center(child: Text(state.loadedResult[index]['ProductionLine'])),
-                      ),
-                      onTap: () => { loadProductionData(context, state.loadedResult[index]['ID']) }
-                    );
-                  }
-                );
+                    itemCount: state.loadedResult.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                          child: SizedBox(
+                            height: 50,
+                            child: Center(
+                                child: Text(state.loadedResult[index]
+                                    ['ProductionLine'])),
+                          ),
+                          onTap: () => {
+                                loadProductionData(context, state.loadedResult[index]['ID'])
+                              });
+                    });
               case ProductionDataLoadState.notLoaded:
                 return const Text("Not Loaded");
             }
           },
         ),
-      );
+      ),
+    );
   }
 }
