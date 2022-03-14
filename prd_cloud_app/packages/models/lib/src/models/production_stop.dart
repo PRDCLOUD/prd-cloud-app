@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:models/src/utils/date_time_functions.dart';
 import 'package:timezone/timezone.dart' as tz;
 
 abstract class ProductionStop extends Equatable {
@@ -42,8 +43,8 @@ abstract class ProductionStop extends Equatable {
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
           totalTime: json['totalTime'],
-          begin: DateTime.parse(json['beginAtStopBeginEnd']).toLocal(),
-          end: DateTime.parse(json['endAtStopBeginEnd']).toLocal()
+          begin: DateTimeFunctions.parseDateTime(json['beginAtStopBeginEnd'], location),
+          end: DateTimeFunctions.parseDateTime(json['endAtStopBeginEnd'], location)
         );
       case 'StopBeginTimeSpan': 
         return ProductionStopBeginAndTimeSpan(
@@ -55,7 +56,7 @@ abstract class ProductionStop extends Equatable {
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
           totalTime: json['totalTime'],
-          begin: DateTime.parse(json['beginAtStopBeginAndTimeSpan']).toLocal(),
+          begin: DateTimeFunctions.parseDateTime(json['beginAtStopBeginAndTimeSpan'], location),
           timeSpan: json['timeSpanAtStopBeginAndTimeSpan']
         );
       case 'StopQtyAverageTime':
