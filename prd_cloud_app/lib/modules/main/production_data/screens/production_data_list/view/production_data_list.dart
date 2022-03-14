@@ -4,9 +4,14 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
-class ProductionDataListPage extends StatelessWidget {
+class ProductionDataListPage extends StatefulWidget {
   const ProductionDataListPage({Key? key}) : super(key: key);
 
+  @override
+  State<ProductionDataListPage> createState() => _ProductionDataListPageState();
+}
+
+class _ProductionDataListPageState extends State<ProductionDataListPage> {
   Future<void> loadProductionData(BuildContext context, int productionDataId) async {
     context.loaderOverlay.show();
     try {
@@ -29,15 +34,29 @@ class ProductionDataListPage extends StatelessWidget {
   }
 
   @override
+  void initState() {
+    var currentFilteredDataState = context.read<ProductionDataCubit>().state;
+    if (currentFilteredDataState.status == ProductionDataLoadState.notLoaded) {
+      context.read<ProductionDataCubit>().filter(context.read<ProductionListFilterCubit>().state);
+    } else if (currentFilteredDataState.status == ProductionDataLoadState.loaded) {
+      var filter = context.read<ProductionListFilterCubit>().state;
+      if (currentFilteredDataState.filter != filter) {
+        context.read<ProductionDataCubit>().filter(context.read<ProductionListFilterCubit>().state);
+      }
+    }
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocListener<ProductionListFilterCubit, ProductionDataFilter>(
         listener: (context, state) {
-          if (state != context.read<ProductionDataBloc>().state.filter) {
-            context.read<ProductionDataBloc>().
+          if (state != context.read<ProductionDataCubit>().state.filter) {
+            context.read<ProductionDataCubit>().filter(state);
           }
         },
-        child: BlocBuilder<ProductionDataBloc, ProductionDataState>(
+        child: BlocBuilder<ProductionDataCubit, ProductionDataState>(
           builder: (BuildContext context, state) {
             switch (state.status) {
               case ProductionDataLoadState.loading:
