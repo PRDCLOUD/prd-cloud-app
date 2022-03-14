@@ -24,10 +24,10 @@ class ProductionLossCubit extends Cubit<ProductionLossState> {
       _openProductionDataRepository.openDataStream().listen(checkProductionDataAndUpdateLosses);
     }
 
-  void checkProductionDataAndUpdateLosses(items) {
+  void checkProductionDataAndUpdateLosses(List<ProductionBasicData> items) {
     var prdData = items.firstWhere((element) => element.id == state.productionBasicDataId);
     if (state.losses != prdData.stops) {
-      emit(state.copyWith(losses: prdData.stops));
+      emit(state.copyWith(losses: prdData.losses));
     }
   }
   

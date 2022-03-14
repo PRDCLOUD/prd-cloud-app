@@ -24,7 +24,7 @@ class ProductionStopCubit extends Cubit<ProductionStopState> {
       _openProductionDataRepository.openDataStream().listen(checkProductionDataAndUpdateLosses);
     }
 
-  void checkProductionDataAndUpdateLosses(items) {
+  void checkProductionDataAndUpdateLosses(List<ProductionBasicData> items) {
     var prdData = items.firstWhere((element) => element.id == state.productionBasicDataId);
     if (state.stops != prdData.stops) {
       emit(state.copyWith(stops: prdData.stops));

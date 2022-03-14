@@ -284,12 +284,12 @@ class OpenProductionDataRepository {
     }
   }
 
-  Future<void> deleteStop(int productionBasicDataId, int productionLossId) async {
+  Future<void> deleteStop(int productionBasicDataId, int productionStopId) async {
     try {
-      await _http.deleteProductionStop(productionLossId);
+      await _http.deleteProductionStop(productionStopId);
       var prdData = _getProductionBasicData(productionBasicDataId);
-      var filteredLosses = prdData.losses.where((e) => e.id != productionLossId).toList(); 
-      emitProductionChange(productionBasicDataId, prdData.copyWith(losses: filteredLosses));
+      var filteredStops = prdData.stops.where((e) => e.id != productionStopId).toList(); 
+      emitProductionChange(productionBasicDataId, prdData.copyWith(stops: filteredStops));
     } catch (e) {
       _errorsDataStreamController.add(e.toString());
     }

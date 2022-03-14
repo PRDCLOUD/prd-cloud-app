@@ -63,6 +63,7 @@ class ProductionStopMain extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
                 title: Text(state.stops[index].name),
+                onLongPress: () async => await context.read<ProductionStopCubit>().removeStop(context.read<SelectedProductionDataCubit>().state!, state.stops[index].id),
               );
             },
           ),

@@ -63,6 +63,7 @@ class ProductionLossMain extends StatelessWidget {
             itemBuilder: (BuildContext context, int index) {
               return ListTile(
                 title: Text(state.losses[index].name),
+                onLongPress: () async => await context.read<ProductionLossCubit>().removeLoss(context.read<SelectedProductionDataCubit>().state!, state.losses[index].id),
               );
             },
           ),
