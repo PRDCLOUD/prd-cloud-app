@@ -1,4 +1,5 @@
 import 'package:authentication_repository/authentication_repository.dart';
+import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -10,6 +11,7 @@ import 'package:prd_cloud_app/modules/initial/screens/login/view/login_page.dart
 import 'package:prd_cloud_app/modules/initial/screens/splash/view/splash_page.dart';
 import 'package:prd_cloud_app/modules/initial/screens/tenant_selection/view/tenant_selection_page.dart';
 
+
 class App extends StatelessWidget {
   const App({
     Key? key,
@@ -20,8 +22,10 @@ class App extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider.value(
-      value: authenticationRepository,
+    return MultiRepositoryProvider(providers:[
+        RepositoryProvider.value(value: authenticationRepository),
+        RepositoryProvider(create: (context) => ErrorRepository())
+      ],
       child: MultiBlocProvider(
         providers: [
           BlocProvider<AuthenticationBloc>(

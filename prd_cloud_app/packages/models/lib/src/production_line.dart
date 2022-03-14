@@ -1,19 +1,19 @@
 import 'package:equatable/equatable.dart';
 
-class ProductionLine extends Equatable {
+class ProductionLineAndGroups extends Equatable {
 
-  final int id;
+  final String id;
   final String name;
   final String type;
 
-  ProductionLine({ required this.id, 
+  ProductionLineAndGroups({ required this.id, 
          required this.name, 
          required this.type});
 
 
-  factory ProductionLine.fromJson(Map<String, dynamic> json) {
+  factory ProductionLineAndGroups.fromJson(Map<String, dynamic> json) {
     
-    return ProductionLine(
+    return ProductionLineAndGroups(
       id: json['id'],
       name: json['name'],
       type: json['type']
@@ -24,12 +24,12 @@ class ProductionLine extends Equatable {
   @override
   List<Object> get props => [id, name, type];
 
-  ProductionLine copyWith({
-    int? id,
+  ProductionLineAndGroups copyWith({
+    String? id,
     String? name,
     String? type,
   }) {
-    return ProductionLine(
+    return ProductionLineAndGroups(
       id: id ?? this.id,
       name: name ?? this.name,
       type: type ?? this.type,

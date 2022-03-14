@@ -1,0 +1,8 @@
+name: error_repository
+description: Dart package which manages the authentication domain.
+publish_to: none
+
+environment:
+  sdk: ">=2.16.0 <3.0.0"
+
+dependencies:

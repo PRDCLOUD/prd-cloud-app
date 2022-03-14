@@ -41,6 +41,8 @@ dependencies:
   loader_overlay: 2.0.5+1
   easy_debounce: 2.0.2+1
   responsive_grid: 2.0.0
+  error_repository:
+    path: packages/error_repository
   authentication_repository:
     path: packages/authentication_repository
   tenant_data_repository:

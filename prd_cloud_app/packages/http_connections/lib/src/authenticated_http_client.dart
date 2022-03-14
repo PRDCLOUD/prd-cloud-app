@@ -76,9 +76,9 @@ class AuthenticatedHttpClient {
     return await _getRequest('api/tenant/claims');
   }  
 
-  Future<List<ProductionLine>> getProductionLineList(int take) async {
+  Future<List<ProductionLineAndGroups>> getProductionLineAndGroupsList() async {
     var response = await _getRequest('api/lineunit/prdlineandgroups');
-    var productionLines = response.data?.map((x) => ProductionLine.fromJson(x)).cast<ProductionLine>().toList();
+    var productionLines = response.data?.map((x) => ProductionLineAndGroups.fromJson(x)).cast<ProductionLineAndGroups>().toList();
     return productionLines; 
   }
 
@@ -223,6 +223,35 @@ class AuthenticatedHttpClient {
 
   Future<Response<dynamic>> deleteProductionStop(int productionStopId) async {
     return await _deleteRequest('api/production/stop/' + productionStopId.toString());
+  }
+
+  Future<void> concludeProduction({
+    required int? id,
+    required DateTime? begin,
+    required DateTime? end,
+    required String? comments,
+    required int? productId,
+    required List<ProductionVariable> variables,
+    required tz.Location location
+  }) async {
+    var data = [ 
+      {
+        'id': id,
+        'begin': dateToString(begin, location),
+        'end': dateToString(end, location),
+        'comments': comments,
+        'productId': productId,
+        'variables': variables.map((e) => {
+          'id': e.id,
+          'productionBasicDataId': e.productionBasicDataId,
+          'text': e.text,
+          'type': e.typeVariableDefinition,
+          'value': e.value,
+          'definitionName': e.definitionName
+        })
+      }
+    ];
+    await _postRequest('api/production/conclude', data);
   }
 
   String? dateToString(DateTime? date, tz.Location location) {
