@@ -73,7 +73,7 @@ class _StopAddState extends State<StopAdd> {
           itemCount: widget.stopOptions.length,
           itemBuilder: (BuildContext context, int index) {
             return ListTile(
-                title: Text(widget.stopOptions[index].name),
+                title: Text(widget.stopOptions[index].codeName),
                 onTap: () => selectStop(widget.stopOptions[index]));
           },
         );
