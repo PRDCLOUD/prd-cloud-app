@@ -12,9 +12,8 @@ class ProductionDataRepository {
 
   ProductionDataRepository(this._http, this._tenantInformation);
 
-  Future<Response> getApontamentos(int take) async {
-    var response = await _http.getProductionDataList(take);
-    return response;
+  Future<List<dynamic>> getApontamentos(ProductionDataStatus status, int take, List<String> prdLines) async {
+    return await _http.getProductionDataList(status, take, prdLines);
   }
 
   Future<ProductionBasicData> getApontamento(int id) async {

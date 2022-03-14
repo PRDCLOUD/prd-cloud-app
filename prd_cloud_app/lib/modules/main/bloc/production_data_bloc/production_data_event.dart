@@ -5,6 +5,8 @@ abstract class ProductionDataEvent {}
 
 class ApontamentosRefreshEvent extends ProductionDataEvent {
   final int take;
+  final List<String> prdLines;
+  final ProductionDataStatus status;
 
-  ApontamentosRefreshEvent({required this.take});
+  ApontamentosRefreshEvent({required this.prdLines, required this.status, required this.take});
 }

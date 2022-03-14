@@ -4,12 +4,12 @@ import 'package:models/models.dart';
 
 class ProductionLineRepository {
 
-  final AuthenticatedHttpClient _http;
+  final AuthenticatedHttpClient _authenticatedHttpClient;
 
-  ProductionLineRepository(this._http);
+  ProductionLineRepository(AuthenticatedHttpClient authenticatedHttpClient) : _authenticatedHttpClient = authenticatedHttpClient;
 
-  Future<List<ProductionLineAndGroups>> getProductionLineAndGroupsList(int take) async {
-    return await _http.getProductionLineAndGroupsList();
+  Future<List<ProductionLineAndGroup>> getProductionLineAndGroupsList() async {
+    return await _authenticatedHttpClient.getProductionLineAndGroupsList();
   }
 
 }

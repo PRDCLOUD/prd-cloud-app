@@ -12,4 +12,4 @@ export 'src/models/production_variable.dart';
 export 'src/models/production_loss.dart';
 export 'src/models/production_stop.dart';
 export 'src/models/production_line_unit.dart';
-export 'src/models/production_line.dart';
+export 'src/models/production_line_and_group.dart';

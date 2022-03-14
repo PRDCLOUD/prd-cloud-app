@@ -3,7 +3,11 @@ import 'package:models/models.dart';
 import 'package:models/src/utils/date_time_functions.dart';
 import 'package:timezone/timezone.dart' as tz;
 
-enum ProductionDataStatus { concluded, opened, canceled }
+enum ProductionDataStatus { 
+  concluded, 
+  opened, 
+  canceled 
+}
 
 class ProductionBasicData extends Equatable {
 
@@ -26,7 +30,7 @@ class ProductionBasicData extends Equatable {
 
   final String? comments;
 
-  final int status;
+  final ProductionDataStatus status;
 
   final Map<int, LineUnit> lineUnitDict;
 
@@ -77,7 +81,7 @@ class ProductionBasicData extends Equatable {
       productId: json['productId'],
       id: json['id'],
       productionLineId: json['productionLineId'],
-      status: json['status'],
+      status: ProductionBasicData._parseProductionDataStatus(json['status']),
       stopOptions: stopOptions,
       stops: stops,
       lossesOptions: losssesOptions,
@@ -99,7 +103,7 @@ class ProductionBasicData extends Equatable {
     List<Loss>? lossesOptions,
     List<Stop>? stopOptions,
     String? comments,
-    int? status,
+    ProductionDataStatus? status,
     Map<int, LineUnit>? lineUnitDict
   }) {
     return ProductionBasicData(
@@ -119,7 +123,14 @@ class ProductionBasicData extends Equatable {
     );
   }
 
-
+  static ProductionDataStatus _parseProductionDataStatus(int status) {
+    switch(status) {
+      case 0: return ProductionDataStatus.canceled;
+      case 1: return ProductionDataStatus.opened;
+      case 2: return ProductionDataStatus.concluded;
+      default: throw Exception('Invalid Production Status');
+    }
+  }
 
   @override
   List<Object?> get props {

@@ -1,4 +1,5 @@
 import 'package:error_repository/error_repository.dart';
+import 'package:models/models.dart';
 import 'package:production_data_repository/production_data_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -24,8 +25,8 @@ class ProductionDataBloc extends Bloc<ProductionDataEvent, ProductionDataState> 
   void _onAuthenticationStatusChanged(ApontamentosRefreshEvent event, Emitter<ProductionDataState> emit) async {
     emit(ProductionDataState.loading());
     try {
-      var result = await _apontamentosRepository.getApontamentos(event.take);
-      emit(ProductionDataState.loaded(result.data));
+      var result = await _apontamentosRepository.getApontamentos(event.status, event.take, event.prdLines);
+      emit(ProductionDataState.loaded(result));
     } catch(e) {
       _errorRepository.communicateError(e);
       emit(ProductionDataState.notLoaded());

@@ -12,7 +12,7 @@ class AuthenticatedHttpClient {
 
   AuthenticatedHttpClient(this._authority, this._tenant, this._getAccessToken);
 
-  Future<Response> _getRequest(String path, [ Map<String, String>? queryParams = null ]) async {
+  Future<Response> _getRequest(String path, [ Map<String, dynamic>? queryParams = null ]) async {
 
     var accessToken = await _getAccessToken();
 
@@ -76,18 +76,35 @@ class AuthenticatedHttpClient {
     return await _getRequest('api/tenant/claims');
   }  
 
-  Future<List<ProductionLineAndGroups>> getProductionLineAndGroupsList() async {
+  Future<List<ProductionLineAndGroup>> getProductionLineAndGroupsList() async {
     var response = await _getRequest('api/lineunit/prdlineandgroups');
-    var productionLines = response.data?.map((x) => ProductionLineAndGroups.fromJson(x)).cast<ProductionLineAndGroups>().toList();
+    var productionLines = response.data?.map((x) => ProductionLineAndGroup.fromJson(x)).cast<ProductionLineAndGroup>().toList();
     return productionLines; 
   }
 
-  Future<Response> getProductionDataList(int take) async {
-    return (await _getRequest('api/production/open', 
+  Future<List<dynamic>> getProductionDataList(ProductionDataStatus status, int take, List<String> prdLines) async {
+
+    var statusString = () {
+      switch (status) {
+        case ProductionDataStatus.canceled: return 'canceled';
+        case ProductionDataStatus.concluded: return 'concluded';
+        case ProductionDataStatus.opened: return 'open';
+        default: throw new Exception('Invalid Status');
+      }
+    };
+
+    var response = await _getRequest('api/production/list', 
     { 
-      'type': 'all', 
-      'take': take.toString() 
-    }));
+      'status': statusString(),
+      'take': take.toString(),
+      'prdLine': prdLines
+    });
+
+    if (response.statusCode == 204) {
+      return List.empty();
+    } else {
+      return response.data;
+    }
   }
 
   Future<Response> getProductionDataById(int id) async {

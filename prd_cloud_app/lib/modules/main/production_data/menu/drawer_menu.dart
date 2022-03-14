@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_data_list/production_data_list.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/production_opened_items.dart';
@@ -15,7 +16,16 @@ class DrawerMenuPage extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (context) => MenuItemSelectedCubit(), lazy: false),
-        BlocProvider(create: (context) => ProductionDataBloc(errorRepository: context.read<ErrorRepository>(), apontamentosRepository: context.read<ProductionDataRepository>())..add(ApontamentosRefreshEvent(take: 100))),
+        BlocProvider(create: (context) => ProductionDataBloc(
+          errorRepository: context.read<ErrorRepository>(), 
+          apontamentosRepository: context.read<ProductionDataRepository>())..add(
+            ApontamentosRefreshEvent(
+              status: ProductionDataStatus.opened, 
+              take: 100, 
+              prdLines: const ['24']
+            )
+          )
+        ),
         BlocProvider(create: (context) => OpenProductionDataCubit(errorRepository: context.read<ErrorRepository>(), openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false),
         BlocProvider(create: (context) => SelectedProductionDataCubit(), lazy: false),
         BlocProvider(create: (context) => ErrorCubit(errorRepository: context.read<ErrorRepository>()), lazy: false)

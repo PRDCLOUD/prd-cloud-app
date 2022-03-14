@@ -3,6 +3,7 @@ import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http_connections/http_connections.dart';
+import 'package:prd_cloud_app/modules/initial/bloc/production_line_and_groups/production_line_and_groups_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_information/tenant_information_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/tenant_selection_cubit.dart';
 import 'package:prd_cloud_app/modules/main/production_data/menu/drawer_menu.dart';
@@ -43,25 +44,72 @@ class TenantInformationLoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: BlocBuilder<TenantInformationCubit, TenantInformationState>(
-        builder: (context, state) {
-          switch (state.tenantInformationLoadState) {
-            case TenantInformationLoadState.loaded: 
-              return  const MainRepositoryProviderPage(child: DrawerMenuPage());
-            case TenantInformationLoadState.loading:
-              return const Text("Loading Tenant Info", textAlign: TextAlign.center);
-            case TenantInformationLoadState.unloaded:
-              var tenantState = context.read<TenantSelectionCubit>().state as TenantSelectedState;
-              context.read<TenantInformationCubit>().loadTenantInformation(tenantState.tenant);
-              return const Text("Unloaded Tenant Info", textAlign: TextAlign.center);
-          }
-        },
-      ),
+    return BlocBuilder<TenantInformationCubit, TenantInformationState>(
+      builder: (context, state) {
+        switch (state.tenantInformationLoadState) {
+          case TenantInformationLoadState.loaded: 
+            return  const MainRepositoryProviderPage(
+              child: ProductionLineAndGroupsProvider(child: 
+                ProductionLineLoadingPage(
+                  child: DrawerMenuPage()
+                )
+              )
+            );
+          case TenantInformationLoadState.loading:
+            return const Text("Loading Tenant Info", textAlign: TextAlign.center);
+          case TenantInformationLoadState.unloaded:
+            var tenantState = context.read<TenantSelectionCubit>().state as TenantSelectedState;
+            context.read<TenantInformationCubit>().loadTenantInformation(tenantState.tenant);
+            return const Text("Unloaded Tenant Info", textAlign: TextAlign.center);
+        }
+      },
     );
   }
 }
 
+class ProductionLineAndGroupsProvider extends StatelessWidget {
+  const ProductionLineAndGroupsProvider({ Key? key, required Widget child }) : _child = child, super(key: key);
+
+  final Widget _child;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(providers: [
+            BlocProvider(create: (context) => ProductionLineAndGroupsCubit(errorRepository: context.read(), productionLineRepository: context.read() ), lazy: false,)
+          ], 
+          child: Builder(
+            builder: (context) {
+              return _child;
+            }
+          ));
+  
+  }
+}
+
+
+
+class ProductionLineLoadingPage extends StatelessWidget {
+  const ProductionLineLoadingPage({ Key? key, required Widget child }) : _child = child, super(key: key);
+
+  final Widget _child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProductionLineAndGroupsCubit, ProductionLineAndGroupsState>(
+      builder: (context, state) {
+        switch (state.productionLineAndGroupsLoadState) {
+          case ProductionLineAndGroupsLoadState.loaded: 
+            return _child;
+          case ProductionLineAndGroupsLoadState.loading:
+            return const Text("Loading Production Lines", textAlign: TextAlign.center);
+          case ProductionLineAndGroupsLoadState.unloaded:
+            context.read<ProductionLineAndGroupsCubit>().loadProductionLines();
+            return const Text("Unloaded Production Lines", textAlign: TextAlign.center);
+        }
+      },
+    );
+  }
+}
 
 class MainRepositoryProviderPage extends StatelessWidget {
   const MainRepositoryProviderPage({ Key? key, required Widget child }) : _child = child, super(key: key);
@@ -74,6 +122,7 @@ class MainRepositoryProviderPage extends StatelessWidget {
     var tenantInformation = (context.read<TenantInformationCubit>().state as TenantInformationLoaded).tenantInformation;
     var errorRepository = context.read<ErrorRepository>();
     return MultiRepositoryProvider(providers: [
+            RepositoryProvider(create: (context) => ProductionLineRepository(authenticatedHttpClient), lazy: false,),
             RepositoryProvider(create: (context) => ProductionDataRepository(authenticatedHttpClient, tenantInformation), lazy: false),
             RepositoryProvider(create: (context) => OpenProductionDataRepository(authenticatedHttpClient: authenticatedHttpClient, tenantInformation: tenantInformation, errorRepository: errorRepository), lazy: false)
           ], 
