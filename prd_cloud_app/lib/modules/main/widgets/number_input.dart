@@ -6,7 +6,6 @@ typedef NumberInputChanged = void Function(double? newValue);
 class NumberInput extends StatelessWidget {
   const NumberInput({
     Key? key,
-    this.controller,
     this.value,
     required this.label,
     this.onChanged,
@@ -16,7 +15,6 @@ class NumberInput extends StatelessWidget {
     this.disabled = false,
   }) : super(key: key);
 
-  final TextEditingController? controller;
   final double? value;
   final String label;
   final NumberInputChanged? onChanged;
@@ -49,7 +47,6 @@ class NumberInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
-      controller: controller,
       initialValue: setterParse(value),
       onChanged: onChangedParse,
       readOnly: disabled,

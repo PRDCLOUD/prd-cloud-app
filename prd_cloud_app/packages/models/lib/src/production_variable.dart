@@ -38,10 +38,10 @@ class ProductionVariable extends Equatable {
     }
 
     bool get isReadOnly {
-      return typeVariableImplementation == 'Default numeric value' || 
-              typeVariableImplementation == 'Default text value' ||
-              typeVariableImplementation == 'Numeric Per Product' ||
-              typeVariableImplementation == 'Text Per Product';
+      return typeVariableImplementation.toLowerCase() == 'default numeric value' || 
+              typeVariableImplementation.toLowerCase() == 'default text value' ||
+              typeVariableImplementation.toLowerCase() == 'numeric per product' ||
+              typeVariableImplementation.toLowerCase() == 'text per product';
     }
 
     ProductionVariable({ 

@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:models/models.dart';
-import 'package:prd_cloud_app/modules/main/widgets/number_input.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/production_stop_add_qty_total_time.dart';
+import 'production_stop_add_qty_average.dart';
 
-enum StopAddStates { stopSelection, lineUnitSelection, valueFill }
+enum StopAddStates { stopSelection, lineUnitSelection, stopFill }
 
 typedef StopAddCallback = Future<bool> Function({
     required int productionBasicDataId, 
     required int lineUnitId, 
     required int stopCurrentDefinitionId,
-    required String stopType,
+    required StopTypeOf stopType,
     required List<StopClaim> claims, 
     double? averageTimeAtStopQtyAverageTime, 
     int? qtyAtStopQtyAverageTime,
@@ -39,7 +40,6 @@ class _StopAddState extends State<StopAdd> {
 
   Stop? selectedStop;
   LineUnit? selectedLineUnit;
-  double? lossValue;
 
   void selectStop(Stop stop) {
     setState(() {
@@ -51,12 +51,8 @@ class _StopAddState extends State<StopAdd> {
   void selectLineUnit(LineUnit lineUnit) {
     setState(() {
       selectedLineUnit = lineUnit;
-      stopAddStates = StopAddStates.valueFill;
+      stopAddStates = StopAddStates.stopFill;
     });
-  }
-
-  void fillStopValue(double? value) {
-    lossValue = value;
   }
 
   @override
@@ -85,34 +81,26 @@ class _StopAddState extends State<StopAdd> {
             );
           },
         );
-      case StopAddStates.valueFill:
-        return Column(
-          children: [
-            Row(children: [ const Text("Perda: "), Text(selectedStop!.name)]),
-            Row(children: [ const Text("Local: "), Text(selectedLineUnit!.name)]),
-            NumberInput(
-              label: "Quantidade", 
-              value: lossValue, 
-              allowDecimal: true,
-              onChanged: (newValue) => setState(() {
-                lossValue = newValue;
-              })
-            ),
-            ElevatedButton(
-              child: const Text("Adicionar"),
-              style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
-              onPressed: lossValue == null ? 
-                null : 
-                () async {
-                // var result = await widget.stopAddCallback(widget.productionBasicId, selectedLoss!.id, lossValue!, selectedLineUnit!.id);
-                // if (result) {
-                  Navigator.pop(context);
-                // }
-              }
-            )
-          ],
-        );
+      case StopAddStates.stopFill:
+        switch (selectedStop!.stopTypeOf) {
+          case StopTypeOf.BeginEnd: 
+            return StopQtyAverageTime(
+              productionBasicId: widget.productionBasicId,
+              selectedLineUnit: selectedLineUnit!,
+              selectedStop: selectedStop!,
+              stopAddCallback: widget.stopAddCallback
+            );
+          case StopTypeOf.QtyTotalTime:
+            return StopQtyTotalTime(
+              productionBasicId: widget.productionBasicId,
+              selectedLineUnit: selectedLineUnit!,
+              selectedStop: selectedStop!,
+              stopAddCallback: widget.stopAddCallback
+            );
+          default: throw Exception('Invalid StopTypeOf');
+        }
 
     }
   }
 }
+

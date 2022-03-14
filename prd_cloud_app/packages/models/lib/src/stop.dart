@@ -1,5 +1,12 @@
 import 'package:equatable/equatable.dart';
 
+enum StopTypeOf {
+  BeginEnd,
+  TimeBegin,
+  QtyAverageTime,
+  QtyTotalTime,
+  TimePerStop
+}
 class Stop extends Equatable {
   
   final int id;
@@ -9,6 +16,17 @@ class Stop extends Equatable {
   final double? averageTime;
   final List<int> lineUnitStops;
   final List<StopClaim> stopClaims;
+
+  StopTypeOf get stopTypeOf {
+    switch (typeOf) {
+      case 1: return StopTypeOf.BeginEnd;
+      case 2: return StopTypeOf.TimeBegin;
+      case 3: return StopTypeOf.QtyAverageTime;
+      case 4: return StopTypeOf.QtyTotalTime;
+      case 5: return StopTypeOf.TimePerStop;
+      default: throw new Exception('Unknown Stop Type');
+    }
+  }
 
   String get codeName {
     if (code != null) {

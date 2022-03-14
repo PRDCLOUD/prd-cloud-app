@@ -165,7 +165,7 @@ class AuthenticatedHttpClient {
     required int productionBasicDataId, 
     required int lineUnitId, 
     required int stopCurrentDefinitionId,
-    required String stopType,
+    required StopTypeOf stopType,
     required List<StopClaim> claims, 
     double? averageTimeAtStopQtyAverageTime, 
     int? qtyAtStopQtyAverageTime,
@@ -200,7 +200,18 @@ class AuthenticatedHttpClient {
         'claims': Map<String, dynamic>.fromIterable(claims, key: (x) => x.claim.toString(), value: (x) => x.toJson())
       },
     };
-    return await _postRequest('api/production/stop/' + stopType, data);
+    
+    return await _postRequest(_endpointAddStop(stopType), data);
+  }
+
+  String _endpointAddStop(StopTypeOf typeOf) {
+    switch (typeOf) {
+      case StopTypeOf.QtyTotalTime: return 'api/production/stop/StopQtyTotalTime';
+      case StopTypeOf.BeginEnd: return 'api/production/stop/StopBeginEnd';
+      case StopTypeOf.QtyAverageTime: return 'api/production/stop/StopQtyAverageTime';
+      case StopTypeOf.TimeBegin: return 'api/production/stop/StopBeginTimeSpan';
+      case StopTypeOf.TimePerStop: return 'api/production/stop/StopTimePerStop';
+    }
   }
 
   Future<Response<dynamic>> deleteProductionStop(int productionStopId) async {

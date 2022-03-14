@@ -175,7 +175,7 @@ class _Products extends StatelessWidget {
   
   Widget setupAlertDialoadContainer(BuildContext context, List<Product> products, ProductSetter onChange) {
 
-    return Container(
+    return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,
       child: ListView.builder(

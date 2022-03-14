@@ -8,16 +8,9 @@ class TenantInformation extends Equatable {
   final String lossGeneralUnit;
   final List<String> lossGridOptions;
   final String timeZone;
+  final tz.Location location;
 
-  tz.Location? _location;
-  tz.Location get location {
-    if (_location == null) {
-      _location = tz.getLocation(timeZone);
-    }
-    return _location!;
-  }
-
-  TenantInformation({ required this.language, required  this.lossGeneralCurrency, required  this.lossGeneralUnit, required  this.lossGridOptions, required  this.timeZone });
+  TenantInformation({ required this.language, required  this.lossGeneralCurrency, required  this.lossGeneralUnit, required  this.lossGridOptions, required  this.timeZone, required this.location });
 
   factory TenantInformation.fromJson(Map<String, dynamic> json) {
     return TenantInformation(
@@ -25,7 +18,9 @@ class TenantInformation extends Equatable {
       lossGeneralCurrency: json['lossGeneralCurrency'], 
       lossGeneralUnit: json['lossGeneralUnit'], 
       lossGridOptions: List<String>.from(json['lossGridOptions']), 
-      timeZone: json['timeZone']);
+      timeZone: json['timeZone'],
+      location: tz.getLocation(json['timeZone'])
+    );
   }
 
   @override
@@ -37,6 +32,7 @@ class TenantInformation extends Equatable {
     String? lossGeneralUnit,
     List<String>? lossGridOptions,
     String? timeZone,
+    tz.Location? location
   }) {
     return TenantInformation(
       language: language ?? this.language,
@@ -44,6 +40,7 @@ class TenantInformation extends Equatable {
       lossGeneralUnit: lossGeneralUnit ?? this.lossGeneralUnit,
       lossGridOptions: lossGridOptions ?? this.lossGridOptions,
       timeZone: timeZone ?? this.timeZone,
+      location: location ?? this.location
     );
   }
 }

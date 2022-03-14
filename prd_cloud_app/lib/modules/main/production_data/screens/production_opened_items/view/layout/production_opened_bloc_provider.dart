@@ -2,7 +2,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
-import 'package:prd_cloud_app/modules/main/bloc/production_stop_cubit/production_stop_cubit.dart';
 import 'package:production_data_repository/production_data_repository.dart';
 
 import 'production_opened_item_navigation.dart';

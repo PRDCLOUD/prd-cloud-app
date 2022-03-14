@@ -242,7 +242,7 @@ class OpenProductionDataRepository {
     required int productionBasicDataId, 
     required int lineUnitId, 
     required int stopCurrentDefinitionId,
-    required String stopType,
+    required StopTypeOf stopType,
     required List<StopClaim> claims, 
     double? averageTimeAtStopQtyAverageTime, 
     int? qtyAtStopQtyAverageTime,

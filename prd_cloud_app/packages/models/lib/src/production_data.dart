@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
-import '../models.dart';
 import 'package:timezone/timezone.dart' as tz;
+
+import '../models.dart';
 
 enum ProductionDataStatus { concluded, opened, canceled }
 
@@ -27,13 +28,7 @@ class ProductionBasicData extends Equatable {
 
   final int status;
 
-  Map<int, LineUnit>? _lineUnitDict;
-  Map<int, LineUnit> get lineUnitDict {
-    if (_lineUnitDict == null) {
-      _lineUnitDict = Map.fromIterable(lineUnits, key: (x) => x.lineUnit.id, value: (x) => x.lineUnit); 
-    }
-    return _lineUnitDict!;
-  }
+  final Map<int, LineUnit> lineUnitDict;
 
   List<Product> get products {
     return lineUnits.firstWhere((element) => element.type == 'ProductionLine').lineUnit.products ?? new List.empty();
@@ -51,7 +46,8 @@ class ProductionBasicData extends Equatable {
     required this.stops,
     required this.lossesOptions, 
     required this.losses,
-    required this.lineUnits 
+    required this.lineUnits,
+    required this.lineUnitDict
   });
 
 
@@ -72,6 +68,8 @@ class ProductionBasicData extends Equatable {
     var lineUnits = json['lineUnits'].map((x) => ProductionLineUnit.fromJson(x)).cast<ProductionLineUnit>().toList() as List<ProductionLineUnit>;
     lineUnits.sort((a, b) => a.order - b.order);
 
+    var lineUnitDict = Map<int, LineUnit>.fromIterable(lineUnits, key: (x) => x.lineUnit.id, value: (x) => x.lineUnit); 
+
     return ProductionBasicData(
       begin: ProductionBasicData._formatDateTime(json['begin'] as String?, location),
       end: ProductionBasicData._formatDateTime(json['end'] as String?, location),
@@ -85,7 +83,51 @@ class ProductionBasicData extends Equatable {
       lossesOptions: losssesOptions,
       losses: losses,
       lineUnits: lineUnits,
+      lineUnitDict: lineUnitDict,
     );
+  }
+
+  ProductionBasicData copyWith({
+    int? id,
+    DateTime? begin,
+    DateTime? end,
+    int? productId,
+    int? productionLineId,
+    List<ProductionLineUnit>? lineUnits,
+    List<ProductionLoss>? losses,
+    List<ProductionStop>? stops,
+    List<Loss>? lossesOptions,
+    List<Stop>? stopOptions,
+    String? comments,
+    int? status,
+    Map<int, LineUnit>? lineUnitDict
+  }) {
+    return ProductionBasicData(
+      id: id ?? this.id,
+      begin: begin ?? this.begin,
+      end: end ?? this.end,
+      productId: productId ?? this.productId,
+      productionLineId: productionLineId ?? this.productionLineId,
+      lineUnits: lineUnits ?? this.lineUnits,
+      losses: losses ?? this.losses,
+      stops: stops ?? this.stops,
+      lossesOptions: lossesOptions ?? this.lossesOptions,
+      stopOptions: stopOptions ?? this.stopOptions,
+      comments: comments ?? this.comments,
+      status: status ?? this.status,
+      lineUnitDict: lineUnitDict ?? this.lineUnitDict
+    );
+  }
+
+  static DateTime? _formatDateTime(String? input, tz.Location location) {
+    if (input == null || input.isEmpty) {
+      return null;
+    } else {
+      var utc = DateTime.parse(input);
+      var utcTz = tz.TZDateTime.utc(utc.year, utc.month, utc.day, utc.hour, utc.minute, utc.second);
+      var dateAtLocation = tz.TZDateTime.from(utcTz, location);
+      return DateTime(dateAtLocation.year, dateAtLocation.month, dateAtLocation.day, dateAtLocation.hour, dateAtLocation.minute, dateAtLocation.second);
+    }
   }
 
   @override
@@ -103,47 +145,7 @@ class ProductionBasicData extends Equatable {
       stopOptions,
       comments,
       status,
+      lineUnitDict,
     ];
-  }
-
-  ProductionBasicData copyWith({
-    int? id,
-    DateTime? begin,
-    DateTime? end,
-    int? productId,
-    int? productionLineId,
-    List<ProductionLineUnit>? lineUnits,
-    List<ProductionLoss>? losses,
-    List<ProductionStop>? stops,
-    List<Loss>? lossesOptions,
-    List<Stop>? stopOptions,
-    String? comments,
-    int? status,
-  }) {
-    return ProductionBasicData(
-      id: id ?? this.id,
-      begin: begin ?? this.begin,
-      end: end ?? this.end,
-      productId: productId ?? this.productId,
-      productionLineId: productionLineId ?? this.productionLineId,
-      lineUnits: lineUnits ?? this.lineUnits,
-      losses: losses ?? this.losses,
-      stops: stops ?? this.stops,
-      lossesOptions: lossesOptions ?? this.lossesOptions,
-      stopOptions: stopOptions ?? this.stopOptions,
-      comments: comments ?? this.comments,
-      status: status ?? this.status,
-    );
-  }
-
-  static DateTime? _formatDateTime(String? input, tz.Location location) {
-    if (input == null || input.isEmpty) {
-      return null;
-    } else {
-      var utc = DateTime.parse(input);
-      var utcTz = tz.TZDateTime.utc(utc.year, utc.month, utc.day, utc.hour, utc.minute, utc.second);
-      var dateAtLocation = tz.TZDateTime.from(utcTz, location);
-      return DateTime(dateAtLocation.year, dateAtLocation.month, dateAtLocation.day, dateAtLocation.hour, dateAtLocation.minute, dateAtLocation.second);
-    }
   }
 }

@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/loss/production_loss_main.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/production_edit/production_data_edit.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/production_stop_main.dart';
 
 class ProductionOpenedItemNavigation extends StatefulWidget {
   const ProductionOpenedItemNavigation({Key? key}) : super(key: key);
@@ -13,16 +14,11 @@ class ProductionOpenedItemNavigation extends StatefulWidget {
 
 class _ProductionOpenedItemNavigation extends State<ProductionOpenedItemNavigation> {
   int _selectedIndex = 0;
-
-  static const TextStyle optionStyle = TextStyle(fontSize: 30, fontWeight: FontWeight.bold);
-  
+ 
   static const List<Widget> _widgetOptions = <Widget>[
     ProductionDataEdit(),
     ProductionLossMain(),
-    Text(
-      'Index 2: School',
-      style: optionStyle,
-    ),
+    ProductionStopMain(),
   ];
 
   void _onItemTapped(int index) {
