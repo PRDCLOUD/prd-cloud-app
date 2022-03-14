@@ -1,5 +1,5 @@
 import 'package:equatable/equatable.dart';
-import 'package:models/src/line_unit.dart';
+import 'package:models/models.dart';
 
 class ProductionLineUnit extends Equatable {
 

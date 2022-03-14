@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 abstract class ProductionStop extends Equatable {
   final int id;
@@ -29,7 +30,7 @@ abstract class ProductionStop extends Equatable {
     required this.totalTime,
   });
 
-  factory ProductionStop.fromJson(Map<String, dynamic> json) {
+  factory ProductionStop.fromJson(Map<String, dynamic> json, tz.Location location) {
     switch (json['typeProductionStop']) {
       case 'StopBeginEnd': 
         return ProductionStopBeginEnd(

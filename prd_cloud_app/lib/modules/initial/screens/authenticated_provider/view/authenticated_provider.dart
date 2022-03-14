@@ -13,8 +13,7 @@ class AuthenticatedProviderPage extends StatelessWidget {
   const AuthenticatedProviderPage({Key? key}) : super(key: key);
 
   static Route route() {
-    return MaterialPageRoute<void>(
-        builder: (_) => const AuthenticatedProviderPage());
+    return MaterialPageRoute<void>(builder: (_) => const AuthenticatedProviderPage());
   }
 
   @override
@@ -44,30 +43,21 @@ class TenantInformationLoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<TenantInformationCubit, TenantInformationState>(
-      builder: (context, state) {
-        switch (state.tenantInformationLoadState) {
-          case TenantInformationLoadState.loaded: 
-            return  const MainRepositoryProviderPage(child: DrawerMenuPage());
-          case TenantInformationLoadState.loading:
-            return const Scaffold(
-                body: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Text("Loading Tenant Info", textAlign: TextAlign.center)
-                )
-            );
-          case TenantInformationLoadState.unloaded:
-            var tenantState = context.read<TenantSelectionCubit>().state as TenantSelectedState;
-            context.read<TenantInformationCubit>().loadTenantInformation(tenantState.tenant);
-            return const Scaffold(
-                body: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Text("Unloaded Tenant Info", textAlign: TextAlign.center)
-                )
-            );
-        }
-        
-      },
+    return Scaffold(
+      body: BlocBuilder<TenantInformationCubit, TenantInformationState>(
+        builder: (context, state) {
+          switch (state.tenantInformationLoadState) {
+            case TenantInformationLoadState.loaded: 
+              return  const MainRepositoryProviderPage(child: DrawerMenuPage());
+            case TenantInformationLoadState.loading:
+              return const Text("Loading Tenant Info", textAlign: TextAlign.center);
+            case TenantInformationLoadState.unloaded:
+              var tenantState = context.read<TenantSelectionCubit>().state as TenantSelectedState;
+              context.read<TenantInformationCubit>().loadTenantInformation(tenantState.tenant);
+              return const Text("Unloaded Tenant Info", textAlign: TextAlign.center);
+          }
+        },
+      ),
     );
   }
 }

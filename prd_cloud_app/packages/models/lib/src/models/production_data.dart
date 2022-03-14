@@ -1,7 +1,7 @@
 import 'package:equatable/equatable.dart';
+import 'package:models/models.dart';
+import 'package:models/src/utils/date_time_functions.dart';
 import 'package:timezone/timezone.dart' as tz;
-
-import '../models.dart';
 
 enum ProductionDataStatus { concluded, opened, canceled }
 
@@ -53,7 +53,7 @@ class ProductionBasicData extends Equatable {
 
   factory ProductionBasicData.fromJson(Map<String, dynamic> json, tz.Location location) {
 
-    var stops = json['stops'].map((x) => ProductionStop.fromJson(x)).cast<ProductionStop>().toList() as List<ProductionStop>;
+    var stops = json['stops'].map((x) => ProductionStop.fromJson(x, location)).cast<ProductionStop>().toList() as List<ProductionStop>;
     stops.sort(((a, b) => a.codeName.toLowerCase().compareTo(b.codeName.toLowerCase())));
 
     var losssesOptions = json['lossesOptions'].map((x) => Loss.fromJson(x)).cast<Loss>().toList() as List<Loss>;
@@ -71,8 +71,8 @@ class ProductionBasicData extends Equatable {
     var lineUnitDict = Map<int, LineUnit>.fromIterable(lineUnits, key: (x) => x.lineUnit.id, value: (x) => x.lineUnit); 
 
     return ProductionBasicData(
-      begin: ProductionBasicData._formatDateTime(json['begin'] as String?, location),
-      end: ProductionBasicData._formatDateTime(json['end'] as String?, location),
+      begin: DateTimeFunctions.parseDateTime(json['begin'] as String?, location),
+      end: DateTimeFunctions.parseDateTime(json['end'] as String?, location),
       comments: json['comments'],
       productId: json['productId'],
       id: json['id'],
@@ -119,16 +119,7 @@ class ProductionBasicData extends Equatable {
     );
   }
 
-  static DateTime? _formatDateTime(String? input, tz.Location location) {
-    if (input == null || input.isEmpty) {
-      return null;
-    } else {
-      var utc = DateTime.parse(input);
-      var utcTz = tz.TZDateTime.utc(utc.year, utc.month, utc.day, utc.hour, utc.minute, utc.second);
-      var dateAtLocation = tz.TZDateTime.from(utcTz, location);
-      return DateTime(dateAtLocation.year, dateAtLocation.month, dateAtLocation.day, dateAtLocation.hour, dateAtLocation.minute, dateAtLocation.second);
-    }
-  }
+
 
   @override
   List<Object?> get props {

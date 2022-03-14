@@ -1,6 +1,5 @@
 import 'package:equatable/equatable.dart';
-
-import '../models.dart';
+import 'package:models/models.dart';
 
 class ApiConnectionData extends Equatable {
 

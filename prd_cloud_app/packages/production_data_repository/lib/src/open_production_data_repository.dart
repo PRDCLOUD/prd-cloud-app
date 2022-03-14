@@ -266,7 +266,7 @@ class OpenProductionDataRepository {
       totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime,
       stopTimeAtStopTimePerStop: stopTimeAtStopTimePerStop,
     );
-    var newStops = response.data.map((x) => ProductionStop.fromJson(x)).cast<ProductionStop>().toList();
+    var newStops = response.data.map((x) => ProductionStop.fromJson(x, _tenantInformation.location)).cast<ProductionStop>().toList();
     var prdData = _getProductionBasicData(productionBasicDataId);
     var oldStops = prdData.stops; 
     var allStops = List<ProductionStop>.from(oldStops)..addAll(newStops);
