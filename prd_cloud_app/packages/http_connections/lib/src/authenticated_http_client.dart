@@ -88,10 +88,10 @@ class AuthenticatedHttpClient {
     return await _getRequest('api/production/' + id.toString());
   }
 
-  Future<Response<dynamic>> patchProductionDataBegin(ProductionBasicData productionBasicData, String timeZone) async {
+  Future<Response<dynamic>> patchProductionDataBegin(ProductionBasicData productionBasicData, tz.Location location) async {
     var data = { 
-      'begin': dateToString(productionBasicData.begin, timeZone),
-      'end': dateToString(productionBasicData.end, timeZone),
+      'begin': dateToString(productionBasicData.begin, location),
+      'end': dateToString(productionBasicData.end, location),
       'comments': productionBasicData.comments,
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
@@ -99,10 +99,10 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/begin/' + productionBasicData.id.toString(), data);
   }
 
-  Future<Response<dynamic>> patchProductionDataEnd(ProductionBasicData productionBasicData, String timeZone) async {
+  Future<Response<dynamic>> patchProductionDataEnd(ProductionBasicData productionBasicData, tz.Location location) async {
     var data = { 
-      'begin': dateToString(productionBasicData.begin, timeZone),
-      'end': dateToString(productionBasicData.end, timeZone),
+      'begin': dateToString(productionBasicData.begin, location),
+      'end': dateToString(productionBasicData.end, location),
       'comments': productionBasicData.comments,
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
@@ -110,10 +110,10 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/end/' + productionBasicData.id.toString(), data);
   }
 
-  Future<Response<dynamic>> patchProductionDataComments(ProductionBasicData productionBasicData, String timeZone) async {
+  Future<Response<dynamic>> patchProductionDataComments(ProductionBasicData productionBasicData, tz.Location location) async {
     var data = { 
-      'begin': dateToString(productionBasicData.begin, timeZone),
-      'end': dateToString(productionBasicData.end, timeZone),
+      'begin': dateToString(productionBasicData.begin, location),
+      'end': dateToString(productionBasicData.end, location),
       'comments': productionBasicData.comments,
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
@@ -121,10 +121,10 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/comment/' + productionBasicData.id.toString(), data);
   }
 
-  Future<Response<dynamic>> patchProductionDataProduct(ProductionBasicData productionBasicData, String timeZone) async {
+  Future<Response<dynamic>> patchProductionDataProduct(ProductionBasicData productionBasicData, tz.Location locale) async {
     var data = { 
-      'begin': dateToString(productionBasicData.begin, timeZone),
-      'end': dateToString(productionBasicData.end, timeZone),
+      'begin': dateToString(productionBasicData.begin, locale),
+      'end': dateToString(productionBasicData.end, locale),
       'comments': productionBasicData.comments,
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
@@ -167,6 +167,7 @@ class AuthenticatedHttpClient {
     required int stopCurrentDefinitionId,
     required StopTypeOf stopType,
     required List<StopClaim> claims, 
+    required tz.Location location,
     double? averageTimeAtStopQtyAverageTime, 
     int? qtyAtStopQtyAverageTime,
     DateTime? beginAtStopBeginAndTimeSpan,
@@ -189,7 +190,7 @@ class AuthenticatedHttpClient {
         'beginAtStopBeginAndTimeSpan': beginAtStopBeginAndTimeSpan, // StopBeginAndTimeSpan
         'timeSpanAtStopBeginAndTimeSpan': timeSpanAtStopBeginAndTimeSpan, // StopBeginAndTimeSpan
         
-        'beginAtStopBeginEnd': beginAtStopBeginEnd, // StopBeginEnd
+        'beginAtStopBeginEnd': dateToString(beginAtStopBeginEnd, location), // StopBeginEnd
         'endAtStopBeginEnd': endAtStopBeginEnd, // StopBeginEnd
 
         'qtyAtStopQtyTotalTime': qtyAtStopQtyTotalTime, // StopQtyTotalTime
@@ -218,12 +219,11 @@ class AuthenticatedHttpClient {
     return await _deleteRequest('api/production/stop/' + productionStopId.toString());
   }
 
-  String? dateToString(DateTime? date, String locationName) {
+  String? dateToString(DateTime? date, tz.Location location) {
     if (date == null) {
       return null;
     } else {
-      var timezone = tz.getLocation(locationName);
-      var dateOnLocal = tz.TZDateTime(timezone, date.year, date.month, date.day, date.hour, date.minute, date.second);
+      var dateOnLocal = tz.TZDateTime(location, date.year, date.month, date.day, date.hour, date.minute, date.second);
       return dateOnLocal.toIso8601String();
     }
   }

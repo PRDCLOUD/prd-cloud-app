@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:models/models.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/production_stop_add_begin_end.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/production_stop_add_begin_time.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/production_stop_add_qty_total_time.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/production_stop_add_total_time.dart';
 import 'production_stop_add_qty_average.dart';
 
 enum StopAddStates { stopSelection, lineUnitSelection, stopFill }
@@ -83,7 +86,7 @@ class _StopAddState extends State<StopAdd> {
         );
       case StopAddStates.stopFill:
         switch (selectedStop!.stopTypeOf) {
-          case StopTypeOf.BeginEnd: 
+          case StopTypeOf.QtyAverageTime: 
             return StopQtyAverageTime(
               productionBasicId: widget.productionBasicId,
               selectedLineUnit: selectedLineUnit!,
@@ -92,6 +95,27 @@ class _StopAddState extends State<StopAdd> {
             );
           case StopTypeOf.QtyTotalTime:
             return StopQtyTotalTime(
+              productionBasicId: widget.productionBasicId,
+              selectedLineUnit: selectedLineUnit!,
+              selectedStop: selectedStop!,
+              stopAddCallback: widget.stopAddCallback
+            );
+          case StopTypeOf.TimeBegin:
+            return StopBeginTime(
+              productionBasicId: widget.productionBasicId,
+              selectedLineUnit: selectedLineUnit!,
+              selectedStop: selectedStop!,
+              stopAddCallback: widget.stopAddCallback
+            );
+          case StopTypeOf.TimePerStop:
+            return StopTimePerStop(
+              productionBasicId: widget.productionBasicId,
+              selectedLineUnit: selectedLineUnit!,
+              selectedStop: selectedStop!,
+              stopAddCallback: widget.stopAddCallback
+            );
+          case StopTypeOf.BeginEnd: 
+            return StopBeginEnd(
               productionBasicId: widget.productionBasicId,
               selectedLineUnit: selectedLineUnit!,
               selectedStop: selectedStop!,

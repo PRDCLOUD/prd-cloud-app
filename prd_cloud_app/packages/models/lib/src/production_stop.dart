@@ -10,8 +10,6 @@ abstract class ProductionStop extends Equatable {
   final String? typeProductionStop;
   final double totalTime;
 
-  final List<ProductionStopClaim>? claims;
-
   String get codeName {
     if (code != null) {
       return '(' + code! + ') ' + name;
@@ -29,7 +27,6 @@ abstract class ProductionStop extends Equatable {
     required this.name, 
     required this.typeProductionStop,
     required this.totalTime,
-    required this.claims
   });
 
   factory ProductionStop.fromJson(Map<String, dynamic> json) {
@@ -44,7 +41,6 @@ abstract class ProductionStop extends Equatable {
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
           totalTime: json['totalTime'],
-          claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
           begin: DateTime.parse(json['beginAtStopBeginEnd']).toLocal(),
           end: DateTime.parse(json['endAtStopBeginEnd']).toLocal()
         );
@@ -58,7 +54,6 @@ abstract class ProductionStop extends Equatable {
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
           totalTime: json['totalTime'],
-          claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
           begin: DateTime.parse(json['beginAtStopBeginAndTimeSpan']).toLocal(),
           timeSpan: json['timeSpanAtStopBeginAndTimeSpan']
         );
@@ -72,7 +67,6 @@ abstract class ProductionStop extends Equatable {
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
           totalTime: json['totalTime'],
-          claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
           averageTime: json['averageTimeAtStopQtyAverageTime'],
           qty: json['qtyAtStopQtyAverageTime']
         );
@@ -86,7 +80,6 @@ abstract class ProductionStop extends Equatable {
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
           totalTime: json['totalTime'],
-          claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
           qty: json['qtyAtStopQtyTotalTime'],
           totalTimeAtStopQtyTotalTime: json['totalTimeAtStopQtyTotalTime']
         );
@@ -100,7 +93,6 @@ abstract class ProductionStop extends Equatable {
           stopCurrentDefinitionId: json['stopCurrentDefinitionId'],
           typeProductionStop: json['typeProductionStop'],
           totalTime: json['totalTime'],
-          claims: json['claims']?.map((x) => ProductionStopClaim.fromJson(x)).cast<ProductionStopClaim>().toList(),
           stopTimePerStop: json['stopTimeAtStopTimePerStop']
         );
       default:
@@ -123,12 +115,10 @@ class ProductionStopBeginEnd extends ProductionStop {
     required String? code, 
     required String name, 
     required String? typeProductionStop, 
-    required List<ProductionStopClaim>? claims,
     required double totalTime,
     required this.begin,
     required this.end
   }) : super(
-    claims: claims, 
     code: code, 
     id: id, 
     lineUnitId: lineUnitId, 
@@ -150,7 +140,6 @@ class ProductionStopBeginEnd extends ProductionStop {
       name,
       typeProductionStop,
       totalTime,
-      claims,
       begin,
       end
     ];
@@ -170,12 +159,10 @@ class ProductionStopBeginAndTimeSpan extends ProductionStop{
     required String? code, 
     required String name, 
     required String? typeProductionStop, 
-    required List<ProductionStopClaim>? claims,
     required double totalTime,
     required this.begin,
     required this.timeSpan
   }) : super(
-    claims: claims, 
     code: code, 
     id: id, 
     lineUnitId: lineUnitId, 
@@ -197,7 +184,6 @@ class ProductionStopBeginAndTimeSpan extends ProductionStop{
       name,
       typeProductionStop,
       totalTime,
-      claims,
       begin,
       timeSpan
     ];
@@ -217,12 +203,10 @@ class ProductionStopQtyAverageTime extends ProductionStop{
     required String? code, 
     required String name, 
     required String? typeProductionStop, 
-    required List<ProductionStopClaim>? claims,
     required double totalTime,
     required this.qty,
     required this.averageTime
   }) : super(
-    claims: claims, 
     code: code, 
     id: id, 
     lineUnitId: lineUnitId, 
@@ -244,7 +228,6 @@ class ProductionStopQtyAverageTime extends ProductionStop{
       name,
       typeProductionStop,
       totalTime,
-      claims,
       qty,
       averageTime
     ];
@@ -264,13 +247,11 @@ class ProductionStopQtyTotalTime extends ProductionStop{
     required String? code, 
     required String name, 
     required String? typeProductionStop, 
-    required List<ProductionStopClaim>? claims,
     required double totalTime,
     required this.qty,
     required this.totalTimeAtStopQtyTotalTime
 
   }) : super(
-    claims: claims, 
     code: code, 
     id: id, 
     lineUnitId: lineUnitId, 
@@ -292,7 +273,6 @@ class ProductionStopQtyTotalTime extends ProductionStop{
       name,
       typeProductionStop,
       totalTime,
-      claims,
       qty,
       totalTimeAtStopQtyTotalTime
     ];
@@ -311,11 +291,9 @@ class ProductionStopTimePerStop extends ProductionStop{
     required String? code, 
     required String name, 
     required String? typeProductionStop, 
-    required List<ProductionStopClaim>? claims,
     required double totalTime,
     required this.stopTimePerStop
   }) : super(
-    claims: claims, 
     code: code, 
     id: id, 
     lineUnitId: lineUnitId, 
@@ -337,7 +315,6 @@ class ProductionStopTimePerStop extends ProductionStop{
       name,
       typeProductionStop,
       totalTime,
-      claims,
       stopTimePerStop
     ];
   }

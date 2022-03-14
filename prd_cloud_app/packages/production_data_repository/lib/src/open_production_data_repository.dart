@@ -60,7 +60,7 @@ class OpenProductionDataRepository {
   // TODO create FIFO queue
   Future _updateBeginApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataBegin(productionBasicData, _tenantInformation.timeZone);
+      await _http.patchProductionDataBegin(productionBasicData, _tenantInformation.location);
     } catch (e) {
       _errorsDataStreamController.add(e);
     }
@@ -68,7 +68,7 @@ class OpenProductionDataRepository {
 
   Future _updateEndApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataEnd(productionBasicData, _tenantInformation.timeZone);
+      await _http.patchProductionDataEnd(productionBasicData, _tenantInformation.location);
     } catch (e) {
       _errorsDataStreamController.add(e);
     }
@@ -76,7 +76,7 @@ class OpenProductionDataRepository {
 
   Future _updateCommentsApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataComments(productionBasicData, _tenantInformation.timeZone);
+      await _http.patchProductionDataComments(productionBasicData, _tenantInformation.location);
     } catch (e) {
       _errorsDataStreamController.add(e);
     }
@@ -84,7 +84,7 @@ class OpenProductionDataRepository {
 
   Future _updateProductApi(ProductionBasicData productionBasicData) async {
     try {
-      await _http.patchProductionDataProduct(productionBasicData, _tenantInformation.timeZone);
+      await _http.patchProductionDataProduct(productionBasicData, _tenantInformation.location);
     } catch (e) {
       _errorsDataStreamController.add(e);
     }
@@ -256,6 +256,7 @@ class OpenProductionDataRepository {
   }) async {
     try {
       var response = await _http.postProductionStop(
+        location: _tenantInformation.location,
         productionBasicDataId: productionBasicDataId,
         lineUnitId: lineUnitId,
         stopCurrentDefinitionId: stopCurrentDefinitionId,
