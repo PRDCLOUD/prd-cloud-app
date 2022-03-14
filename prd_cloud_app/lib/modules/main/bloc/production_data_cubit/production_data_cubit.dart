@@ -18,7 +18,7 @@ class ProductionDataCubit extends Cubit<ProductionDataState> {
   final ErrorRepository _errorRepository;
   final ProductionDataRepository _apontamentosRepository;
 
-  void refresh() async {
+  Future<void> refresh() async {
     if (state.status == ProductionDataLoadState.loading) return;
     if (state.filter == null) return;
 

@@ -14,38 +14,40 @@ class Filter extends StatelessWidget {
         return Row(
           children: [
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: InkWell(
-                child: Chip(
-                  label: const Text("Em Aberto"),
-                  backgroundColor: state.status == ProductionDataStatus.opened ? Colors.green : Colors.grey
-                ),
-                onTap: () => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.opened),
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ChoiceChip(
+                label: const Text("Em Aberto"),
+                avatar: avatar(isOpened(state.status)),
+                selected: isOpened(state.status),
+                onSelected: (selected) => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.opened)
+              )
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: InkWell(
-                child: Chip(
-                  label: const Text("Concluído"),
-                  backgroundColor: state.status == ProductionDataStatus.concluded ? Colors.green : Colors.grey
-                ),
-                onTap: () => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.concluded),
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ChoiceChip(
+                label: const Text("Concluído"),
+                avatar: avatar(isConcluded(state.status)),
+                selected: isConcluded(state.status),
+                onSelected: (selected) => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.concluded),
+              )
             ),
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0),
-              child: InkWell(
-                child: Chip(
-                  label: const Text("Cancelado"),
-                  backgroundColor: state.status == ProductionDataStatus.canceled ? Colors.green : Colors.grey
-                ),
-                onTap: () => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.canceled),
-              ),
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: ChoiceChip(
+                label: const Text("Cancelado"),
+                avatar: avatar(isCanceled(state.status)),
+                selected: isCanceled(state.status),
+                onSelected: (selected) => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.canceled),
+              )
             ),
           ],
         );
       },
     );
   }
+
+  bool isOpened (ProductionDataStatus currentStatus) => currentStatus == ProductionDataStatus.opened;
+  bool isConcluded (ProductionDataStatus currentStatus) => currentStatus == ProductionDataStatus.concluded;
+  bool isCanceled (ProductionDataStatus currentStatus) => currentStatus == ProductionDataStatus.canceled;
+  Icon? avatar(bool showAvatar) => showAvatar ? const Icon(Icons.check) : null;
 }

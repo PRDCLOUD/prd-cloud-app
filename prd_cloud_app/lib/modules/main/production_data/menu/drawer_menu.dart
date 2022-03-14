@@ -67,12 +67,16 @@ class DrawerMenuList extends StatelessWidget {
         // Important: Remove any padding from the ListView.
         padding: EdgeInsets.zero,
         children: [
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
+          DrawerHeader(
+              child: Container(
+                decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage("assets/img/logotipo.png"),
+                     fit: BoxFit.scaleDown)
+                ),
+              ),
+              padding: const EdgeInsets.all(40),
             ),
-            child: Text('Drawer Header'),
-          ),
           ListTile(
             title: const Text('Lista de Apontamentos'),
             onTap: () {

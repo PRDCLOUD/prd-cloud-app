@@ -56,28 +56,38 @@ class _ProductionDataListState extends State<ProductionDataList> {
             context.read<ProductionDataCubit>().filter(state);
           }
         },
-        child: BlocBuilder<ProductionDataCubit, ProductionDataState>(
+        child: BlocConsumer<ProductionDataCubit, ProductionDataState>(
+          listener: (context, state) {
+            if (state.status == ProductionDataLoadState.loading) {
+              context.loaderOverlay.show();
+            } else {
+              context.loaderOverlay.hide();
+            }
+          },
           builder: (BuildContext context, state) {
             switch (state.status) {
               case ProductionDataLoadState.loading:
-                return const Text("loading");
+                context.loaderOverlay.show();
+                return const Center(child: Text("carregando..."));
               case ProductionDataLoadState.loaded:
-                return ListView.builder(
+                return RefreshIndicator(
+                  onRefresh: context.read<ProductionDataCubit>().refresh,
+                  child: ListView.builder(
                     itemCount: state.loadedResult.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
-                          child: SizedBox(
-                            height: 50,
-                            child: Center(
-                                child: Text(state.loadedResult[index]
-                                    ['ProductionLine'])),
-                          ),
-                          onTap: () => {
-                                loadProductionData(context, state.loadedResult[index]['ID'])
-                              });
-                    });
+                        child: SizedBox(
+                          height: 50,
+                          child: Center(
+                              child: Text(state.loadedResult[index]['ProductionLine'])),
+                        ),
+                        onTap: () => loadProductionData(context, state.loadedResult[index]['ID'])
+                      );
+                    }
+                  )
+                );
               case ProductionDataLoadState.notLoaded:
-                return const Text("Not Loaded");
+                return const Center(child: Text("Não carregado!"));
             }
           },
         ),
