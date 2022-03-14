@@ -8,6 +8,7 @@ import 'package:prd_cloud_app/modules/initial/bloc/selected_production_line_and_
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_information/tenant_information_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/tenant_selection_cubit.dart';
 import 'package:prd_cloud_app/modules/main/production_data/menu/drawer_menu.dart';
+import 'package:prd_cloud_app/modules/main/production_data/production_data_module.dart';
 import 'package:production_data_repository/production_data_repository.dart';
 import 'package:tenant_data_repository/tenant_data_repository.dart';
 
@@ -52,7 +53,7 @@ class TenantInformationLoadingPage extends StatelessWidget {
             return  const MainRepositoryProviderPage(
               child: ProductionLineAndGroupsProvider(child: 
                 ProductionLineLoadingPage(
-                  child: DrawerMenuPage()
+                  child: ProductionDataModule()
                 )
               )
             );

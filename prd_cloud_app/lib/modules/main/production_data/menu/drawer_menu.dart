@@ -1,83 +1,57 @@
 import 'package:dio/dio.dart';
-import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:models/models.dart';
-import 'package:prd_cloud_app/modules/initial/bloc/selected_production_line_and_groups/selected_production_line_and_groups_cubit.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_data_list/production_data_list.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_line_selection/production_line_selection.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/production_opened_items.dart';
-import 'package:production_data_repository/production_data_repository.dart';
 
-class DrawerMenuPage extends StatelessWidget {
-  const DrawerMenuPage({Key? key}) : super(key: key);
+class DrawerMenu extends StatelessWidget {
+  const DrawerMenu({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (context) => MenuItemSelectedCubit(), lazy: false),
-        BlocProvider(create: (context) => 
-          ProductionDataCubit(
-            errorRepository: context.read<ErrorRepository>(), 
-            apontamentosRepository: context.read<ProductionDataRepository>()
-          )
-        ),
-        BlocProvider(create: (context) => OpenProductionDataCubit(errorRepository: context.read<ErrorRepository>(), openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false),
-        BlocProvider(create: (context) => SelectedProductionDataCubit(), lazy: false),
-        BlocProvider(
-          create: (context) => ProductionListFilterCubit(
-            ProductionDataFilter(
-              prdLines: context.read<SelectedProductionLineAndGroupsCubit>().state.selectedProductionLinesAndGroups.map((e) => e.id).toList(),
-              status: ProductionDataStatus.opened,
-              take: 200
-            )
-          ), 
-          lazy: false),
-        BlocProvider(create: (context) => ErrorCubit(errorRepository: context.read<ErrorRepository>()), lazy: false)
-      ], 
-      child: Scaffold(
+    return Scaffold(
         appBar: AppBar(title: const Text('Apontamentos')),
         drawer: const DrawerMenuList(),
         body: BlocListener<ErrorCubit, ErrorState>(
-          listener: (context, state) {
-            String? errorToShow;
-            if (state.errorObject != null) {
-              if (state is String) {
-                errorToShow = state as String;
-              } else if (state.errorObject is DioError) {
-                var dioError = state.errorObject as DioError;
-                if (dioError.response?.statusCode != null && dioError.response!.statusCode == 400 && dioError.response?.data is Map) {
-                  errorToShow = (dioError.response!.data as Map)['errorMessage'];
-                }
+          listener: snackBarErrorHandler,
+          child: BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
+            builder: (context, state) {
+              switch (state.menuItemSelected) {
+                case MenuItemSelected.productionOpenedItems:
+                  return const ProductionOpenedItemLayoutPage();
+                case MenuItemSelected.productionLines:
+                  return const ProductionLineSelectionPage();
+                default:
+                  return const ProductionDataListPage();
               }
-              if (errorToShow != null && errorToShow.isNotEmpty) {
-                final snackBar = SnackBar(
-                  content: Text(errorToShow)
-                );
+            },
+          ),
+        ),
+      );
+  }
 
-                ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  void snackBarErrorHandler(context, state) {
+          String? errorToShow;
+          if (state.errorObject != null) {
+            if (state is String) {
+              errorToShow = state;
+            } else if (state.errorObject is DioError) {
+              var dioError = state.errorObject as DioError;
+              if (dioError.response?.statusCode != null && dioError.response!.statusCode == 400 && dioError.response?.data is Map) {
+                errorToShow = (dioError.response!.data as Map)['errorMessage'];
               }
             }
-          },
-          child: BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
-                  builder: (context, state) {
-                    switch (state.menuItemSelected) {
-                      case MenuItemSelected.productionOpenedItems:
-                        return const ProductionOpenedItemLayoutPage();
-                      case MenuItemSelected.productionLines:
-                        return const ProductionLineSelectionPage();
-                      default:
-                        return const ProductionDataListPage();
-                    }
-                  },
-                ),
-        ),
-      )
-    );
-      
-  }
+            if (errorToShow != null && errorToShow.isNotEmpty) {
+              final snackBar = SnackBar(
+                content: Text(errorToShow)
+              );
+  
+              ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            }
+          }
+        }
 }
 
 class DrawerMenuList extends StatelessWidget {
