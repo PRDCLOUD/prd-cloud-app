@@ -4,14 +4,14 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
-class ProductionDataListPage extends StatefulWidget {
-  const ProductionDataListPage({Key? key}) : super(key: key);
+class ProductionDataList extends StatefulWidget {
+  const ProductionDataList({Key? key}) : super(key: key);
 
   @override
-  State<ProductionDataListPage> createState() => _ProductionDataListPageState();
+  State<ProductionDataList> createState() => _ProductionDataListState();
 }
 
-class _ProductionDataListPageState extends State<ProductionDataListPage> {
+class _ProductionDataListState extends State<ProductionDataList> {
   Future<void> loadProductionData(BuildContext context, int productionDataId) async {
     context.loaderOverlay.show();
     try {
