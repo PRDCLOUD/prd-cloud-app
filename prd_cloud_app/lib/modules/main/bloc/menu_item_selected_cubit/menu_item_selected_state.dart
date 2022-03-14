@@ -1,6 +1,6 @@
 part of 'menu_item_selected_cubit.dart';
 
-enum MenuItemSelected { productionDataList, productionOpenedItems }
+enum MenuItemSelected { productionDataList, productionOpenedItems, productionLines }
 
 @immutable
 class MenuItemSelectedState extends Equatable {

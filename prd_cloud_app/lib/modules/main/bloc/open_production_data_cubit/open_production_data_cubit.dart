@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:error_repository/error_repository.dart';
@@ -15,16 +17,15 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
     
     _openProductionDataRepository = openProductionDataRepository, 
     _errorRespository = errorRepository,
-    super(OpenProductionDataState.empty()) {
-    _openProductionDataRepository.openDataStream().listen((items) {
+  super(OpenProductionDataState.empty()) {
+    _openProductionDataSubscription = _openProductionDataRepository.openDataStream().listen((items) {
       emit(state.copyWith(loadedItems: items));
     });
   }
 
   final ErrorRepository _errorRespository;
   final OpenProductionDataRepository _openProductionDataRepository;
-
-  
+  late StreamSubscription<List<ProductionBasicData>> _openProductionDataSubscription;
 
   Future loadProductionData(int id) async {
 
@@ -51,4 +52,11 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
     var itemToRemove = state.loadedItems.firstWhere((x) => x.id == id);
     emit(state.copyWith(loadedItems: state.loadedItems..remove(itemToRemove)));
   }
+
+  @override
+  Future<void> close() {
+    _openProductionDataSubscription.cancel();
+    return super.close();
+  }
+
 }

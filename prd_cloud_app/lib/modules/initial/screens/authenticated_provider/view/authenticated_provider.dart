@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http_connections/http_connections.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/production_line_and_groups/production_line_and_groups_cubit.dart';
+import 'package:prd_cloud_app/modules/initial/bloc/selected_production_line_and_groups/selected_production_line_and_groups_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_information/tenant_information_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/tenant_selection_cubit.dart';
 import 'package:prd_cloud_app/modules/main/production_data/menu/drawer_menu.dart';
@@ -75,18 +76,38 @@ class ProductionLineAndGroupsProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiBlocProvider(providers: [
-            BlocProvider(create: (context) => ProductionLineAndGroupsCubit(errorRepository: context.read(), productionLineRepository: context.read() ), lazy: false,)
-          ], 
-          child: Builder(
-            builder: (context) {
-              return _child;
-            }
-          ));
+      BlocProvider(create: (context) => ProductionLineAndGroupsCubit(errorRepository: context.read(), productionLineRepository: context.read() ), lazy: false,)
+    ], 
+    child: Builder(
+      builder: (context) {
+        return _child;
+      }
+    ));
   
   }
 }
 
+class SelectedProductionLineAndGroupsProvider extends StatelessWidget {
+  const SelectedProductionLineAndGroupsProvider({ Key? key, required Widget child }) : _child = child, super(key: key);
 
+  final Widget _child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<ProductionLineAndGroupsCubit, ProductionLineAndGroupsState>(
+      builder: (context, state) {
+        return BlocProvider(
+          create: (context) => SelectedProductionLineAndGroupsCubit(List.empty()), lazy: false,
+          child: Builder(
+            builder: (context) {
+              return _child;
+            }
+          )
+        );
+      },
+    );
+  }
+}
 
 class ProductionLineLoadingPage extends StatelessWidget {
   const ProductionLineLoadingPage({ Key? key, required Widget child }) : _child = child, super(key: key);
@@ -99,7 +120,7 @@ class ProductionLineLoadingPage extends StatelessWidget {
       builder: (context, state) {
         switch (state.productionLineAndGroupsLoadState) {
           case ProductionLineAndGroupsLoadState.loaded: 
-            return _child;
+            return SelectedProductionLineAndGroupsProvider(child: _child);
           case ProductionLineAndGroupsLoadState.loading:
             return const Text("Loading Production Lines", textAlign: TextAlign.center);
           case ProductionLineAndGroupsLoadState.unloaded:

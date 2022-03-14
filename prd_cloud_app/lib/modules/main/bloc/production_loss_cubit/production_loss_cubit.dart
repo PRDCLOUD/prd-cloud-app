@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:error_repository/error_repository.dart';
@@ -24,8 +26,8 @@ class ProductionLossCubit extends Cubit<ProductionLossState> {
       )
     ) {
       _openProductionDataRepository = openProductionDataRepository;
-      _openProductionDataRepository.openDataStream().listen(checkProductionDataAndUpdateLosses);
-    }
+      _openProductionDataSubscription = _openProductionDataRepository.openDataStream().listen(checkProductionDataAndUpdateLosses);
+  }
 
   void checkProductionDataAndUpdateLosses(List<ProductionBasicData> items) {
     var prdData = items.firstWhere((element) => element.id == state.productionBasicDataId);
@@ -36,6 +38,7 @@ class ProductionLossCubit extends Cubit<ProductionLossState> {
   
   final ErrorRepository _errorRepository;
   late OpenProductionDataRepository _openProductionDataRepository;
+  late StreamSubscription<List<ProductionBasicData>> _openProductionDataSubscription;
 
   Future<bool> addLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
     emit(state.copyWith(status: ProductionLossStatus.adding));
@@ -59,6 +62,12 @@ class ProductionLossCubit extends Cubit<ProductionLossState> {
     } finally {
       emit(state.copyWith(status: ProductionLossStatus.updated));
     }
+  }
+
+  @override
+  Future<void> close() {
+    _openProductionDataSubscription.cancel();
+    return super.close();
   }
 
 }

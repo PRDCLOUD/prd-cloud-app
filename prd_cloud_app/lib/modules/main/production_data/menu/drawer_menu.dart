@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_data_list/production_data_list.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_line_selection/production_line_selection.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/production_opened_items.dart';
 import 'package:production_data_repository/production_data_repository.dart';
 
@@ -59,6 +60,8 @@ class DrawerMenuPage extends StatelessWidget {
                     switch (state.menuItemSelected) {
                       case MenuItemSelected.productionOpenedItems:
                         return const ProductionOpenedItemLayoutPage();
+                      case MenuItemSelected.productionLines:
+                        return const ProductionLineSelectionPage();
                       default:
                         return const ProductionDataListPage();
                     }
@@ -91,19 +94,26 @@ class DrawerMenuList extends StatelessWidget {
             child: Text('Drawer Header'),
           ),
           ListTile(
-            title: const Text('Item 12'),
+            title: const Text('Lista de Apontamentos'),
             onTap: () {
               context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionDataList);
               Navigator.pop(context);
             },
           ),
           ListTile(
-            title: const Text('Item 2'),
+            title: const Text('Abertos'),
             onTap: () {
               context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionOpenedItems);
               Navigator.pop(context);
             },
           ),
+          ListTile(
+            title: const Text('Linhas de Produção'),
+            onTap: () {
+              context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionLines);
+              Navigator.pop(context);
+            },
+          )
         ],
       ),
     );
