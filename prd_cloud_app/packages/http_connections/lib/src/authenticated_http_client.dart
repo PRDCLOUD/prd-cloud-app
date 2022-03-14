@@ -76,6 +76,12 @@ class AuthenticatedHttpClient {
     return await _getRequest('api/tenant/claims');
   }  
 
+  Future<List<ProductionLine>> getProductionLineList(int take) async {
+    var response = await _getRequest('api/lineunit/prdlineandgroups');
+    var productionLines = response.data?.map((x) => ProductionLine.fromJson(x)).cast<ProductionLine>().toList();
+    return productionLines; 
+  }
+
   Future<Response> getProductionDataList(int take) async {
     return (await _getRequest('api/production/open', 
     { 

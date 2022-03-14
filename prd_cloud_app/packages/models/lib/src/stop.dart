@@ -104,9 +104,9 @@ class Stop extends Equatable {
 class StopClaim extends Equatable {
 
   final String claim;
-  final String claimValue;
-  final String defaultValue;
-  final List<String> valueList;
+  final String? claimValue;
+  final String? defaultValue;
+  final List<String>? valueList;
   final bool onTheFly;
   final bool required;
 
@@ -117,14 +117,14 @@ class StopClaim extends Equatable {
       claim: claim,
       claimValue: json['value'] ?? json['defaultValue'],
       onTheFly: json['onTheFly'],
-      valueList: json['valueList'],
+      valueList: json['valueList']?.map((x) => x.toString()).toList(),
       defaultValue: json['defaultValue'],
       required: json['required'],
     );
   }
 
   @override
-  List<Object> get props {
+  List<Object?> get props {
     return [
       claim,
       claimValue,
