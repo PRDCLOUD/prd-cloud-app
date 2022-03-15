@@ -3,6 +3,7 @@ import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:prd_cloud_app/modules/initial/bloc/auth_data_cubit/auth_data_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/authentication/authentication_bloc.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_options/tenant_options_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/tenant_selection_cubit.dart';
@@ -29,18 +30,22 @@ class App extends StatelessWidget {
       ],
       child: MultiBlocProvider(
         providers: [
-          BlocProvider<AuthenticationBloc>(
-              create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
-              lazy: false
-              ),
-          BlocProvider<TenantSelectionCubit>(
-              create: (_) => TenantSelectionCubit(authenticationRepository: authenticationRepository),
-              lazy: false
-              ),
-          BlocProvider<TenantOptionsCubit>(
-              create: (_) => TenantOptionsCubit(authenticationRepository: authenticationRepository),
-              lazy: false
-              )
+          BlocProvider(
+            create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
+            lazy: false
+          ),
+          BlocProvider(
+            create: (_) => AuthDataCubit(authenticationRepository: authenticationRepository),
+            lazy: false
+          ),
+          BlocProvider(
+            create: (_) => TenantSelectionCubit(authenticationRepository: authenticationRepository),
+            lazy: false
+          ),
+          BlocProvider(
+            create: (_) => TenantOptionsCubit(authenticationRepository: authenticationRepository),
+            lazy: false
+          )
         ],
         child: const AppView(),
       ),

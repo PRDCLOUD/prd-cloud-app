@@ -3,6 +3,7 @@ import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http_connections/http_connections.dart';
+import 'package:prd_cloud_app/modules/initial/bloc/auth_data_cubit/auth_data_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/production_line_and_groups/production_line_and_groups_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/selected_production_line_and_groups/selected_production_line_and_groups_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_information/tenant_information_cubit.dart';
@@ -32,7 +33,6 @@ class AuthenticatedProviderPage extends StatelessWidget {
       child: MultiBlocProvider(providers: [
             BlocProvider(
               create: (context) => TenantInformationCubit(tenantDataRepository: context.read<TenantDataRepository>())..loadTenantInformation((context.read<TenantSelectionCubit>().state as TenantSelectedState).tenant),
-              child: Container()
             )
           ], 
           child: const TenantInformationLoadingPage()
