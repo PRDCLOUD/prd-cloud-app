@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/stop_claim_cubit/stop_claim_cubit.dart';
-import 'package:prd_cloud_app/modules/main/widgets/widgets.dart';
+import 'package:prd_cloud_app/widgets/widgets.dart';
 
 import 'production_stop_add.dart';
 import 'production_stop_claim.dart';

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
-import 'package:prd_cloud_app/modules/main/widgets/widgets.dart';
+import 'package:prd_cloud_app/widgets/widgets.dart';
 import 'package:production_data_repository/production_data_repository.dart';
 
 class ProductionVariableEdit extends StatelessWidget {

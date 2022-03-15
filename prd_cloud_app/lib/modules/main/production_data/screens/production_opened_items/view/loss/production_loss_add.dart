@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:models/models.dart';
-import 'package:prd_cloud_app/modules/main/widgets/number_input.dart';
+import 'package:prd_cloud_app/widgets/widgets.dart';
 
 enum LossAddStates { lossSelection, lineUnitSelection, valueFill }
 

@@ -6,11 +6,10 @@ import 'package:error_repository/error_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:user_preferences_repository/user_preferences_repository.dart';
 
-part 'preferences_state.dart';
+part 'user_preferences_state.dart';
 
-class PreferencesCubit extends Cubit<UserPreferencesState> {
-  PreferencesCubit({
-    required UserPreferencesRepository tenant, 
+class UserPreferencesCubit extends Cubit<UserPreferencesState> {
+  UserPreferencesCubit({
     required List<String> selectedProductionLines,
     required UserPreferencesRepository userPreferencesRepository,
     required ErrorRepository errorRepository

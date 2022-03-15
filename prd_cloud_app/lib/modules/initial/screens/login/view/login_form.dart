@@ -39,8 +39,7 @@ class LoginForm extends StatelessWidget {
                   ),
                 ),
               ),
-              Text("prdCloud® Todos os direitos reservados.",
-              style: TextStyle(fontWeight: FontWeight.w600),)
+              const Text("prdCloud® Todos os direitos reservados.", style: TextStyle(fontWeight: FontWeight.w600))
             ]
           )
         )
@@ -60,8 +59,8 @@ class _LoginButton extends StatelessWidget {
                 key: const Key('loginForm_continue_raisedButton'),
                 style: ElevatedButton.styleFrom(
                   primary: AppThemeColors.primary,
-                  minimumSize: Size(120, 70),
-                  textStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 21)
+                  minimumSize: const Size(120, 70),
+                  textStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 21)
                 ),
                 child: const Text('Clique Aqui para Logar'),
                 onPressed: () { context.read<LoginBloc>().add(const LoginSubmitted()); }

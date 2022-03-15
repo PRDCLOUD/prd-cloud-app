@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:models/models.dart';
-import 'package:prd_cloud_app/modules/main/widgets/widgets.dart';
+import 'package:prd_cloud_app/widgets/widgets.dart';
 
 import 'production_stop_add.dart';
 import 'production_stop_claim.dart';

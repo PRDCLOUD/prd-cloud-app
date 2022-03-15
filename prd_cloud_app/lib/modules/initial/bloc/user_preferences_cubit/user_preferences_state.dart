@@ -1,4 +1,4 @@
-part of 'preferences_cubit.dart';
+part of 'user_preferences_cubit.dart';
 
 @immutable
 class UserPreferencesState extends Equatable {
