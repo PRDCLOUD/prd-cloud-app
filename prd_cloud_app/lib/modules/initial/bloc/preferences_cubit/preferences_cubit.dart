@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:error_repository/error_repository.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:user_preferences_repository/user_preferences_repository.dart';
 
@@ -8,11 +11,25 @@ part 'preferences_state.dart';
 class PreferencesCubit extends Cubit<UserPreferencesState> {
   PreferencesCubit({
     required UserPreferencesRepository tenant, 
-    required List<String> selectedProductionLine
-  }) : super(const UserPreferencesUnloaded());
+    required List<String> selectedProductionLines,
+    required UserPreferencesRepository userPreferencesRepository,
+    required ErrorRepository errorRepository
+  }) : _userPreferencesRepository= userPreferencesRepository, _errorRepository = errorRepository, super(UserPreferencesState(selectedProductionLines: selectedProductionLines));
+
+  final UserPreferencesRepository _userPreferencesRepository;
+  final ErrorRepository _errorRepository;
 
   updateSelectedProductionLines(List<String> selectedProductionLine) {
     emit(state.copyWith(selectedProductionLines: selectedProductionLine));
+    unawaited(_setProductionLine(selectedProductionLine));
+  }
+
+  Future<void> _setProductionLine(List<String> selectedProductionLine) async {
+    try {
+      _userPreferencesRepository.setSelectedProductionLine(selectedProductionLine);
+    } catch (e) {
+      _errorRepository.communicateError(e);
+    }
   }
 
 

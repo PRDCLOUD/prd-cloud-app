@@ -35,6 +35,7 @@ dependencies:
   http: ^0.13.4  
   timezone: ^0.8.0
   flex_color_scheme: ^4.2.0
+  shared_preferences: ^2.0.13
   flutter_secure_storage: ^5.0.2
   date_format: ^2.0.5
   dio: ^4.0.4  
@@ -50,6 +51,8 @@ dependencies:
     path: packages/tenant_data_repository
   production_data_repository:
     path: packages/production_data_repository
+  user_preferences_repository:
+    path: packages/user_preferences_repository
   http_connections:
     path: packages/http_connections
   models:
