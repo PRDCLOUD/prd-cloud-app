@@ -63,43 +63,61 @@ class DrawerMenuList extends StatelessWidget {
       // Add a ListView to the drawer. This ensures the user can scroll
       // through the options in the drawer if there isn't enough vertical
       // space to fit everything.
-      child: ListView(
-        // Important: Remove any padding from the ListView.
-        padding: EdgeInsets.zero,
+      child: Column(
         children: [
-          DrawerHeader(
-              child: Container(
-                decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage("assets/img/logotipo.png"),
-                     fit: BoxFit.scaleDown)
+          Expanded(child: 
+            ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: [
+                DrawerHeader(
+                    child: Container(
+                      decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage("assets/img/logotipo.png"),
+                          fit: BoxFit.scaleDown)
+                      ),
+                    ),
+                    padding: const EdgeInsets.all(40),
+                  ),
+                ListTile(
+                  title: const Text('Lista de Apontamentos'),
+                  onTap: () {
+                    context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionDataList);
+                    Navigator.pop(context);
+                  },
                 ),
-              ),
-              padding: const EdgeInsets.all(40),
-            ),
-          ListTile(
-            title: const Text('Lista de Apontamentos'),
-            onTap: () {
-              context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionDataList);
-              Navigator.pop(context);
-            },
+                ListTile(
+                  title: const Text('Abertos'),
+                  onTap: () {
+                    context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionOpenedItems);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: const Text('Linhas de Produção'),
+                  onTap: () {
+                    context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionLines);
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            )
           ),
-          ListTile(
-            title: const Text('Abertos'),
-            onTap: () {
-              context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionOpenedItems);
-              Navigator.pop(context);
-            },
-          ),
-          ListTile(
-            title: const Text('Linhas de Produção'),
-            onTap: () {
-              context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionLines);
-              Navigator.pop(context);
-            },
-          )
+          _User()
         ],
-      ),
+      )
     );
+  }
+}
+
+class _User extends StatelessWidget {
+  const _User({
+    Key? key,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Container();
   }
 }
