@@ -16,18 +16,14 @@ class ProductionLineSelectionPage extends StatelessWidget {
               itemCount: productionLineOptions.length,
               itemBuilder: (BuildContext context, int index) {
                 var selected = state.isSelected(productionLineOptions[index]);
-                return GestureDetector(
-                  child: SizedBox(
-                    height: 50,
-                    child: Center(
-                      child: Text(
-                        productionLineOptions[index].name,
-                        style: TextStyle(color: selected ? Colors.amber : Colors.blue),)
-                    ),
-                  ),
-                  onTap: selected ? 
-                    () => context.read<SelectedProductionLineAndGroupsCubit>().remove(productionLineOptions[index]) :
-                    () => context.read<SelectedProductionLineAndGroupsCubit>().select(productionLineOptions[index])
+                return Card(
+                  child: ListTile(
+                    leading: selected ? const Icon(Icons.check) : const Icon(Icons.circle_outlined),
+                    title: Text(productionLineOptions[index].name),
+                    onTap: selected ? 
+                      () => context.read<SelectedProductionLineAndGroupsCubit>().remove(productionLineOptions[index]) :
+                      () => context.read<SelectedProductionLineAndGroupsCubit>().select(productionLineOptions[index])
+                  )
                 );
               }
             );

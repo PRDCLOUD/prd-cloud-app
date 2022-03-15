@@ -12,7 +12,7 @@ class ProductionDataList extends StatefulWidget {
 }
 
 class _ProductionDataListState extends State<ProductionDataList> {
-  Future<void> loadProductionData(BuildContext context, int productionDataId) async {
+  Future<void> loadProductionData(int productionDataId) async {
     context.loaderOverlay.show();
     try {
       await context
@@ -75,14 +75,8 @@ class _ProductionDataListState extends State<ProductionDataList> {
                   child: ListView.builder(
                     itemCount: state.loadedResult.length,
                     itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        child: SizedBox(
-                          height: 50,
-                          child: Center(
-                              child: Text(state.loadedResult[index]['ProductionLine'])),
-                        ),
-                        onTap: () => loadProductionData(context, state.loadedResult[index]['ID'])
-                      );
+                      var item = state.loadedResult[index];
+                      return card(item);
                     }
                   )
                 );
@@ -92,6 +86,19 @@ class _ProductionDataListState extends State<ProductionDataList> {
           },
         ),
       ),
+    );
+  }
+
+  Card card(item) {
+    return Card(
+      child: GestureDetector(
+        child: SizedBox(
+          height: 50,
+          child: Center(
+              child: Text(item['ProductionLine'])),
+        ),
+        onTap: () => loadProductionData(item['ID'])
+      )
     );
   }
 }

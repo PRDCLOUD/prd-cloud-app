@@ -32,11 +32,11 @@ class DrawerMenu extends StatelessWidget {
   AppBar menuItemAppBar(MenuItemSelected menuItemSelected) {
     switch (menuItemSelected) {
       case MenuItemSelected.productionOpenedItems:
-        return AppBar(title: const Text('Apontamentos'));
+        return AppBar(title: const Text('Edição de Apontamentos'));
       case MenuItemSelected.productionLines:
         return AppBar(title: const Text('Linhas de Produção'));
       default:
-        return AppBar(title: const Text('Edição de Apontamentos'));
+        return AppBar(title: const Text('Apontamentos'));
     }
   }
 
@@ -110,7 +110,7 @@ class DrawerMenuList extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Abertos'),
+              title: const Text('Apontamentos Abertos'),
               onTap: () {
                 context
                     .read<MenuItemSelectedCubit>()
