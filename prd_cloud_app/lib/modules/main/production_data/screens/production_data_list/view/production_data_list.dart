@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
@@ -12,6 +13,7 @@ class ProductionDataList extends StatefulWidget {
 }
 
 class _ProductionDataListState extends State<ProductionDataList> {
+  
   Future<void> loadProductionData(int productionDataId) async {
     context.loaderOverlay.show();
     try {
@@ -49,6 +51,7 @@ class _ProductionDataListState extends State<ProductionDataList> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: BlocListener<ProductionListFilterCubit, ProductionDataFilter>(
         listener: (context, state) {
@@ -88,17 +91,40 @@ class _ProductionDataListState extends State<ProductionDataList> {
       ),
     );
   }
-
-  Card card(item) {
+  
+  Card card(ProductionItemOfList item) {
     return Card(
       child: GestureDetector(
-        child: SizedBox(
-          height: 50,
-          child: Center(
-              child: Text(item['ProductionLine'])),
+        child: Container(
+          padding: EdgeInsets.all(10),
+          child: Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(item.productionLine ?? ""),
+                  Text(item.product ?? "")
+                ]
+              ),
+              Column( // Localizations.localeOf(context);
+                children: [
+                  Text(dateAsString(item.begin)),
+                  Text(dateAsString(item.end))
+                ]
+              ),
+            ]
+          ),
         ),
-        onTap: () => loadProductionData(item['ID'])
+        onTap: () => loadProductionData(item.id)
       )
     );
   }
+
+  String dateAsString(DateTime? date) {
+    if (date == null) {
+      return "";
+    } else {
+      return DateFormat.yMd(Localizations.localeOf(context).languageCode).add_jm().format(date);
+    }
+  } 
 }

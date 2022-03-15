@@ -9,11 +9,11 @@ class ProductionDataState extends Equatable {
 
   ProductionDataState.loading(ProductionDataFilter filter) : this._(ProductionDataLoadState.loading, List.empty(), filter);
 
-  const ProductionDataState.loaded(List<dynamic> loadedResult, ProductionDataFilter filter) : this._(ProductionDataLoadState.loaded, loadedResult, filter);
+  const ProductionDataState.loaded(List<ProductionItemOfList> loadedResult, ProductionDataFilter filter) : this._(ProductionDataLoadState.loaded, loadedResult, filter);
 
   final ProductionDataFilter? filter;
   final ProductionDataLoadState status;
-  final List<dynamic> loadedResult;
+  final List<ProductionItemOfList> loadedResult;
 
   @override
   List<Object> get props => [status, loadedResult];

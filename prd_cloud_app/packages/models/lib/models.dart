@@ -14,3 +14,4 @@ export 'src/models/production_stop.dart';
 export 'src/models/production_line_unit.dart';
 export 'src/models/production_line_and_group.dart';
 export 'src/models/production_data_filter.dart';
+export 'src/models/production_item_of_list.dart';

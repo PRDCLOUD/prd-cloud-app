@@ -2,6 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/auth_data_cubit/auth_data_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/authentication/authentication_bloc.dart';
@@ -69,6 +70,16 @@ class _AppViewState extends State<AppView> {
   Widget build(BuildContext context) {
     return GlobalLoaderOverlay(
       child: MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        locale: const Locale('en', 'US'),
+        supportedLocales: const [
+          Locale('en', 'US'),
+          Locale('pt', 'BR'),
+          Locale('es', 'AR'),
+        ],
         // The Mandy red, light theme.
         theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
         // The Mandy red, dark theme.
