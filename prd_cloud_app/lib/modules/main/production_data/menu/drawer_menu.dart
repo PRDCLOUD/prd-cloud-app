@@ -14,25 +14,41 @@ class DrawerMenu extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Apontamentos')),
-      drawer: const DrawerMenuList(),
-      body: BlocListener<ErrorCubit, ErrorState>(
-        listener: snackBarErrorHandler,
-        child: BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
-          builder: (context, state) {
-            switch (state.menuItemSelected) {
-              case MenuItemSelected.productionOpenedItems:
-                return const ProductionOpenedItemLayoutPage();
-              case MenuItemSelected.productionLines:
-                return const ProductionLineSelectionPage();
-              default:
-                return const ProductionDataListPage();
-            }
-          },
-        ),
-      ),
+    return BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
+      builder: (context, state) {
+        var menuItemSelected = state.menuItemSelected;
+        return Scaffold(
+          appBar: menuItemAppBar(menuItemSelected),
+          drawer: const DrawerMenuList(),
+          body: BlocListener<ErrorCubit, ErrorState>(
+            listener: snackBarErrorHandler,
+            child: menuItemSelectedPage(menuItemSelected),
+          ),
+        );
+      },
     );
+  }
+
+  AppBar menuItemAppBar(MenuItemSelected menuItemSelected) {
+    switch (menuItemSelected) {
+      case MenuItemSelected.productionOpenedItems:
+        return AppBar(title: const Text('Apontamentos'));
+      case MenuItemSelected.productionLines:
+        return AppBar(title: const Text('Linhas de Produção'));
+      default:
+        return AppBar(title: const Text('Edição de Apontamentos'));
+    }
+  }
+
+  StatelessWidget menuItemSelectedPage(MenuItemSelected menuItemSelected) {
+    switch (menuItemSelected) {
+      case MenuItemSelected.productionOpenedItems:
+        return const ProductionOpenedItemLayoutPage();
+      case MenuItemSelected.productionLines:
+        return const ProductionLineSelectionPage();
+      default:
+        return const ProductionDataListPage();
+    }
   }
 
   void snackBarErrorHandler(context, state) {
@@ -71,49 +87,48 @@ class DrawerMenuList extends StatelessWidget {
         child: Column(
       children: [
         Expanded(
-          child: ListView(
-            // Important: Remove any padding from the ListView.
-            padding: EdgeInsets.zero,
-            children: [
-              DrawerHeader(
-                child: Container(
-                  decoration: const BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage("assets/img/logotipo.png"),
-                          fit: BoxFit.scaleDown)),
-                ),
-                padding: const EdgeInsets.all(40),
+            child: ListView(
+          // Important: Remove any padding from the ListView.
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Container(
+                decoration: const BoxDecoration(
+                    image: DecorationImage(
+                        image: AssetImage("assets/img/logotipo.png"),
+                        fit: BoxFit.scaleDown)),
               ),
-              ListTile(
-                title: const Text('Lista de Apontamentos'),
-                onTap: () {
-                  context
-                      .read<MenuItemSelectedCubit>()
-                      .selectPage(MenuItemSelected.productionDataList);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Text('Abertos'),
-                onTap: () {
-                  context
-                      .read<MenuItemSelectedCubit>()
-                      .selectPage(MenuItemSelected.productionOpenedItems);
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                title: const Text('Linhas de Produção'),
-                onTap: () {
-                  context
-                      .read<MenuItemSelectedCubit>()
-                      .selectPage(MenuItemSelected.productionLines);
-                  Navigator.pop(context);
-                },
-              )
-            ],
-          )
-        ),
+              padding: const EdgeInsets.all(40),
+            ),
+            ListTile(
+              title: const Text('Lista de Apontamentos'),
+              onTap: () {
+                context
+                    .read<MenuItemSelectedCubit>()
+                    .selectPage(MenuItemSelected.productionDataList);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Abertos'),
+              onTap: () {
+                context
+                    .read<MenuItemSelectedCubit>()
+                    .selectPage(MenuItemSelected.productionOpenedItems);
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              title: const Text('Linhas de Produção'),
+              onTap: () {
+                context
+                    .read<MenuItemSelectedCubit>()
+                    .selectPage(MenuItemSelected.productionLines);
+                Navigator.pop(context);
+              },
+            )
+          ],
+        )),
         const _User()
       ],
     ));
@@ -133,9 +148,10 @@ class _User extends StatelessWidget {
           return const SizedBox.shrink();
         } else {
           return InkWell(
-            onTap: () => context.read<AuthenticationBloc>().add(AuthenticationLogoutRequested()),
-            child: _LogoutButton(authData: state)
-          );
+              onTap: () => context
+                  .read<AuthenticationBloc>()
+                  .add(AuthenticationLogoutRequested()),
+              child: _LogoutButton(authData: state));
         }
       },
     );
@@ -143,10 +159,9 @@ class _User extends StatelessWidget {
 }
 
 class _LogoutButton extends StatelessWidget {
-  const _LogoutButton({
-    Key? key,
-    required AuthData authData
-  }) : _authData = authData, super(key: key);
+  const _LogoutButton({Key? key, required AuthData authData})
+      : _authData = authData,
+        super(key: key);
 
   final AuthData _authData;
 
@@ -154,8 +169,7 @@ class _LogoutButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: const BoxDecoration(
-        border: Border(top: BorderSide(width: 1.0, color: Colors.white))
-      ),
+          border: Border(top: BorderSide(width: 1.0, color: Colors.white))),
       height: 70,
       child: Row(children: [
         const Padding(
