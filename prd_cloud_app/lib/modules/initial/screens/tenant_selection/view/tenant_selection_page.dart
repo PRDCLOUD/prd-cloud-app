@@ -20,10 +20,14 @@ class TenantSelectionPage extends StatelessWidget {
       body: ListView.builder(
         itemCount: tenantOptions.length,
         itemBuilder: (BuildContext context, int index) {
-          return GestureDetector(
-            child: SizedBox(
-              height: 50,
-              child: Center(child: Text(tenantOptions[index].name)),
+          return ListTile(
+            style: ListTileStyle.list,
+            title: Container(
+              child: Center(child: 
+                Text(tenantOptions[index].name,
+                  style: Theme.of(context).textTheme.titleLarge
+                )
+                )
             ),
             onTap: () => context.read<TenantSelectionCubit>().selectTenant(tenantOptions[index])
           );

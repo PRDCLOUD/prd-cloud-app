@@ -56,11 +56,13 @@ class TenantInformationLoadingPage extends StatelessWidget {
               )
             );
           case TenantInformationLoadState.loading:
-            return const Text("Loading Tenant Info", textAlign: TextAlign.center);
           case TenantInformationLoadState.unloaded:
-            var tenantState = context.read<TenantSelectionCubit>().state as TenantSelectedState;
-            context.read<TenantInformationCubit>().loadTenantInformation(tenantState.tenant);
-            return const Text("Unloaded Tenant Info", textAlign: TextAlign.center);
+            return const Scaffold(
+              body: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Center(child: Text("Carregando informações do cliente...", textAlign: TextAlign.center))
+                )
+              );
         }
       },
     );
@@ -121,10 +123,22 @@ class ProductionLineLoadingPage extends StatelessWidget {
           case ProductionLineAndGroupsLoadState.loaded: 
             return SelectedProductionLineAndGroupsProvider(child: _child);
           case ProductionLineAndGroupsLoadState.loading:
-            return const Text("Loading Production Lines", textAlign: TextAlign.center);
+            return const Scaffold(
+              body: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Center(child: Text("Carregando linhas de produção...", textAlign: TextAlign.center)
+                )
+              )
+            );
           case ProductionLineAndGroupsLoadState.unloaded:
             context.read<ProductionLineAndGroupsCubit>().loadProductionLines();
-            return const Text("Unloaded Production Lines", textAlign: TextAlign.center);
+            return const Scaffold(
+              body: Padding(
+                  padding: EdgeInsets.all(12),
+                  child: Center(child: Text("Carregando linhas de produção...", textAlign: TextAlign.center)
+                )
+              )
+            );
         }
       },
     );

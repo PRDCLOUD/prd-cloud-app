@@ -144,6 +144,8 @@ class InitialLoadingPage extends StatelessWidget {
     return const Scaffold(
         body: Padding(
             padding: EdgeInsets.all(12),
-            child: Text("Setup", textAlign: TextAlign.center)));
+            child: Center(child: Text("Carregando informações do usuário...", textAlign: TextAlign.center))
+          )
+        );
   }
 }
