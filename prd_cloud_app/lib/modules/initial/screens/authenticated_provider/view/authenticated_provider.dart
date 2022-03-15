@@ -106,8 +106,9 @@ class _MainBlocProviderState extends State<MainBlocProvider> {
             create: (context) => UserPreferencesCubit(
               errorRepository: context.read(), 
               selectedProductionLines: _selectedProductionLines!,
-              userPreferencesRepository: context.read()), 
-            lazy: false,)
+              userPreferencesRepository: context.read()
+            ), 
+            lazy: false)
         ], 
         child: Builder(
           builder: (context) {
@@ -127,13 +128,24 @@ class SelectedProductionLineAndGroupsProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    var storageSelectedProductionLines = context.read<UserPreferencesCubit>().state.selectedProductionLines;
+    var possibleProdutionLines = (context.read<ProductionLineAndGroupsCubit>().state as ProductionLineAndGroupLoaded).productionLineAndGroups;
+
+    var preSelectedProdutionLines = possibleProdutionLines.where((e) => storageSelectedProductionLines.contains(e.id)).toList();
+
     return BlocBuilder<ProductionLineAndGroupsCubit, ProductionLineAndGroupsState>(
       builder: (context, state) {
         return BlocProvider(
-          create: (context) => SelectedProductionLineAndGroupsCubit(List.empty()), lazy: false,
+          create: (context) => SelectedProductionLineAndGroupsCubit(preSelectedProdutionLines), lazy: false,
           child: Builder(
             builder: (context) {
-              return _child;
+              return BlocListener<SelectedProductionLineAndGroupsCubit, SelectedProductionLineAndGroupsState>(
+                listener: (context, state) {
+                  context.read<UserPreferencesCubit>().updateSelectedProductionLines(state.selectedProductionLinesAndGroups.map((e) => e.id).toList());
+                },
+                child: _child,
+              );
             }
           )
         );
