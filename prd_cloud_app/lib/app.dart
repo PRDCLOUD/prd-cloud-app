@@ -74,7 +74,7 @@ class _AppViewState extends State<AppView> {
           GlobalMaterialLocalizations.delegate,
           GlobalWidgetsLocalizations.delegate,
         ],
-        locale: const Locale('en', 'US'),
+        locale: const Locale('pt', 'BR'),
         supportedLocales: const [
           Locale('en', 'US'),
           Locale('pt', 'BR'),

@@ -34,6 +34,7 @@ class _StopBeginTimeState extends State<StopBeginTime> {
         Row(children: [ const Text("Perda: "), Text(widget.selectedStop.name)]),
         Row(children: [ const Text("Local: "), Text(widget.selectedLineUnit.name)]),
         DateTimePicker(
+          locale: Localizations.localeOf(context),
           date: beginAtStopBeginAndTimeSpan,
           onChange: (newValue) {
             setState(() {

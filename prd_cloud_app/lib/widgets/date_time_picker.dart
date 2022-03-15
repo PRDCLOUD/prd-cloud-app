@@ -4,10 +4,10 @@ import 'package:intl/intl.dart';
 typedef DateTimePickerSetter = void Function(DateTime? newValue);
 
 class DateTimePicker extends StatelessWidget {
-  DateTimePicker({Key? key, DateTime? date, DateTimePickerSetter? onChange, Locale? locale}) : 
+  DateTimePicker({Key? key, DateTime? date, DateTimePickerSetter? onChange, required Locale locale}) : 
   _date = date, 
   _onChange = onChange, 
-  _dateController = TextEditingController(text: date == null ? null : DateFormat.yMd(locale).add_jm().format(date)),
+  _dateController = TextEditingController(text: date == null ? null : DateFormat.yMd(locale.languageCode).add_jm().format(date)),
   super(key: key);
 
   final DateTime? _date;

@@ -39,6 +39,7 @@ class _StopBeginEndState extends State<StopBeginEnd> {
         Row(children: [ const Text("Perda: "), Text(widget.selectedStop.name)]),
         Row(children: [ const Text("Local: "), Text(widget.selectedLineUnit.name)]),
         DateTimePicker(
+          locale: Localizations.localeOf(context),
           date: beginAtStopBeginEnd,
           onChange: (newValue) {
             setState(() {
@@ -47,6 +48,7 @@ class _StopBeginEndState extends State<StopBeginEnd> {
           },
         ),
         DateTimePicker(
+          locale: Localizations.localeOf(context),
           date: endAtStopBeginEnd,
           onChange: (newValue) {
             setState(() {

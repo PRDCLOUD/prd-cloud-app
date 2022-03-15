@@ -95,6 +95,7 @@ class _Begin extends StatelessWidget {
     return BlocBuilder<FieldBeginCubit, FieldBeginState>(
         builder: (BuildContext context, state) {
       return DateTimePicker(
+          locale: Localizations.localeOf(context),
           date: state.fieldValue,
           onChange: (newValue) =>
               context.read<FieldBeginCubit>().updateField(newValue));
@@ -110,6 +111,7 @@ class _End extends StatelessWidget {
     return BlocBuilder<FieldEndCubit, FieldEndState>(
         builder: (BuildContext context, state) {
       return DateTimePicker(
+          locale: Localizations.localeOf(context),
           date: state.fieldValue,
           onChange: (newValue) =>
               context.read<FieldEndCubit>().updateField(newValue));
