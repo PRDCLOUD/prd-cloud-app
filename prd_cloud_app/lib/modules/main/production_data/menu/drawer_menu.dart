@@ -51,7 +51,9 @@ class DrawerMenu extends StatelessWidget {
       if (errorToShow != null && errorToShow.isNotEmpty) {
         final snackBar = SnackBar(content: Text(errorToShow));
 
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        ScaffoldMessenger.of(context)
+          ..hideCurrentSnackBar()
+          ..showSnackBar(snackBar);
       }
     }
   }
