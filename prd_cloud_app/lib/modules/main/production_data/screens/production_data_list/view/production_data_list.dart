@@ -139,13 +139,14 @@ class _ListCardState extends State<ListCard> {
             ]
           ),
         ),
-        onTap: () => loadProductionData(item.id),
-        onLongPress: () => unloadProductionData(item.id),
+        onTap: () => isLoaded ? null : loadProductionData(),
+        onLongPress: () => isLoaded ? unloadProductionData() : cancelProductionData(),
+        onDoubleTap: () => isLoaded ? editProductionData() : null,
       )
     );
   }
 
-  Column unloadedItemOptions() {
+  Widget unloadedItemOptions() {
     return Column(
       children: [
         Text("<clique para carregar>", style: Theme.of(context).textTheme.bodySmall),
@@ -154,7 +155,7 @@ class _ListCardState extends State<ListCard> {
     );
   }
 
-  Column loadedItemOptions() {
+  Widget loadedItemOptions() {
     return Column(
       children: [
         Padding(
@@ -167,22 +168,38 @@ class _ListCardState extends State<ListCard> {
     );
   }
 
-  Future<void> loadProductionData(int productionDataId) async {
+  Future<void> loadProductionData() async {
     context.loaderOverlay.show();
     try {
       await context
           .read<OpenProductionDataCubit>()
-          .loadProductionData(productionDataId);
+          .loadProductionData(widget._productionItemOfList.id);
       context
           .read<SelectedProductionDataCubit>()
-          .selectProductionData(productionDataId);
+          .selectProductionData(widget._productionItemOfList.id);
     } finally {
       context.loaderOverlay.hide();
     }
   }
 
-  void unloadProductionData(int productionDataId) async {
-    context.read<OpenProductionDataCubit>().closeProductionData(productionDataId);
+  void unloadProductionData() async {
+    context.read<OpenProductionDataCubit>().closeProductionData(widget._productionItemOfList.id);
+  }
+
+  void editProductionData() async {
+
+    context.read<SelectedProductionDataCubit>().selectProductionData(widget._productionItemOfList.id);
+
+    context
+        .read<MenuItemSelectedCubit>()
+        .selectPage(MenuItemSelected.productionOpenedItems);
+  }
+
+
+  void cancelProductionData() async {
+      context
+          .read<ProductionDataCubit>()
+          .cancelItem(widget._productionItemOfList.id);
   }
 
   String dateAsString(DateTime? date) {

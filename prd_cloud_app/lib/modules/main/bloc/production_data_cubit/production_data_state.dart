@@ -7,9 +7,9 @@ class ProductionDataState extends Equatable {
 
   ProductionDataState.notLoaded() : this._(ProductionDataLoadState.notLoaded, List.empty(), null);
 
-  ProductionDataState.loading(ProductionDataFilter filter) : this._(ProductionDataLoadState.loading, List.empty(), filter);
+  ProductionDataState.loading(ProductionDataFilter filter, [ List<ProductionItemOfList>? loadedResult ]) : this._(ProductionDataLoadState.loading, loadedResult ?? List.empty(), filter);
 
-  const ProductionDataState.loaded(List<ProductionItemOfList> loadedResult, ProductionDataFilter filter) : this._(ProductionDataLoadState.loaded, loadedResult, filter);
+  const ProductionDataState.loaded(ProductionDataFilter filter, List<ProductionItemOfList> loadedResult) : this._(ProductionDataLoadState.loaded, loadedResult, filter);
 
   final ProductionDataFilter? filter;
   final ProductionDataLoadState status;

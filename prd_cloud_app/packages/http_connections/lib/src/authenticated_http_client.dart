@@ -111,6 +111,10 @@ class AuthenticatedHttpClient {
     return await _getRequest('api/production/' + id.toString());
   }
 
+  Future<Response> patchCancelProductionDataById(int id) async {
+    return await _patchRequest('api/production/cancel/' + id.toString());
+  }
+
   Future<Response<dynamic>> patchProductionDataBegin(ProductionBasicData productionBasicData, tz.Location location) async {
     var data = { 
       'begin': dateToString(productionBasicData.begin, location),

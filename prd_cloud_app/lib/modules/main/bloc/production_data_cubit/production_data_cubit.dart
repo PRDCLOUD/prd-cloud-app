@@ -25,7 +25,7 @@ class ProductionDataCubit extends Cubit<ProductionDataState> {
     emit(ProductionDataState.loading(state.filter!));
     try {
       var result = await _apontamentosRepository.getApontamentos(state.filter!);
-      emit(ProductionDataState.loaded(result, state.filter!));
+      emit(ProductionDataState.loaded(state.filter!, result));
     } catch(e) {
       _errorRepository.communicateError(e);
       emit(ProductionDataState.notLoaded());
@@ -38,10 +38,24 @@ class ProductionDataCubit extends Cubit<ProductionDataState> {
     emit(ProductionDataState.loading(filter));
     try {
       var result = await _apontamentosRepository.getApontamentos(filter);
-      emit(ProductionDataState.loaded(result, filter));
+      emit(ProductionDataState.loaded(filter, result));
     } catch(e) {
       _errorRepository.communicateError(e);
       emit(ProductionDataState.notLoaded());
+    }
+  }
+
+  Future<void> cancelItem(int id) async {
+    if (state.status == ProductionDataLoadState.loading) return;
+
+    emit(ProductionDataState.loading(state.filter!, state.loadedResult));
+    try {
+      await _apontamentosRepository.cancelApontamento(id);
+      var newResultList  = state.loadedResult.toList()..removeWhere((element) => element.id == id);
+      emit(ProductionDataState.loaded(state.filter!, newResultList));
+    } catch(e) {
+      _errorRepository.communicateError(e);
+      emit(ProductionDataState.loaded(state.filter!, state.loadedResult));
     }
   }
 
