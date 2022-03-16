@@ -151,3 +151,18 @@ class ProductionBasicData extends Equatable {
     ];
   }
 }
+
+extension ProductionBasicDataExtensions on ProductionBasicData {
+  Product? getSelectedProduct() {
+    if (productId == null) {
+      return null;
+    } else {
+      return products.firstWhere((e) => e.id == productId);
+    }
+  }
+
+  ProductionLineUnit getProductionLine() {
+    return lineUnits.firstWhere((e) => e.type == 'ProductionLine');
+  }
+
+}
