@@ -48,7 +48,7 @@ class DateTimePicker extends StatelessWidget {
     return InkWell(
       onTap: () => _selectDate(context),
       child: Container(
-        width: 160,
+        width: 200,
 
         alignment: Alignment.center,
         child: TextFormField(
@@ -56,7 +56,11 @@ class DateTimePicker extends StatelessWidget {
           keyboardType: TextInputType.text,
           controller: _dateController,
           decoration: InputDecoration(
-            label: Text(_label),
+            label: Text(_label + '1'),
+            enabled: false,
+            enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
+            disabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
+            border:  Theme.of(context).inputDecorationTheme.enabledBorder
           ),
         ),
       ),

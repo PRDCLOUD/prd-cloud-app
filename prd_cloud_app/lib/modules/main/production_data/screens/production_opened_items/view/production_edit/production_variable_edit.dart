@@ -94,8 +94,6 @@ class _TextField extends StatelessWidget {
       ),
     );
   }
-   
-  
 }
 
 class _DropdownField extends StatelessWidget {

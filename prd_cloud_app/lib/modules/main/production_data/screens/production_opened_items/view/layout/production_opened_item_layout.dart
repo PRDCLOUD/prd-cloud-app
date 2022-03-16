@@ -16,6 +16,7 @@ class ProductionOpenedItemLayoutPage extends StatelessWidget {
           builder: (BuildContext context, state) {
             var selectedProductionData = context.read<OpenProductionDataCubit>().state.loadedItems.cast<ProductionBasicData?>().firstWhere((element) => element?.id == state, orElse: () => null);
             return Column(
+              key: UniqueKey(),
               children: [
                 ProductionSelectedSummary(productionData: selectedProductionData!),
                 Expanded(child: _Bottom(selectedProductionBasicData: selectedProductionData))

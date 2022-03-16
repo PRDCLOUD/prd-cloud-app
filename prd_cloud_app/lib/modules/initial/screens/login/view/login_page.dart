@@ -15,6 +15,7 @@ class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black54,
       body: BlocProvider(
           create: (context) => LoginBloc(authenticationRepository: context.read<AuthenticationRepository>()),
           child: const LoginForm(),

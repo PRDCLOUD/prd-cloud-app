@@ -39,7 +39,7 @@ class LoginForm extends StatelessWidget {
                   ),
                 ),
               ),
-              const Text("prdCloud® Todos os direitos reservados.", style: TextStyle(fontWeight: FontWeight.w600))
+              const Text("prdCloud® Todos os direitos reservados.", style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600))
             ]
           )
         )

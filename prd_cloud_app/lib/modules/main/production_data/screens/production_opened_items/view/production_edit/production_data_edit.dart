@@ -25,11 +25,23 @@ class ProductionDataEdit extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
                 Row(children: const [
-                  _Begin(),
-                  _End(),
+                  Padding(
+                    padding: EdgeInsets.all(3.0),
+                    child: _Begin(),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(3.0),
+                    child: _End(),
+                  ),
                 ]),
-                const _Comments(),
-                const _Products(),
+                const Padding(
+                  padding: EdgeInsets.all(3.0),
+                  child: _Comments(),
+                ),
+                const Padding(
+                  padding: EdgeInsets.all(3.0),
+                  child: _Products(),
+                ),
                 ...getVariableWidgets(context)
               ],
             ),
@@ -75,7 +87,10 @@ class ProductionDataEdit extends StatelessWidget {
         for(var column in row.columns) {
           columnWidgets.add(
             ResponsiveGridCol(
-              child: ProductionVariableEdit(productionVariable: column.productionVariable)
+              child: Padding(
+                padding: const EdgeInsets.all(3.0),
+                child: ProductionVariableEdit(productionVariable: column.productionVariable),
+              )
             )
           );
         }
@@ -95,6 +110,7 @@ class _Begin extends StatelessWidget {
     return BlocBuilder<FieldBeginCubit, FieldBeginState>(
       builder: (BuildContext context, state) {
         return DateTimePicker(
+          key: const ValueKey("Início"),
           label: "Início",
           locale: Localizations.localeOf(context),
           date: state.fieldValue,
@@ -113,6 +129,7 @@ class _End extends StatelessWidget {
     return BlocBuilder<FieldEndCubit, FieldEndState>(
       builder: (BuildContext context, state) {
         return DateTimePicker(
+          key: const ValueKey("Fim"),
           label: "Fim",
           locale: Localizations.localeOf(context),
           date: state.fieldValue,
@@ -189,7 +206,6 @@ class _Products extends StatelessWidget {
   }
   
   Widget setupAlertDialoadContainer(BuildContext context, List<Product> products, ProductSetter onChange) {
-
     return SizedBox(
       height: MediaQuery.of(context).size.height,
       width: MediaQuery.of(context).size.width,

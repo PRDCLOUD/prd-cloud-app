@@ -30,6 +30,12 @@ class _LossAddState extends State<LossAdd> {
     setState(() {
       selectedLoss = loss;
       lossAddStates = LossAddStates.lineUnitSelection;
+
+      var possibleLineUnits = widget.lineUnits.where((lineUnit) => selectedLoss!.lineUnitLoss.contains(lineUnit.id)).toList();
+      if (possibleLineUnits.length == 1) {
+        selectedLineUnit = possibleLineUnits.first;
+        lossAddStates = LossAddStates.valueFill;
+      }
     });
   }
 
@@ -46,46 +52,208 @@ class _LossAddState extends State<LossAdd> {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(height: 20,),
+        Text("CADASTRO DE PERDA", style: Theme.of(context).textTheme.headline6,),
+        Expanded(child: dialogBody()),
+      ],
+    );
+  }
+
+  Widget dialogBody() {
     switch (lossAddStates) {
       case LossAddStates.lossSelection:
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: widget.lossOptions.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              title: Text(widget.lossOptions[index].name),
-              onTap: () => selectLoss(widget.lossOptions[index])
-            );
-          },
-        );
+        return lossSelection();
       case LossAddStates.lineUnitSelection:
         var lineUnits = widget.lineUnits.where((lineUnit) => selectedLoss!.lineUnitLoss.contains(lineUnit.id)).toList();
-        return ListView.builder(
-          shrinkWrap: true,
-          itemCount: lineUnits.length,
-          itemBuilder: (BuildContext context, int index) {
-            return ListTile(
-              title: Text(lineUnits[index].name),
-              onTap: () => selectLineUnit(lineUnits[index])
-            );
-          },
-        );
+        return lineUnitSelection(lineUnits);
       case LossAddStates.valueFill:
-        return Column(
-          children: [
-            Row(children: [ const Text("Perda: "), Text(selectedLoss!.name)]),
-            Row(children: [ const Text("Local: "), Text(selectedLineUnit!.name)]),
-            NumberInput(
-              label: "Quantidade", 
+        return valueFill();
+    }
+  }
+
+  Widget valueFill() {
+    return Column(
+        children: [
+          tipoPerdaSelecionada(),
+          localSelecionado(),
+          Container(
+            width: 300,
+            padding: const EdgeInsets.symmetric(vertical: 30),
+            child: NumberInput(
+              label: "Quantidade em " + selectedLoss!.unit, 
               value: lossValue, 
               allowDecimal: true,
               onChanged: (newValue) => setState(() {
                 lossValue = newValue;
               })
+            )
+          ),
+          flowControlButtons(),
+        ],
+      );
+  }
+
+  Widget lossSelection() {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(15),
+          child: Text("Selecione a Perda", style: Theme.of(context).textTheme.titleMedium)
+        ),
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: widget.lossOptions.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Card(
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    child: Text(widget.lossOptions[index].name)
+                  )
+                ),
+                onTap: () => selectLoss(widget.lossOptions[index])
+              );
+            },
+          )
+        ),
+        flowControlButtons(),
+      ],
+    );
+  }
+
+
+  Widget lineUnitSelection(List<LineUnit> lineUnits) {
+    return Column(
+      children: [
+        tipoPerdaSelecionada(),
+        Container(
+          padding: const EdgeInsets.all(15),
+          child: Text("Selecione o local", style: Theme.of(context).textTheme.headline6)),
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: lineUnits.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Card(
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    child: Text(lineUnits[index].name)
+                  )
+                ),
+                onTap: () => selectLineUnit(lineUnits[index])
+              );
+            },
+          )
+        ),
+        flowControlButtons(),
+      ],
+    );
+  }
+
+  Widget tipoPerdaSelecionada() {
+    var textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white);
+    return InkWell(
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Card(
+          color: Theme.of(context).primaryColor,
+          
+          borderOnForeground: true,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+            child: Row(
+              children: [
+                Text("Perda:", style: textStyle.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(width: 10),
+                Text(selectedLoss!.name + '(' + selectedLoss!.unit + ')', style: textStyle)
+              ],
             ),
-            ElevatedButton(
+          )
+        ),
+      ),
+      onTap: () => backToLossSelectionStage(),
+    );
+  }
+
+  Widget localSelecionado() {
+    var textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white);
+    return InkWell(
+      child: Container(
+        padding: const EdgeInsets.all(10.0),
+        child: Card(
+          color: Theme.of(context).primaryColor,
+          
+          borderOnForeground: true,
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+            child: Row(
+              children: [
+                Text("Local:", style: textStyle.copyWith(fontWeight: FontWeight.bold)),
+                const SizedBox(width: 10),
+                Text(selectedLineUnit!.name, style: textStyle)
+              ],
+            ),
+          )
+        ),
+      ),
+      onTap: () => backToLineUnitSelectionStage(),
+    );
+  }
+
+  void backOneStage() {
+    if (lossAddStates == LossAddStates.lineUnitSelection) {
+      backToLossSelectionStage();
+    } else if (lossAddStates == LossAddStates.valueFill) {
+      backToLineUnitSelectionStage();
+    }
+  }
+
+  void backToLineUnitSelectionStage() {
+    setState(() {
+      lossAddStates = LossAddStates.lineUnitSelection;
+      selectedLineUnit = null;
+      lossValue = null;
+    });
+  }
+
+  void backToLossSelectionStage() {
+    setState(() {
+      selectedLoss = null;
+      lossAddStates = LossAddStates.lossSelection;
+      selectedLineUnit = null;
+      lossValue = null;
+    });
+  }
+
+  Widget flowControlButtons() {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical:  8.0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          if (lossAddStates != LossAddStates.lossSelection) 
+            ...[ ElevatedButton.icon(
+              icon: const Icon(Icons.arrow_back),
+              label: const Text("Voltar"),
+              onPressed: () => backOneStage(),
+              style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).colorScheme.secondary,
+                minimumSize: const Size(1, 50)
+              )
+            ) ]
+          else 
+            ...[],
+          if (lossAddStates == LossAddStates.valueFill)
+            ...[ElevatedButton(
               child: const Text("Adicionar"),
-              style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
+              style: ElevatedButton.styleFrom(
+                minimumSize: const Size(1, 50),
+                primary: Theme.of(context).colorScheme.primary
+              ),
               onPressed: lossValue == null ? 
                 null : 
                 () async {
@@ -94,10 +262,20 @@ class _LossAddState extends State<LossAdd> {
                   Navigator.pop(context);
                 }
               }
+            )]
+          else
+            ...[],
+          ElevatedButton.icon(
+            icon: const Icon(Icons.close),
+            label: const Text("Cancelar"),
+            onPressed: () => Navigator.pop(context),
+            style: ElevatedButton.styleFrom(
+              minimumSize: const Size(1, 50),
+              primary: Theme.of(context).colorScheme.error
             )
-          ],
-        );
-
-    }
+          ),
+        ]
+      ),
+    );
   }
 }
