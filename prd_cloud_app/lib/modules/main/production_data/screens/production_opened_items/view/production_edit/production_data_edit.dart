@@ -130,11 +130,17 @@ class _Comments extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FieldCommentsCubit, FieldCommentsState>(
         builder: (BuildContext context, state) {
-      return TextAreaInput(
-          initialValue: state.fieldValue,
-          onChange: (newValue) =>
-              context.read<FieldCommentsCubit>().updateField(newValue));
-    });
+          return TextFormField(
+            initialValue: state.fieldValue,
+            maxLines: 3,
+            keyboardType: TextInputType.multiline,
+            onChanged: (newValue) => context.read<FieldCommentsCubit>().updateField(newValue),
+            decoration: const InputDecoration(
+              label: Text("Comentário"),
+            ),
+          );
+        }
+      );
   }
 }
 
