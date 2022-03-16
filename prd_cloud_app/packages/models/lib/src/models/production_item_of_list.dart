@@ -15,7 +15,7 @@ class ProductionItemOfList extends Equatable {
   final String? updatedBy;
   final DateTime? updatedDate;
 
-   final ProductionDataStatus status;
+  final ProductionDataStatus status;
 
   ProductionItemOfList({
     required this.id, 

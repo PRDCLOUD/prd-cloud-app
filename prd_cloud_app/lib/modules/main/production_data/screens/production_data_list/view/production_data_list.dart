@@ -109,11 +109,11 @@ class _ListCardState extends State<ListCard> {
           });
         }
       },
-      child: card(widget._productionItemOfList),
+      child: openItemCard(widget._productionItemOfList),
     );
   }
 
-  Card card(ProductionItemOfList item) {
+  Card openItemCard(ProductionItemOfList item) {
     
     var title = Theme.of(context).textTheme.titleLarge!;
     var bodyMedium = Theme.of(context).textTheme.bodyMedium!;
@@ -130,21 +130,29 @@ class _ListCardState extends State<ListCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Row(children: [ Text(item.productionLine ?? "", style: title.copyWith(fontWeight: FontWeight.normal)) ] ),
+                    if (item.product == null) 
+                      ...[]
+                    else ...[
+                      Padding(
+                        padding: const EdgeInsets.only(left: 7.0),
+                        child: Row(children: [ Text(item.product!, style: bodyMedium) ] ),
+                      )
+                    ],
                     Padding(
-                      padding: const EdgeInsets.only(left: 7.0),
-                      child: Row(children: [ Text(item.product ?? "", style: bodyMedium) ] ),
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Row(children: [ Text("Início: ", style: bodyMedium), Text(dateTimeAsString(item.begin), style: bodyMedium) ] ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Row(children: [ Text("Início: ", style: bodyMedium), Text(dateAsString(item.begin), style: bodyMedium) ] ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 8.0),
-                      child: Row(children: [ Text("Fim: ", style: bodyMedium), Text(dateAsString(item.end), style: bodyMedium) ] ),
+                      child: Row(children: [ Text("Fim: ", style: bodyMedium), Text(dateTimeAsString(item.end), style: bodyMedium) ] ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(top: 4.0, left: 8.0),
-                      child: Row(children: [ Text("Criado por: ", style: bodySmall), Text(item.createdBy?.split('@')[0] ?? "", style: bodySmall) ] ),
+                      child: Row(children: [ Text("Criado por: ", style: bodySmall), Text(auditoryText(item.createdBy, item.createdDate), style: bodySmall) ] ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                      child: Row(children: [ Text("Editado por: ", style: bodySmall), Text(auditoryText(item.updatedBy, item.updatedDate), style: bodySmall) ] ),
                     )
                   ]
                 )
@@ -216,11 +224,29 @@ class _ListCardState extends State<ListCard> {
           .cancelItem(widget._productionItemOfList.id);
   }
 
-  String dateAsString(DateTime? date) {
+  String auditoryText(String? by, DateTime? date) {
+    if (by == null || by.isEmpty) {
+      return "";
+    } else if (date == null) {
+      return by.split('@')[0];
+    } else {
+      return by.split('@')[0] + ' (' + dateAsString(date) + ')';
+    }
+  }
+
+  String dateTimeAsString(DateTime? date) {
     if (date == null) {
       return "";
     } else {
       return DateFormat.yMd(Localizations.localeOf(context).languageCode).add_jm().format(date);
+    }
+  } 
+
+  String dateAsString(DateTime? date) {
+    if (date == null) {
+      return "";
+    } else {
+      return DateFormat.yMd(Localizations.localeOf(context).languageCode).format(date);
     }
   } 
 
