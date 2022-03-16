@@ -44,9 +44,10 @@ class _StopQtyTotalTimeState extends State<StopQtyTotalTime> {
             stopCurrentDefinitionId: widget.selectedStop.id,
             stopType: widget.selectedStop.stopTypeOf,
             averageTimeAtStopQtyAverageTime: widget.selectedStop.averageTime,
-            claims: widget.selectedStop.stopClaims,
             qtyAtStopQtyTotalTime: qtyAtStopQtyTotalTime!.toInt(),
-            totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime);
+            totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime,
+            claims: context.read<StopClaimCubit>().state.stopClaims
+          );
         if (result) {
           Navigator.pop(context);
         }
