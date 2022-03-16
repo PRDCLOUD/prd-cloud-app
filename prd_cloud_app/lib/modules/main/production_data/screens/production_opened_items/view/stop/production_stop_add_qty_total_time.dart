@@ -6,6 +6,8 @@ import 'package:prd_cloud_app/widgets/widgets.dart';
 
 import 'production_stop_add.dart';
 import 'production_stop_claim.dart';
+import 'stop_add_cubit/stop_add_cubit.dart';
+import 'stop_add_validation_cubit copy/stop_add_validation_cubit.dart';
 
 class StopQtyTotalTime extends StatefulWidget {
   const StopQtyTotalTime(
@@ -29,57 +31,53 @@ class _StopQtyTotalTimeState extends State<StopQtyTotalTime> {
   double? qtyAtStopQtyTotalTime;
   double? totalTimeAtStopQtyTotalTime;
 
+  bool isValid() => qtyAtStopQtyTotalTime != null && totalTimeAtStopQtyTotalTime != null;
+
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        NumberInput(
-          key: const ValueKey('StopQtyTotalTime_Quantidade'),
-          label: "Quantidade",
-          allowDecimal: false,
-          value: qtyAtStopQtyTotalTime,
-          onChanged: (newValue) {
-            setState(() {
-              qtyAtStopQtyTotalTime = newValue;
-            });
-          },
-        ),
-        NumberInput(
-          key: const ValueKey('StopQtyTotalTime_Tempo'),
-          label: "Tempo Total (min)",
-          allowDecimal: true,
-          value: totalTimeAtStopQtyTotalTime,
-          onChanged: (newValue) {
-            setState(() {
-              totalTimeAtStopQtyTotalTime = newValue;
-            });
-          },
-        ),
-        const StopClaims(),
-        BlocBuilder<StopClaimCubit, StopClaimState>(
-          builder: (context, state) {
-            return ElevatedButton(
-                child: const Text("Adicionar"),
-                style: ElevatedButton.styleFrom(textStyle: const TextStyle(fontSize: 20)),
-                onPressed: (qtyAtStopQtyTotalTime == null || totalTimeAtStopQtyTotalTime == null || !state.isStopClaimFillValid())
-                    ? null
-                    : () async {
-                        var result = await widget.stopAddCallback(
-                            lineUnitId: widget.selectedLineUnit.id,
-                            productionBasicDataId: widget.productionBasicId,
-                            stopCurrentDefinitionId: widget.selectedStop.id,
-                            stopType: widget.selectedStop.stopTypeOf,
-                            averageTimeAtStopQtyAverageTime:widget.selectedStop.averageTime,
-                            claims: widget.selectedStop.stopClaims,
-                            qtyAtStopQtyTotalTime: qtyAtStopQtyTotalTime!.toInt(),
-                            totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime);
-                        if (result) {
-                          Navigator.pop(context);
-                        }
-                      });
-          },
-        )
-      ],
+    context.read<StopAddValidationCubit>().timeValidationState(isValid());
+    return BlocListener<StopAddCubit, DateTime>(
+      listener: (context, state) async {
+        var result = await widget.stopAddCallback(
+            lineUnitId: widget.selectedLineUnit.id,
+            productionBasicDataId: widget.productionBasicId,
+            stopCurrentDefinitionId: widget.selectedStop.id,
+            stopType: widget.selectedStop.stopTypeOf,
+            averageTimeAtStopQtyAverageTime: widget.selectedStop.averageTime,
+            claims: widget.selectedStop.stopClaims,
+            qtyAtStopQtyTotalTime: qtyAtStopQtyTotalTime!.toInt(),
+            totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime);
+        if (result) {
+          Navigator.pop(context);
+        }
+      },
+      child: Column(
+        children: [
+          NumberInput(
+            key: const ValueKey('StopQtyTotalTime_Quantidade'),
+            label: "Quantidade",
+            allowDecimal: false,
+            value: qtyAtStopQtyTotalTime,
+            onChanged: (newValue) {
+              setState(() {
+                qtyAtStopQtyTotalTime = newValue;
+              });
+            },
+          ),
+          NumberInput(
+            key: const ValueKey('StopQtyTotalTime_Tempo'),
+            label: "Tempo Total (min)",
+            allowDecimal: true,
+            value: totalTimeAtStopQtyTotalTime,
+            onChanged: (newValue) {
+              setState(() {
+                totalTimeAtStopQtyTotalTime = newValue;
+              });
+            },
+          )
+           
+        ],
+      ),
     );
   }
 }

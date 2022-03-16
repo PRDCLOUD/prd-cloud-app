@@ -71,7 +71,7 @@ class _AppViewState extends State<AppView> {
     return GlobalLoaderOverlay(
       child: MaterialApp(
         localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
+          ...GlobalMaterialLocalizations.delegates,
           GlobalWidgetsLocalizations.delegate,
         ],
         locale: const Locale('pt', 'BR'),

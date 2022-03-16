@@ -5,8 +5,11 @@ import 'package:prd_cloud_app/modules/main/production_data/screens/production_op
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/production_stop_add_begin_time.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/production_stop_add_qty_total_time.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/production_stop_add_total_time.dart';
+import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/stop_add_cubit/stop_add_cubit.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/stop/stop_claim_cubit/stop_claim_cubit.dart';
 import 'production_stop_add_qty_average.dart';
+import 'production_stop_claim.dart';
+import 'stop_add_validation_cubit copy/stop_add_validation_cubit.dart';
 
 enum StopAddStates { stopSelection, lineUnitSelection, stopFill }
 
@@ -50,65 +53,66 @@ class _StopAddState extends State<StopAdd> {
   Stop? selectedStop;
   LineUnit? selectedLineUnit;
 
-
-
   @override
   Widget build(BuildContext context) {
     switch (stopAddStates) {
       case StopAddStates.stopSelection:
         return Column(
-          children: [
-            Expanded(child: _stopSelection()),
-            flowControlButtons()
-          ],
+          children: [Expanded(child: _stopSelection()), _flowControlButtons()],
         );
       case StopAddStates.lineUnitSelection:
-        
         return Column(
           children: [
             _selectedLossTopCard(),
             Expanded(child: _lineUnitSelection()),
-            flowControlButtons()
+            _flowControlButtons()
           ],
         );
       case StopAddStates.stopFill:
-        return BlocProvider(
-          create: (context) => StopClaimCubit(stopClaims: selectedStop!.stopClaims),
-          child: Column(
-            children: [
-              _selectedLossTopCard(),
-              _selectedLineUnitCard(),
-              stopInformationFill(),
-              flowControlButtons()
-            ],
+        return MultiBlocProvider(
+          providers: [
+            BlocProvider(create: (context) => StopClaimCubit(stopClaims: selectedStop!.stopClaims)),
+          ],
+          child: _FlowBlocProviders(
+            child: Column(
+              children: [
+                _selectedLossTopCard(),
+                _selectedLineUnitCard(),
+                _stopInformationFill(),
+                const StopClaims(),
+                _flowControlButtons()
+              ],
+            ),
           ),
         );
     }
   }
 
   ListView _lineUnitSelection() {
-    var lineUnits = widget.lineUnits.where((lineUnit) => selectedStop!.lineUnitStops.contains(lineUnit.id)).toList();
+    var lineUnits = widget.lineUnits
+        .where((lineUnit) => selectedStop!.lineUnitStops.contains(lineUnit.id))
+        .toList();
     return ListView.builder(
-        shrinkWrap: true,
-        itemCount: lineUnits.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-              title: Text(lineUnits[index].name),
-              onTap: () => selectLineUnit(lineUnits[index]));
-        },
-      );
+      shrinkWrap: true,
+      itemCount: lineUnits.length,
+      itemBuilder: (BuildContext context, int index) {
+        return ListTile(
+            title: Text(lineUnits[index].name),
+            onTap: () => selectLineUnit(lineUnits[index]));
+      },
+    );
   }
 
   ListView _stopSelection() {
     return ListView.builder(
-        shrinkWrap: true,
-        itemCount: widget.stopOptions.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-              title: Text(widget.stopOptions[index].codeName),
-              onTap: () => selectStop(widget.stopOptions[index]));
-        },
-      );
+      shrinkWrap: true,
+      itemCount: widget.stopOptions.length,
+      itemBuilder: (BuildContext context, int index) {
+        return ListTile(
+            title: Text(widget.stopOptions[index].codeName),
+            onTap: () => selectStop(widget.stopOptions[index]));
+      },
+    );
   }
 
   void backOneStage() {
@@ -149,7 +153,7 @@ class _StopAddState extends State<StopAdd> {
     });
   }
 
-  Widget stopInformationFill() {
+  Widget _stopInformationFill() {
     switch (selectedStop!.stopTypeOf) {
       case StopTypeOf.QtyAverageTime:
         return StopQtyAverageTime(
@@ -186,106 +190,132 @@ class _StopAddState extends State<StopAdd> {
     }
   }
 
-  Widget flowControlButtons() {
+  Widget _flowControlButtons() {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical:  8.0),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          if (stopAddStates != StopAddStates.stopSelection) 
-            ...[ ElevatedButton.icon(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+        if (stopAddStates != StopAddStates.stopSelection) ...[
+          ElevatedButton.icon(
               icon: const Icon(Icons.arrow_back),
               label: const Text("Voltar"),
               onPressed: () => backOneStage(),
               style: ElevatedButton.styleFrom(
-                primary: Theme.of(context).colorScheme.secondary,
-                minimumSize: const Size(1, 50)
-              )
-            ) ]
-          else 
-            ...[],
-          if (stopAddStates == StopAddStates.stopFill)
-            ...[ElevatedButton(
-              child: const Text("Adicionar"),
-              style: ElevatedButton.styleFrom(
-                minimumSize: const Size(1, 50),
-                primary: Theme.of(context).colorScheme.primary
-              ),
-              onPressed: () {} 
-              // lossValue == null ? 
-              //   null : 
-              //   () async {
-              //   var result = await widget.lossAddCallback(widget.productionBasicId, selectedLoss!.id, lossValue!, selectedLineUnit!.id);
-              //   if (result) {
-              //     Navigator.pop(context);
-              //   }
-              // }
-            )]
-          else
-            ...[],
-          ElevatedButton.icon(
+                  primary: Theme.of(context).colorScheme.secondary,
+                  minimumSize: const Size(1, 50)))
+        ] else
+          ...[],
+        if (stopAddStates == StopAddStates.stopFill) ...[
+          BlocBuilder<StopAddValidationCubit, StopAddValidationState>(
+            builder: (context, state) {
+              return ElevatedButton(
+                  child: const Text("Adicionar"),
+                  style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(1, 50),
+                      primary: Theme.of(context).colorScheme.primary),
+                  onPressed: state.timeValidation == TimeValidation.invalid ?
+                    null :
+                    () => context.read<StopAddCubit>().addStop()
+                  );
+            },
+          )
+        ] else
+          ...[],
+        ElevatedButton.icon(
             icon: const Icon(Icons.close),
             label: const Text("Cancelar"),
             onPressed: () => Navigator.pop(context),
             style: ElevatedButton.styleFrom(
-              minimumSize: const Size(1, 50),
-              primary: Theme.of(context).colorScheme.error
-            )
-          ),
-        ]
-      ),
+                minimumSize: const Size(1, 50),
+                primary: Theme.of(context).colorScheme.error)),
+      ]),
     );
   }
 
-
   Widget _selectedLossTopCard() {
-    var textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white);
+    var textStyle =
+        Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white);
     return InkWell(
       child: Container(
         padding: const EdgeInsets.all(10.0),
         child: Card(
-          color: Theme.of(context).primaryColor,
-          
-          borderOnForeground: true,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-            child: Row(
-              children: [
-                Text("Perda:", style: textStyle.copyWith(fontWeight: FontWeight.bold)),
-                const SizedBox(width: 10),
-                Text(selectedStop!.codeName, style: textStyle)
-              ],
-            ),
-          )
-        ),
+            color: Theme.of(context).primaryColor,
+            borderOnForeground: true,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+              child: Row(
+                children: [
+                  Text("Perda:",
+                      style: textStyle.copyWith(fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 10),
+                  Text(selectedStop!.codeName, style: textStyle)
+                ],
+              ),
+            )),
       ),
       onTap: () => backToStopSelectionStage(),
     );
   }
 
   Widget _selectedLineUnitCard() {
-    var textStyle = Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white);
+    var textStyle =
+        Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white);
     return InkWell(
       child: Container(
         padding: const EdgeInsets.all(10.0),
         child: Card(
-          color: Theme.of(context).primaryColor,
-          
-          borderOnForeground: true,
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-            child: Row(
-              children: [
-                Text("Local:", style: textStyle.copyWith(fontWeight: FontWeight.bold)),
-                const SizedBox(width: 10),
-                Text(selectedLineUnit!.name, style: textStyle)
-              ],
-            ),
-          )
-        ),
+            color: Theme.of(context).primaryColor,
+            borderOnForeground: true,
+            child: Padding(
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+              child: Row(
+                children: [
+                  Text("Local:",
+                      style: textStyle.copyWith(fontWeight: FontWeight.bold)),
+                  const SizedBox(width: 10),
+                  Text(selectedLineUnit!.name, style: textStyle)
+                ],
+              ),
+            )),
       ),
       onTap: () => backToLineUnitSelectionStage(),
     );
   }
+}
 
+
+
+class _FlowBlocProviders extends StatelessWidget {
+  const _FlowBlocProviders({ Key? key, required Widget child }) : _child = child, super(key: key);
+
+  final Widget _child;
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => StopAddValidationCubit(isTimeValid: false, isClaimValid: context.read<StopClaimCubit>().state.isStopClaimFillValid())),
+        BlocProvider(create: (context) => StopAddCubit()),
+      ],
+      child: _FlowBlocListerner(
+        child: _child)
+      );
+  }
+}
+
+class _FlowBlocListerner extends StatelessWidget {
+  const _FlowBlocListerner({ Key? key, required Widget child }) : _child = child, super(key: key);
+
+  final Widget _child;
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<StopClaimCubit, StopClaimState>(
+      listener: (context, state) {
+        context.read<StopAddValidationCubit>().claimValidationState(state.isStopClaimFillValid());
+      },
+      child: _child,
+    );
+  }
 }
