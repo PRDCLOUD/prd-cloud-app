@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 
 import 'line_unit.dart';
 
@@ -10,7 +11,7 @@ class ProductionLoss extends Equatable {
   final String? code;
   final String name;
   final String? unit;
-  final double? numberValue;
+  final double? lossValue;
   final int order;
 
   ProductionLoss({ 
@@ -20,7 +21,7 @@ class ProductionLoss extends Equatable {
     required this.code, 
     required this.name, 
     required this.unit, 
-    required this.numberValue, 
+    required this.lossValue, 
     required this.order 
   });
 
@@ -32,7 +33,7 @@ class ProductionLoss extends Equatable {
       code: json['code'], 
       name: json['name'], 
       unit: json['unit'], 
-      numberValue: json['numberValue'], 
+      lossValue: json['lossValue'], 
       order: json['order']);
   }
 
@@ -46,7 +47,7 @@ class ProductionLoss extends Equatable {
       code,
       name,
       unit,
-      numberValue,
+      lossValue,
       order,
     ];
   }
@@ -59,7 +60,7 @@ class ProductionLoss extends Equatable {
     String? code,
     String? name,
     String? unit,
-    double? numberValue,
+    double? lossValue,
     int? order,
   }) {
     return ProductionLoss(
@@ -69,8 +70,22 @@ class ProductionLoss extends Equatable {
       code: code ?? this.code,
       name: name ?? this.name,
       unit: unit ?? this.unit,
-      numberValue: numberValue ?? this.numberValue,
+      lossValue: lossValue ?? this.lossValue,
       order: order ?? this.order,
     );
+  }
+}
+
+extension ProductionLossExtensions on ProductionLoss {
+
+  String getFormatedLossValue() {
+    var f = NumberFormat("##0.0#", "en_US");
+    if (lossValue == null) {
+      return "";
+    } else if (unit == null) {
+      return f.format(lossValue);
+    } else {
+      return f.format(lossValue) + ' ' + unit!;
+    }
   }
 }

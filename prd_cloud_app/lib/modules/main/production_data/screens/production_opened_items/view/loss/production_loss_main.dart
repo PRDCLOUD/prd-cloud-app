@@ -60,10 +60,7 @@ class ProductionLossMain extends StatelessWidget {
             shrinkWrap: true,
             itemCount: state.losses.length,
             itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text(state.losses[index].name),
-                onLongPress: () async => await context.read<ProductionLossCubit>().removeLoss(context.read<SelectedProductionDataCubit>().state!, state.losses[index].id),
-              );
+              return _lossCard(state, index, context);
             },
           ),
         );
@@ -71,7 +68,36 @@ class ProductionLossMain extends StatelessWidget {
     );
   }
 
-  
-  
+  Widget _lossCard(ProductionLossState state, int index, BuildContext context) {
+    return ListTile(
+      title: Card(
+        child: Container(
+          padding: const EdgeInsets.all(13),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(state.losses[index].name, style: Theme.of(context).textTheme.bodyMedium),
+                    Text(state.losses[index].getFormatedLossValue(), style: Theme.of(context).textTheme.bodySmall),
+                  ],
+                ),
+              ),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.delete_outline), 
+                label: const Text("Excluir"),
+                style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.error),
+                onLongPress: () async => await context.read<ProductionLossCubit>().removeLoss(context.read<SelectedProductionDataCubit>().state!, state.losses[index].id),
+                onPressed: () async => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Segure o botão para deletar")))
+              )
+            ],
+          )
+        )
+      ),
+    );
+  }
+
 
 }

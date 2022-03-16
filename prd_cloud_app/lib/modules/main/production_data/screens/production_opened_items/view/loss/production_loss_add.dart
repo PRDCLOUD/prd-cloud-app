@@ -54,7 +54,7 @@ class _LossAddState extends State<LossAdd> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        SizedBox(height: 20,),
+        const SizedBox(height: 20),
         Text("CADASTRO DE PERDA", style: Theme.of(context).textTheme.headline6,),
         Expanded(child: dialogBody()),
       ],
