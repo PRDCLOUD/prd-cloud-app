@@ -69,9 +69,9 @@ class _TextVariable extends StatelessWidget {
     return BlocBuilder<FieldVariableTextCubit, FieldVariableTextState>(
       builder: (context, state) {
         if (state.options == null || state.options!.isEmpty || !state.enabled) {
-          return const _TextField();
+          return _TextField(label: state.label);
         } else {
-          return const _DropdownField();
+          return _DropdownField(label: state.label);
         }
       },
     );
@@ -79,16 +79,18 @@ class _TextVariable extends StatelessWidget {
 }
 
 class _TextField extends StatelessWidget {
-  const _TextField({Key? key}) : super(key: key);
+  const _TextField({Key? key, required String label}) : _label = label, super(key: key);
+
+  final String _label;
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      controller: TextEditingController(text: context.read<FieldVariableTextCubit>().state.fieldValue),
+    return TextFormField(
+      initialValue: context.read<FieldVariableTextCubit>().state.fieldValue,
       enabled: context.read<FieldVariableTextCubit>().state.enabled,
       onChanged: context.read<FieldVariableTextCubit>().updateField,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        label: Text(_label),
       ),
     );
   }
@@ -97,21 +99,19 @@ class _TextField extends StatelessWidget {
 }
 
 class _DropdownField extends StatelessWidget {
-  const _DropdownField({Key? key}) : super(key: key);
+  const _DropdownField({Key? key, required String label}) : _label = label, super(key: key);
+
+  final String _label;
 
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FieldVariableTextCubit, FieldVariableTextState>(
       builder: (context, state) {
-        return DropdownButton<String>(
-          value: state.fieldValue,
-          icon: const Icon(Icons.arrow_downward),
-          elevation: 16,
-          style: const TextStyle(color: Colors.deepPurple),
-          underline: Container(
-            height: 2,
-            color: Colors.deepPurpleAccent,
+        return DropdownButtonFormField<String>(
+          decoration: InputDecoration(
+            label: Text(_label),
           ),
+          value: state.fieldValue,
           onChanged: context.read<FieldVariableTextCubit>().updateField,
           items: state.options!.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
