@@ -107,11 +107,6 @@ class _DropdownFieldState extends State<_DropdownField> {
       value: value,
       icon: const Icon(Icons.arrow_downward),
       elevation: 16,
-      style: const TextStyle(color: Colors.deepPurple),
-      underline: Container(
-        height: 2,
-        color: Colors.deepPurpleAccent,
-      ),
       onChanged: (newValue) {
         if (widget.onChanged != null) {
           widget.onChanged!(newValue);

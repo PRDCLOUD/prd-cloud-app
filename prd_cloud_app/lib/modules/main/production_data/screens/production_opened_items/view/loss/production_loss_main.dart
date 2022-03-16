@@ -50,13 +50,12 @@ class ProductionLossMain extends StatelessWidget {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-
-          backgroundColor: Colors.green,
-          onPressed: () {
-            lossAddDialog(context, lossesOptions, lineUnits, context.read<ProductionLossCubit>().addLoss, productionDataId);
-          },
-        ),
+            child: const Icon(Icons.add, color: Colors.white),
+            backgroundColor: Theme.of(context).primaryColor,
+            onPressed: () {
+              lossAddDialog(context, lossesOptions, lineUnits, context.read<ProductionLossCubit>().addLoss, productionDataId);
+            },
+          ),
           body: ListView.builder(
             shrinkWrap: true,
             itemCount: state.losses.length,

@@ -50,13 +50,12 @@ class ProductionStopMain extends StatelessWidget {
         return Scaffold(
           floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
           floatingActionButton: FloatingActionButton(
-          child: const Icon(Icons.add),
-
-          backgroundColor: Colors.green,
-          onPressed: () {
-            stopAddDialog(context, stopOptions, lineUnits, context.read<ProductionStopCubit>().addStop, productionDataId);
-          },
-        ),
+            child: const Icon(Icons.add, color: Colors.white),
+            backgroundColor: Theme.of(context).primaryColor,
+            onPressed: () {
+              stopAddDialog(context, stopOptions, lineUnits, context.read<ProductionStopCubit>().addStop, productionDataId);
+            },
+          ),
           body: ListView.builder(
             shrinkWrap: true,
             itemCount: state.stops.length,
