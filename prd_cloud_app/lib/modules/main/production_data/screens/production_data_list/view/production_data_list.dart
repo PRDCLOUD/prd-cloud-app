@@ -117,6 +117,7 @@ class _ListCardState extends State<ListCard> {
     
     var title = Theme.of(context).textTheme.titleLarge!;
     var bodyMedium = Theme.of(context).textTheme.bodyMedium!;
+    var bodySmall = Theme.of(context).textTheme.bodySmall!;
 
     return Card(
       child: InkWell(
@@ -128,10 +129,23 @@ class _ListCardState extends State<ListCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(children: [ Text("Linha: ", style: title), Text(item.productionLine ?? "", style: title.copyWith(fontWeight: FontWeight.normal)) ] ),
-                    Row(children: [ Text("Produto: ", style: bodyMedium), Text(item.product ?? "", style: bodyMedium) ] ),
-                    Row(children: [ Text("Início: ", style: bodyMedium), Text(dateAsString(item.begin), style: bodyMedium) ] ),
-                    Row(children: [ Text("Fim: ", style: bodyMedium), Text(dateAsString(item.end), style: bodyMedium) ] )
+                    Row(children: [ Text(item.productionLine ?? "", style: title.copyWith(fontWeight: FontWeight.normal)) ] ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 7.0),
+                      child: Row(children: [ Text(item.product ?? "", style: bodyMedium) ] ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Row(children: [ Text("Início: ", style: bodyMedium), Text(dateAsString(item.begin), style: bodyMedium) ] ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(left: 8.0),
+                      child: Row(children: [ Text("Fim: ", style: bodyMedium), Text(dateAsString(item.end), style: bodyMedium) ] ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 4.0, left: 8.0),
+                      child: Row(children: [ Text("Criado por: ", style: bodySmall), Text(item.createdBy?.split('@')[0] ?? "", style: bodySmall) ] ),
+                    )
                   ]
                 )
               ),
