@@ -4,6 +4,7 @@ import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'Production_opened_bloc_provider.dart';
 import 'production_opened_item_selection_list.dart';
+import 'production_selected_summary.dart';
 import 'production_summary.dart';
 
 class ProductionOpenedItemLayoutPage extends StatelessWidget {
@@ -18,7 +19,7 @@ class ProductionOpenedItemLayoutPage extends StatelessWidget {
             return Column(
               children: [
                 GestureDetector(
-                  child: SelectedProductionDataSummary(productionData: selectedProductionData),
+                  child: ProductionSelectedSummary(productionData: selectedProductionData!),
                   onTap: () => Navigator.of(context).push(ProductionOpenedItemSelectionListPage.route(context.read<OpenProductionDataCubit>(), context.read<SelectedProductionDataCubit>()))
                 ),
                 Expanded(child: 
@@ -44,11 +45,7 @@ class _Bottom extends StatelessWidget {
     if (_selectedProductionBasicData == null) {
       return const Center(child: Text("No Data"));
     }
-    return Container(
-      padding: const EdgeInsets.all(3.0),
-      decoration: BoxDecoration(border: Border.all(color: Colors.blueAccent)),
-      child: ProductionOpenedBlocProvider(productionBasicDataId: _selectedProductionBasicData?.id as int)
-    );
+    return ProductionOpenedBlocProvider(productionBasicDataId: _selectedProductionBasicData?.id as int);
   }
 }
 

@@ -81,11 +81,11 @@ class _AppViewState extends State<AppView> {
           Locale('es', 'AR'),
         ],
         // The Mandy red, light theme.
-        theme: FlexThemeData.light(scheme: FlexScheme.mandyRed),
+        theme: FlexThemeData.light(scheme: FlexScheme.bigStone),
         // The Mandy red, dark theme.
-        darkTheme: FlexThemeData.dark(scheme: FlexScheme.barossa),
+        darkTheme: FlexThemeData.dark(scheme: FlexScheme.outerSpace),
         // Use dark or light theme based on system setting.
-        themeMode: ThemeMode.dark,
+        themeMode: ThemeMode.light,
         navigatorKey: _navigatorKey,
         builder: (context, child) {
           

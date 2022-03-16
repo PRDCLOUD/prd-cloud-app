@@ -95,7 +95,7 @@ class DrawerMenuList extends StatelessWidget {
               child: Container(
                 decoration: const BoxDecoration(
                     image: DecorationImage(
-                        image: AssetImage("assets/img/logotipo.png"),
+                        image: AssetImage("assets/img/logo_dark.png"),
                         fit: BoxFit.scaleDown)),
               ),
               padding: const EdgeInsets.all(40),

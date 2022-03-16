@@ -33,7 +33,10 @@ class _ProductionOpenedItemNavigation extends State<ProductionOpenedItemNavigati
     builder: (BuildContext context, state) {
       return Scaffold(
         body: Center(
-          child: _widgetOptions.elementAt(_selectedIndex),
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: _widgetOptions.elementAt(_selectedIndex),
+          ),
         ),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
@@ -51,7 +54,6 @@ class _ProductionOpenedItemNavigation extends State<ProductionOpenedItemNavigati
             ),
           ],
           currentIndex: _selectedIndex,
-          selectedItemColor: Colors.amber[800],
           onTap: _onItemTapped,
         ),
       );
