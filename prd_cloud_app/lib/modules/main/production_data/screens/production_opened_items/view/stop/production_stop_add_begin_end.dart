@@ -64,6 +64,7 @@ class _StopBeginEndState extends State<StopBeginEnd> {
                 });
               },
             ),
+            const SizedBox(height: 10),
             DateTimePicker(
               label: "Fim",
               locale: Localizations.localeOf(context),

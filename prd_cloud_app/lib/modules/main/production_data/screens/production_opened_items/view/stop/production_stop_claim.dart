@@ -11,12 +11,16 @@ class StopClaims extends StatelessWidget {
     var claims = context.read<StopClaimCubit>().state.stopClaims;
     return Column(
       children: claims.map((x) => 
-        StopClaimField(
-          claim: x.claim,
-          onTheFly: x.onTheFly,
-          initialValue: x.claimValue ?? x.defaultValue,
-          valueList: x.valueList,
-          onClaimValueChanged: (newValue) => context.read<StopClaimCubit>().updateStopClaim(x.claim, newValue),
+        Padding(
+          padding: const EdgeInsets.only(bottom: 10),
+          child: StopClaimField(
+            key: ValueKey("Stop_Claim_" + x.claim),
+            claim: x.claim,
+            onTheFly: x.onTheFly,
+            initialValue: x.claimValue ?? x.defaultValue,
+            valueList: x.valueList,
+            onClaimValueChanged: (newValue) => context.read<StopClaimCubit>().updateStopClaim(x.claim, newValue),
+          ),
         )
       ).cast<Widget>().toList(),
     );
@@ -48,12 +52,14 @@ class _StopClaimFieldState extends State<StopClaimField> {
   Widget build(BuildContext context) {
     return widget.valueList != null && widget.valueList!.isNotEmpty
         ? _DropdownField(
+            label: widget.claim,
             initialValue: widget.initialValue,
             onChanged:widget.onClaimValueChanged,
             options: widget.valueList!
           )
 
         : _TextField(
+            label: widget.claim,
             initialValue: widget.initialValue,
             onChanged: widget.onClaimValueChanged
           );
@@ -61,9 +67,10 @@ class _StopClaimFieldState extends State<StopClaimField> {
 }
 
 class _TextField extends StatelessWidget {
-  const _TextField({Key? key, this.initialValue, this.onChanged})
+  const _TextField({Key? key, required this.label, this.initialValue, this.onChanged})
       : super(key: key);
 
+  final String label;
   final String? initialValue;
   final void Function(String?)? onChanged;
 
@@ -72,8 +79,8 @@ class _TextField extends StatelessWidget {
     return TextFormField(
       initialValue: initialValue,
       onChanged: onChanged,
-      decoration: const InputDecoration(
-        border: OutlineInputBorder(),
+      decoration: InputDecoration(
+        label: Text(label),
       ),
     );
   }
@@ -81,9 +88,10 @@ class _TextField extends StatelessWidget {
 
 class _DropdownField extends StatefulWidget {
   const _DropdownField(
-      {Key? key, this.initialValue, required this.options, this.onChanged})
+      {Key? key, this.initialValue, required this.label, required this.options, this.onChanged})
       : super(key: key);
 
+  final String label;
   final String? initialValue;
   final List<String> options;
   final void Function(String?)? onChanged;
@@ -103,8 +111,11 @@ class _DropdownFieldState extends State<_DropdownField> {
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
+    return DropdownButtonFormField<String>(
       value: value,
+      decoration: InputDecoration(
+        label: Text(widget.label),
+      ),
       icon: const Icon(Icons.arrow_downward),
       elevation: 16,
       onChanged: (newValue) {

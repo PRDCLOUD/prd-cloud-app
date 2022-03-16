@@ -65,6 +65,7 @@ class _StopQtyTotalTimeState extends State<StopQtyTotalTime> {
               });
             },
           ),
+          const SizedBox(height: 10),
           NumberInput(
             key: const ValueKey('StopQtyTotalTime_Tempo'),
             label: "Tempo Total (min)",

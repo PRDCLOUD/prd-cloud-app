@@ -74,14 +74,21 @@ class _StopAddState extends State<StopAdd> {
             BlocProvider(create: (context) => StopClaimCubit(stopClaims: selectedStop!.stopClaims)),
           ],
           child: _FlowBlocProviders(
-            child: Column(
-              children: [
-                _selectedLossTopCard(),
-                _selectedLineUnitCard(),
-                _stopInformationFill(),
-                const StopClaims(),
-                _flowControlButtons()
-              ],
+            child: Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                children: [
+                  _selectedLossTopCard(),
+                  const SizedBox(height: 10),
+                  _selectedLineUnitCard(),
+                  const SizedBox(height: 10),
+                  _stopInformationFill(),
+                  const SizedBox(height: 10),
+                  const StopClaims(),
+                  const SizedBox(height: 10),
+                  _flowControlButtons()
+                ],
+              ),
             ),
           ),
         );
@@ -143,6 +150,16 @@ class _StopAddState extends State<StopAdd> {
       selectedStop = stop;
       stopAddStates = StopAddStates.lineUnitSelection;
       selectedLineUnit = null;
+
+      var lineUnits = widget.lineUnits
+        .where((lineUnit) => selectedStop!.lineUnitStops.contains(lineUnit.id))
+        .toList();
+
+      if (lineUnits.length == 1) {
+        selectedLineUnit = lineUnits.first;
+        stopAddStates = StopAddStates.stopFill;
+      }
+
     });
   }
 
@@ -235,23 +252,20 @@ class _StopAddState extends State<StopAdd> {
     var textStyle =
         Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white);
     return InkWell(
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        child: Card(
-            color: Theme.of(context).primaryColor,
-            borderOnForeground: true,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-              child: Row(
-                children: [
-                  Text("Perda:",
-                      style: textStyle.copyWith(fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 10),
-                  Text(selectedStop!.codeName, style: textStyle)
-                ],
-              ),
-            )),
+      child: Card(
+        color: Theme.of(context).primaryColor,
+        borderOnForeground: true,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+          child: Row(
+            children: [
+              Text("Perda:",
+                  style: textStyle.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(width: 10),
+              Text(selectedStop!.codeName, style: textStyle)
+            ],
+          ),
+        )
       ),
       onTap: () => backToStopSelectionStage(),
     );
@@ -261,23 +275,21 @@ class _StopAddState extends State<StopAdd> {
     var textStyle =
         Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white);
     return InkWell(
-      child: Container(
-        padding: const EdgeInsets.all(10.0),
-        child: Card(
-            color: Theme.of(context).primaryColor,
-            borderOnForeground: true,
-            child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
-              child: Row(
-                children: [
-                  Text("Local:",
-                      style: textStyle.copyWith(fontWeight: FontWeight.bold)),
-                  const SizedBox(width: 10),
-                  Text(selectedLineUnit!.name, style: textStyle)
-                ],
-              ),
-            )),
+      child: Card(
+        color: Theme.of(context).primaryColor,
+        borderOnForeground: true,
+        child: Padding(
+          padding:
+              const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
+          child: Row(
+            children: [
+              Text("Local:",
+                  style: textStyle.copyWith(fontWeight: FontWeight.bold)),
+              const SizedBox(width: 10),
+              Text(selectedLineUnit!.name, style: textStyle)
+            ],
+          ),
+        ),
       ),
       onTap: () => backToLineUnitSelectionStage(),
     );

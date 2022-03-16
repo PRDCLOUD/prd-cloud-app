@@ -66,6 +66,7 @@ class _StopBeginTimeState extends State<StopBeginTime> {
               });
             },
           ),
+          const SizedBox(height: 10),
           NumberInput(
             label: "Tempo Total (min)",
             allowDecimal: true,
