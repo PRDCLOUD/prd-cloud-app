@@ -174,16 +174,19 @@ class _Products extends StatelessWidget {
 
     return BlocBuilder<FieldProductCubit, FieldProductState>(
       builder: (context, state) {
-        return GestureDetector(
+        return InkWell(
           onTap: () => productSelection(context, products, context.read<FieldProductCubit>().updateField),
-          child: state.fieldValue == null ? 
-                  const Text('<selectionar produto>') : 
-                  Text(products.firstWhere((element) => element.id == state.fieldValue).name)
+          child: TextFormField(
+            initialValue: state.fieldValue == null ? null : products.firstWhere((element) => element.id == state.fieldValue).name,
+            enabled: false,
+            decoration: const InputDecoration(
+              label: Text("Produto"),
+            ),
+          )
         );
       },
     );
   }
-
   
   Widget setupAlertDialoadContainer(BuildContext context, List<Product> products, ProductSetter onChange) {
 

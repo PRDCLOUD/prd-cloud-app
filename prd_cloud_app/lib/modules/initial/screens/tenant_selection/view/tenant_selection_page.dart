@@ -25,7 +25,7 @@ class TenantSelectionPage extends StatelessWidget {
             title: Card(
               child: Center(child: 
                 Container(
-                  padding: EdgeInsets.all(20),
+                  padding: const EdgeInsets.all(20),
                   child: Text(tenantOptions[index].name,
                     style: Theme.of(context).textTheme.titleLarge
                   ),
