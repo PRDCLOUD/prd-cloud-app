@@ -3,7 +3,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'Production_opened_bloc_provider.dart';
-import 'production_opened_item_selection_list.dart';
 import 'production_selected_summary.dart';
 import 'production_summary.dart';
 
@@ -18,13 +17,8 @@ class ProductionOpenedItemLayoutPage extends StatelessWidget {
             var selectedProductionData = context.read<OpenProductionDataCubit>().state.loadedItems.cast<ProductionBasicData?>().firstWhere((element) => element?.id == state, orElse: () => null);
             return Column(
               children: [
-                GestureDetector(
-                  child: ProductionSelectedSummary(productionData: selectedProductionData!),
-                  onTap: () => Navigator.of(context).push(ProductionOpenedItemSelectionListPage.route(context.read<OpenProductionDataCubit>(), context.read<SelectedProductionDataCubit>()))
-                ),
-                Expanded(child: 
-                  _Bottom(selectedProductionBasicData: selectedProductionData)
-                )
+                ProductionSelectedSummary(productionData: selectedProductionData!),
+                Expanded(child: _Bottom(selectedProductionBasicData: selectedProductionData))
               ],
             );
           })
