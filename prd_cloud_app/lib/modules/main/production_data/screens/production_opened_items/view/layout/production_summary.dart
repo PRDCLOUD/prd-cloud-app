@@ -14,7 +14,6 @@ class ProductionSummary extends StatefulWidget {
 class _ProductionSummaryState extends State<ProductionSummary> {
   @override
   Widget build(BuildContext context) {
-    var productionLine = widget._productionData.lineUnits.firstWhere((e) => e.type == 'ProductionLine');
     return card();
   }
 

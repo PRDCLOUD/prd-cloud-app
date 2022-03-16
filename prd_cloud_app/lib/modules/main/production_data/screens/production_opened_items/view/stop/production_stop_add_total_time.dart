@@ -30,8 +30,6 @@ class _StopTimePerStopState extends State<StopTimePerStop> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(children: [ const Text("Perda: "), Text(widget.selectedStop.name)]),
-        Row(children: [ const Text("Local: "), Text(widget.selectedLineUnit.name)]),
         NumberInput(
           label: "Tempo Total (min)",
           allowDecimal: true,

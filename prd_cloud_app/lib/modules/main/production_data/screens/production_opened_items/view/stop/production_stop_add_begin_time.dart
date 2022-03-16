@@ -31,8 +31,6 @@ class _StopBeginTimeState extends State<StopBeginTime> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(children: [ const Text("Perda: "), Text(widget.selectedStop.name)]),
-        Row(children: [ const Text("Local: "), Text(widget.selectedLineUnit.name)]),
         DateTimePicker(
           label: "Início",
           locale: Localizations.localeOf(context),

@@ -33,8 +33,6 @@ class _StopQtyTotalTimeState extends State<StopQtyTotalTime> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Row(children: [const Text("Perda: "), Text(widget.selectedStop.name)]),
-        Row(children: [const Text("Local: "), Text(widget.selectedLineUnit.name)]),
         NumberInput(
           key: const ValueKey('StopQtyTotalTime_Quantidade'),
           label: "Quantidade",
