@@ -49,8 +49,7 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
   }
 
   void closeProductionData(int id) {
-    var itemToRemove = state.loadedItems.firstWhere((x) => x.id == id);
-    emit(state.copyWith(loadedItems: state.loadedItems..remove(itemToRemove)));
+    _openProductionDataRepository.closeProductionData(id);
   }
 
   @override

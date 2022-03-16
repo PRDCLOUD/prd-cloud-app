@@ -14,27 +14,6 @@ class ProductionDataList extends StatefulWidget {
 
 class _ProductionDataListState extends State<ProductionDataList> {
   
-  Future<void> loadProductionData(int productionDataId) async {
-    context.loaderOverlay.show();
-    try {
-      await context
-          .read<OpenProductionDataCubit>()
-          .loadProductionData(productionDataId);
-      // This delay is required in order for the cubit update its state
-      await Future.delayed(const Duration(milliseconds: 15));
-      var prdData = context
-          .read<OpenProductionDataCubit>()
-          .state
-          .loadedItems
-          .firstWhere((element) => element.id == productionDataId);
-      context
-          .read<SelectedProductionDataCubit>()
-          .selectProductionData(prdData.id);
-    } finally {
-      context.loaderOverlay.hide();
-    }
-  }
-
   @override
   void initState() {
     var currentFilteredDataState = context.read<ProductionDataCubit>().state;
@@ -79,7 +58,10 @@ class _ProductionDataListState extends State<ProductionDataList> {
                     itemCount: state.loadedResult.length,
                     itemBuilder: (BuildContext context, int index) {
                       var item = state.loadedResult[index];
-                      return card(item);
+                      return ListCard(
+                        key: ObjectKey(item),
+                        productionItemOfList: item
+                      );
                     }
                   )
                 );
@@ -92,6 +74,45 @@ class _ProductionDataListState extends State<ProductionDataList> {
     );
   }
   
+
+}
+
+class ListCard extends StatefulWidget {
+  const ListCard({ Key? key, required ProductionItemOfList productionItemOfList }) :
+    _productionItemOfList = productionItemOfList,
+    super(key: key);
+
+  final ProductionItemOfList _productionItemOfList;
+
+  @override
+  State<ListCard> createState() => _ListCardState();
+}
+
+class _ListCardState extends State<ListCard> {
+
+  bool isLoaded = false;
+
+  @override
+  void initState() {
+    isLoaded = context.read<OpenProductionDataCubit>().state.loadedItems.any((loadedItem) => loadedItem.id == widget._productionItemOfList.id);
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocListener<OpenProductionDataCubit, OpenProductionDataState>(
+      listener: (context, state) {
+        var newStateIsSelected = state.loadedItems.any((loadedItem) => loadedItem.id == widget._productionItemOfList.id);
+        if (newStateIsSelected != isLoaded) {
+          setState(() {
+            isLoaded = newStateIsSelected;
+          });
+        }
+      },
+      child: card(widget._productionItemOfList),
+    );
+  }
+
   Card card(ProductionItemOfList item) {
     
     var title = Theme.of(context).textTheme.titleLarge!;
@@ -114,17 +135,54 @@ class _ProductionDataListState extends State<ProductionDataList> {
                   ]
                 )
               ),
-              Column(
-                children: [
-                  item.status == ProductionDataStatus.opened ? Icon(Icons.edit) : Icon(Icons.open_in_new)
-                ],
-              )
+              isLoaded ? loadedItemOptions() : unloadedItemOptions()
             ]
           ),
         ),
-        onTap: () => loadProductionData(item.id)
+        onTap: () => loadProductionData(item.id),
+        onLongPress: () => unloadProductionData(item.id),
       )
     );
+  }
+
+  Column unloadedItemOptions() {
+    return Column(
+      children: [
+        Text("<clique para carregar>", style: Theme.of(context).textTheme.bodySmall),
+        Text("<segure para cancelar>", style: Theme.of(context).textTheme.bodySmall)
+      ],
+    );
+  }
+
+  Column loadedItemOptions() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Text("Carregado!", style: Theme.of(context).textTheme.bodyMedium,),
+        ),
+        Text("<duplo clique para editar>", style: Theme.of(context).textTheme.bodySmall),
+        Text("<segure para fechar>", style: Theme.of(context).textTheme.bodySmall)
+      ],
+    );
+  }
+
+  Future<void> loadProductionData(int productionDataId) async {
+    context.loaderOverlay.show();
+    try {
+      await context
+          .read<OpenProductionDataCubit>()
+          .loadProductionData(productionDataId);
+      context
+          .read<SelectedProductionDataCubit>()
+          .selectProductionData(productionDataId);
+    } finally {
+      context.loaderOverlay.hide();
+    }
+  }
+
+  void unloadProductionData(int productionDataId) async {
+    context.read<OpenProductionDataCubit>().closeProductionData(productionDataId);
   }
 
   String dateAsString(DateTime? date) {
@@ -134,4 +192,5 @@ class _ProductionDataListState extends State<ProductionDataList> {
       return DateFormat.yMd(Localizations.localeOf(context).languageCode).add_jm().format(date);
     }
   } 
+
 }

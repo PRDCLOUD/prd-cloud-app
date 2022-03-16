@@ -299,6 +299,7 @@ class OpenProductionDataRepository {
     _openDataList.remove(id);
     _openDataStreamController.add(_openDataList.values.toList());
     _productionDataStreamController[id]?.close();
+    _productionDataStreamController.remove(id);
   }
 
   void dispose() {
