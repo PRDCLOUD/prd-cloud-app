@@ -4,13 +4,21 @@ import 'package:intl/intl.dart';
 typedef DateTimePickerSetter = void Function(DateTime? newValue);
 
 class DateTimePicker extends StatelessWidget {
-  DateTimePicker({Key? key, DateTime? date, DateTimePickerSetter? onChange, required Locale locale}) : 
+  DateTimePicker({
+    Key? key, 
+    DateTime? date, 
+    DateTimePickerSetter? onChange, 
+    required String label,
+    required Locale locale
+    }) : 
   _date = date, 
   _onChange = onChange, 
+  _label = label,
   _dateController = TextEditingController(text: date == null ? null : DateFormat.yMd(locale.languageCode).add_jm().format(date)),
   super(key: key);
 
   final DateTime? _date;
+  final String _label;
   final DateTimePickerSetter? _onChange;
 
   final TextEditingController _dateController;
@@ -40,21 +48,16 @@ class DateTimePicker extends StatelessWidget {
     return InkWell(
       onTap: () => _selectDate(context),
       child: Container(
-        width: 150,
-        height: 50,
+        width: 160,
+
         alignment: Alignment.center,
-        decoration: BoxDecoration(color: Colors.grey[200]),
         child: TextFormField(
-          style: const TextStyle(fontSize: 14),
-          textAlign: TextAlign.center,
           enabled: false,
           keyboardType: TextInputType.text,
           controller: _dateController,
-          decoration: const InputDecoration(
-              disabledBorder:
-                  UnderlineInputBorder(borderSide: BorderSide.none),
-              // labelText: 'Time',
-              contentPadding: EdgeInsets.only(top: 0.0)),
+          decoration: InputDecoration(
+            label: Text(_label),
+          ),
         ),
       ),
     );

@@ -93,13 +93,15 @@ class _Begin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FieldBeginCubit, FieldBeginState>(
-        builder: (BuildContext context, state) {
-      return DateTimePicker(
+      builder: (BuildContext context, state) {
+        return DateTimePicker(
+          label: "Início",
           locale: Localizations.localeOf(context),
           date: state.fieldValue,
-          onChange: (newValue) =>
-              context.read<FieldBeginCubit>().updateField(newValue));
-    });
+          onChange: (newValue) => context.read<FieldBeginCubit>().updateField(newValue)
+        );
+      }
+    );
   }
 }
 
@@ -109,13 +111,15 @@ class _End extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FieldEndCubit, FieldEndState>(
-        builder: (BuildContext context, state) {
-      return DateTimePicker(
+      builder: (BuildContext context, state) {
+        return DateTimePicker(
+          label: "Fim",
           locale: Localizations.localeOf(context),
           date: state.fieldValue,
-          onChange: (newValue) =>
-              context.read<FieldEndCubit>().updateField(newValue));
-    });
+          onChange: (newValue) => context.read<FieldEndCubit>().updateField(newValue)
+        );
+      }
+    );
   }
 }
 
