@@ -16,18 +16,21 @@ class TenantSelectionPage extends StatelessWidget {
     final tenantOptions = context.select((TenantOptionsCubit bloc) => bloc.state).tenants.toList();
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Tenant')),
+      appBar: AppBar(centerTitle: true, title: const Text('Selectione a Planta')),
       body: ListView.builder(
         itemCount: tenantOptions.length,
         itemBuilder: (BuildContext context, int index) {
           return ListTile(
             style: ListTileStyle.list,
-            title: Container(
+            title: Card(
               child: Center(child: 
-                Text(tenantOptions[index].name,
-                  style: Theme.of(context).textTheme.titleLarge
+                Container(
+                  padding: EdgeInsets.all(20),
+                  child: Text(tenantOptions[index].name,
+                    style: Theme.of(context).textTheme.titleLarge
+                  ),
                 )
-                )
+              )
             ),
             onTap: () => context.read<TenantSelectionCubit>().selectTenant(tenantOptions[index])
           );

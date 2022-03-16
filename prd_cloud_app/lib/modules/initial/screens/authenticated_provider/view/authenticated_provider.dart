@@ -15,8 +15,6 @@ import 'package:production_data_repository/production_data_repository.dart';
 import 'package:tenant_data_repository/tenant_data_repository.dart';
 import 'package:user_preferences_repository/user_preferences_repository.dart';
 
-import 'package:intl/date_symbol_data_local.dart';
-
 class AuthenticatedProviderPage extends StatelessWidget {
   const AuthenticatedProviderPage({Key? key}) : super(key: key);
 
@@ -50,13 +48,7 @@ class TenantInformationLoadingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<TenantInformationCubit, TenantInformationState>(
-      listener: (context, state) {
-        if (state.tenantInformationLoadState == TenantInformationLoadState.loaded) {
-          var loadedState = state as TenantInformationLoaded;
-
-        }
-      },
+    return BlocBuilder<TenantInformationCubit, TenantInformationState>(
       builder: (context, state) {
         switch (state.tenantInformationLoadState) {
           case TenantInformationLoadState.loaded: 

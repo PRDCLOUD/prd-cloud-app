@@ -93,25 +93,32 @@ class _ProductionDataListState extends State<ProductionDataList> {
   }
   
   Card card(ProductionItemOfList item) {
+    
+    var title = Theme.of(context).textTheme.titleLarge!;
+    var bodyMedium = Theme.of(context).textTheme.bodyMedium!;
+
     return Card(
-      child: GestureDetector(
+      child: InkWell(
         child: Container(
-          padding: EdgeInsets.all(10),
+          padding: const EdgeInsets.all(13),
           child: Row(
             children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(children: [ Text("Linha: ", style: title), Text(item.productionLine ?? "", style: title.copyWith(fontWeight: FontWeight.normal)) ] ),
+                    Row(children: [ Text("Produto: ", style: bodyMedium), Text(item.product ?? "", style: bodyMedium) ] ),
+                    Row(children: [ Text("Início: ", style: bodyMedium), Text(dateAsString(item.begin), style: bodyMedium) ] ),
+                    Row(children: [ Text("Fim: ", style: bodyMedium), Text(dateAsString(item.end), style: bodyMedium) ] )
+                  ]
+                )
+              ),
               Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(item.productionLine ?? ""),
-                  Text(item.product ?? "")
-                ]
-              ),
-              Column( // Localizations.localeOf(context);
-                children: [
-                  Text(dateAsString(item.begin)),
-                  Text(dateAsString(item.end))
-                ]
-              ),
+                  item.status == ProductionDataStatus.opened ? Icon(Icons.edit) : Icon(Icons.open_in_new)
+                ],
+              )
             ]
           ),
         ),
