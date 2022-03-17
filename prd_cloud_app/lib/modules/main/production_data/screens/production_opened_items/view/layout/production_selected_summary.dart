@@ -42,7 +42,9 @@ class ProductionSelectedSummary extends StatelessWidget {
                     primary: Theme.of(context).colorScheme.secondary,
                     fixedSize: const Size(60, 60)
                   ),
-                  onPressed: () {}),
+                  onPressed: () {
+                    context.read<OpenProductionDataCubit>().closeProductionData(_productionData.id);
+                  }),
               ),
               Padding(
                 padding: const EdgeInsets.only(left: 5.0),

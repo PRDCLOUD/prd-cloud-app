@@ -149,14 +149,11 @@ class _StopAddState extends State<StopAdd> {
           child: Text("Selecione a Parada", style: Theme.of(context).textTheme.titleMedium)
         ),
         Expanded(
-          child: Container(
-            height: 100,
-            child: _ListOfStops(
-              stops: widget.stopOptions,
-              selectStopCallback: selectStop
-            ),
-          )
-        ),
+          child: _ListOfStops(
+            stops: widget.stopOptions,
+            selectStopCallback: selectStop
+          ),
+        )
       ],
     );
   }

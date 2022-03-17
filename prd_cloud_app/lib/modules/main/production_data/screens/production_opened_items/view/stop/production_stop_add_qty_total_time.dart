@@ -5,7 +5,6 @@ import 'package:prd_cloud_app/modules/main/production_data/screens/production_op
 import 'package:prd_cloud_app/widgets/widgets.dart';
 
 import 'production_stop_add.dart';
-import 'production_stop_claim.dart';
 import 'stop_add_cubit/stop_add_cubit.dart';
 import 'stop_add_validation_cubit copy/stop_add_validation_cubit.dart';
 

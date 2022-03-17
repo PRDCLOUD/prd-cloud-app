@@ -65,7 +65,7 @@ class ProductionLossMain extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: state.losses.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _LossCard(state, index, context);
+                    return _lossCard(state, index, context);
                   },
                 ),
               ),
@@ -76,7 +76,7 @@ class ProductionLossMain extends StatelessWidget {
     );
   }
 
-  Widget _LossCard(ProductionLossState state, int index, BuildContext context) {
+  Widget _lossCard(ProductionLossState state, int index, BuildContext context) {
     return ListTile(
       title: Card(
         child: Container(

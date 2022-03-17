@@ -12,33 +12,50 @@ class ProductionOpenedItemLayoutPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       body: BlocBuilder<SelectedProductionDataCubit, int?>(
-          builder: (BuildContext context, state) {
-            var selectedProductionData = context.read<OpenProductionDataCubit>().state.loadedItems.cast<ProductionBasicData?>().firstWhere((element) => element?.id == state, orElse: () => null);
+        builder: (BuildContext context, state) {
+          var selectedProductionData = context.read<OpenProductionDataCubit>().state.loadedItems.cast<ProductionBasicData?>().firstWhere((element) => element?.id == state, orElse: () => null);
+          if (selectedProductionData != null) {
             return Column(
               key: UniqueKey(),
               children: [
-                ProductionSelectedSummary(productionData: selectedProductionData!),
+                ProductionSelectedSummary(productionData: selectedProductionData),
                 Expanded(child: _Bottom(selectedProductionBasicData: selectedProductionData))
               ],
             );
-          })
-        );
+          } else {
+            return Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Sem apontamentos selecionados", style: Theme.of(context).textTheme.bodyLarge,),
+                  const SizedBox(height: 20),
+                  const Text("Selecione os apontamentos que deseja editar na list de apontamentos"),
+                  const SizedBox(height: 80),
+                  ElevatedButton(
+                    child: Text("Ir para lista de apontamentos"),
+                    style: ElevatedButton.styleFrom(minimumSize: Size(50, 50)),
+                    onPressed: () => context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionDataList),
+                  )
+                ],
+              ),
+            );
+          }
+        })
+      );
   }
 }
 
 class _Bottom extends StatelessWidget {
   const _Bottom({
     Key? key,
-    required ProductionBasicData? selectedProductionBasicData
+    required ProductionBasicData selectedProductionBasicData
   }) : _selectedProductionBasicData = selectedProductionBasicData, super(key: key);
 
-  final ProductionBasicData? _selectedProductionBasicData;
+  final ProductionBasicData _selectedProductionBasicData;
 
   @override
   Widget build(BuildContext context) {
-    if (_selectedProductionBasicData == null) {
-      return const Center(child: Text("No Data"));
-    }
     return ProductionOpenedBlocProvider(productionBasicDataId: _selectedProductionBasicData?.id as int);
   }
 }
