@@ -69,25 +69,27 @@ class _StopAddState extends State<StopAdd> {
           ],
         );
       case StopAddStates.stopFill:
-        return MultiBlocProvider(
-          providers: [
-            BlocProvider(create: (context) => StopClaimCubit(stopClaims: selectedStop!.stopClaims)),
-          ],
-          child: _FlowBlocProviders(
-            child: Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Column(
-                children: [
-                  _selectedLossTopCard(),
-                  const SizedBox(height: 10),
-                  _selectedLineUnitCard(),
-                  const SizedBox(height: 10),
-                  _stopInformationFill(),
-                  const SizedBox(height: 10),
-                  const StopClaims(),
-                  const SizedBox(height: 10),
-                  _flowControlButtons()
-                ],
+        return SingleChildScrollView(
+          child: MultiBlocProvider(
+            providers: [
+              BlocProvider(create: (context) => StopClaimCubit(stopClaims: selectedStop!.stopClaims)),
+            ],
+            child: _FlowBlocProviders(
+              child: Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    _selectedLossTopCard(),
+                    const SizedBox(height: 10),
+                    _selectedLineUnitCard(),
+                    const SizedBox(height: 10),
+                    _stopInformationFill(),
+                    const SizedBox(height: 10),
+                    const StopClaims(),
+                    const SizedBox(height: 10),
+                    _flowControlButtons()
+                  ],
+                ),
               ),
             ),
           ),
@@ -95,30 +97,54 @@ class _StopAddState extends State<StopAdd> {
     }
   }
 
-  ListView _lineUnitSelection() {
+  Widget _lineUnitSelection() {
     var lineUnits = widget.lineUnits
         .where((lineUnit) => selectedStop!.lineUnitStops.contains(lineUnit.id))
         .toList();
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: lineUnits.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-            title: Text(lineUnits[index].name),
-            onTap: () => selectLineUnit(lineUnits[index]));
-      },
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(15),
+          child: Text("Selecione o local", style: Theme.of(context).textTheme.headline6)),
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: lineUnits.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Card(
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    child: Text(lineUnits[index].name)
+                  )
+                ),
+                onTap: () => selectLineUnit(lineUnits[index])
+              );
+            },
+          )
+        ),
+      ],
     );
   }
 
-  ListView _stopSelection() {
-    return ListView.builder(
-      shrinkWrap: true,
-      itemCount: widget.stopOptions.length,
-      itemBuilder: (BuildContext context, int index) {
-        return ListTile(
-            title: Text(widget.stopOptions[index].codeName),
-            onTap: () => selectStop(widget.stopOptions[index]));
-      },
+  Widget _stopSelection() {
+
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(15),
+          child: Text("Selecione a Parada", style: Theme.of(context).textTheme.titleMedium)
+        ),
+        Expanded(
+          child: Container(
+            height: 100,
+            child: _ListOfStops(
+              stops: widget.stopOptions,
+              selectStopCallback: selectStop
+            ),
+          )
+        ),
+      ],
     );
   }
 
@@ -328,6 +354,89 @@ class _FlowBlocListerner extends StatelessWidget {
         context.read<StopAddValidationCubit>().claimValidationState(state.isStopClaimFillValid());
       },
       child: _child,
+    );
+  }
+}
+
+typedef SelectStopCallback = Function(Stop stop);
+class _ListOfStops extends StatefulWidget {
+  const _ListOfStops({ Key? key, required List<Stop> stops, required SelectStopCallback selectStopCallback }) : _stops = stops, _selectStopCallback = selectStopCallback, super(key: key);
+
+  final List<Stop> _stops;
+  final SelectStopCallback _selectStopCallback;
+
+  @override
+  State<_ListOfStops> createState() => _ListOfStopsState();
+}
+
+class _ListOfStopsState extends State<_ListOfStops> {
+
+  List<Stop> filteredStops = List.empty();
+
+  void _runFilter(String? searchValue) {
+
+    var lcSearchValue = searchValue?.toLowerCase() ?? "";
+
+    List<Stop> results;
+    if (lcSearchValue.isEmpty) {
+      results = widget._stops;
+    } else {
+      results = widget._stops
+          .where((user) =>
+              user.codeName.toLowerCase().contains(lcSearchValue))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+      // Refresh the UI
+    setState(() {
+      filteredStops = results;
+    });
+
+  }
+
+  @override
+  void initState() {
+    filteredStops = widget._stops;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+          const SizedBox(
+            height: 20,
+          ),
+          TextField(
+            onChanged: (value) => _runFilter(value),
+            decoration: const InputDecoration(
+                labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+        Expanded(
+          child: filteredStops.isEmpty
+            ? const Text('Nenhum resultado', style: TextStyle(fontSize: 24))
+            : ListView.builder(
+                shrinkWrap: true,
+                itemCount: filteredStops.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    key: ValueKey(filteredStops[index].id),
+                    title: Card(
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(filteredStops[index].codeName)
+                      )
+                    ),
+                    onTap: () => widget._selectStopCallback(filteredStops[index])
+                  );
+                },
+              ),
+        ),
+      ],
     );
   }
 }
