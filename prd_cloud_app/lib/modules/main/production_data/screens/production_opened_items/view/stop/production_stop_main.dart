@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
+import 'package:prd_cloud_app/theme.dart';
 import 'production_stop_add.dart';
 
 
@@ -116,6 +117,7 @@ Widget _stopCard(ProductionStopState state, int index, BuildContext context) {
 
     return ListTile(
       title: Card(
+        shape: AppTheme.cardShape,
         child: Container(
           padding: const EdgeInsets.all(13),
           child: Row(
