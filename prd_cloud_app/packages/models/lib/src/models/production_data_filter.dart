@@ -13,7 +13,7 @@ class ProductionDataFilter extends Equatable {
   ProductionDataFilter({required this.filterKey, required this.status, required this.take, required this.prdLines});
 
   @override
-  List<Object?> get props => [status, take, prdLines];
+  List<Object?> get props => [filterKey, status, take, prdLines];
 
   ProductionDataFilter copyWith({
     String? filterKey,

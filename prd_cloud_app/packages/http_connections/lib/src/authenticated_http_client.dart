@@ -86,7 +86,7 @@ class AuthenticatedHttpClient {
 
     var statusString = () {
       switch (status) {
-        case ProductionDataStatus.canceled: return 'canceled';
+        case ProductionDataStatus.canceled: return 'cancel';
         case ProductionDataStatus.concluded: return 'concluded';
         case ProductionDataStatus.opened: return 'open';
         default: throw new Exception('Invalid Status');

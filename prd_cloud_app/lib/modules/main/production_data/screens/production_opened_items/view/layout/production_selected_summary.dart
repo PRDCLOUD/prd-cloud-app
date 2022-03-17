@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/open_production_data_cubit/open_production_data_cubit.dart';
+import 'package:prd_cloud_app/modules/main/bloc/production_list_filter_cubit/production_list_filter_cubit.dart';
 import 'package:prd_cloud_app/modules/main/bloc/selected_production_data_cubit/selected_production_data_cubit.dart';
 
 import 'production_opened_item_selection_list.dart';
@@ -50,11 +51,14 @@ class ProductionSelectedSummary extends StatelessWidget {
                 padding: const EdgeInsets.only(left: 5.0),
                 child: ElevatedButton(
                   child: const Icon(Icons.delete_outline, size: 35,),
-                  onPressed: () {},
                   style: ElevatedButton.styleFrom(
                     primary: Theme.of(context).colorScheme.error,
                     fixedSize: const Size(60, 60)
                   ),
+                  onPressed: () {
+                    context.read<OpenProductionDataCubit>().cancelProductionData(_productionData.id);
+                    context.read<ProductionListFilterCubit>().markForRefresh();
+                  },
                 ),
               ),
             ]
