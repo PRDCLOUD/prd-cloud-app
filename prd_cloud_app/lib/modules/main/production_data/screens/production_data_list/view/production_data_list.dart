@@ -129,7 +129,7 @@ class _ListCardState extends State<ListCard> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(children: [ Text(item.productionLine ?? "", style: title.copyWith(fontWeight: FontWeight.normal)) ] ),
+                    Text(item.productionLine ?? "", style: title.copyWith(fontWeight: FontWeight.normal)),
                     if (item.product == null) 
                       ...[]
                     else ...[
@@ -160,10 +160,7 @@ class _ListCardState extends State<ListCard> {
               isLoaded ? loadedItemOptions() : unloadedItemOptions()
             ]
           ),
-        ),
-        onTap: () => isLoaded ? null : loadProductionData(),
-        onLongPress: () => isLoaded ? unloadProductionData() : cancelProductionData(),
-        onDoubleTap: () => isLoaded ? editProductionData() : null,
+        )
       )
     );
   }
@@ -171,8 +168,17 @@ class _ListCardState extends State<ListCard> {
   Widget unloadedItemOptions() {
     return Column(
       children: [
-        Text("<clique para carregar>", style: Theme.of(context).textTheme.bodySmall),
-        Text("<segure para cancelar>", style: Theme.of(context).textTheme.bodySmall)
+        ElevatedButton.icon(
+          icon: const Icon(Icons.file_upload_outlined), 
+          label: const Text("Carregar"),
+          onPressed: () => loadProductionData(),
+        ),
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.error),
+          icon: const Icon(Icons.delete_outline), 
+          label: const Text("Excluir"),
+          onPressed: () => cancelProductionData(),
+        )
       ],
     );
   }
@@ -180,12 +186,17 @@ class _ListCardState extends State<ListCard> {
   Widget loadedItemOptions() {
     return Column(
       children: [
-        Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Text("Carregado!", style: Theme.of(context).textTheme.bodyMedium,),
+        ElevatedButton.icon(
+          icon: const Icon(Icons.edit), 
+          label: const Text("Editar"),
+          onPressed: () => editProductionData(),
         ),
-        Text("<duplo clique para editar>", style: Theme.of(context).textTheme.bodySmall),
-        Text("<segure para fechar>", style: Theme.of(context).textTheme.bodySmall)
+        ElevatedButton.icon(
+          style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.secondary),
+          icon: const Icon(Icons.close), 
+          label: const Text("Descarregar"),
+          onPressed: () => unloadProductionData(),
+        )
       ],
     );
   }
