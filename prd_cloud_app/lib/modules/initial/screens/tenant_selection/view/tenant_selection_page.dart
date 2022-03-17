@@ -23,16 +23,20 @@ class TenantSelectionPage extends StatelessWidget {
           return ListTile(
             style: ListTileStyle.list,
             title: Card(
-              child: Center(child: 
-                Container(
+              child: InkWell(
+                child: Container(
+                  width: double.infinity,
+                  color: Colors.transparent,
                   padding: const EdgeInsets.all(20),
-                  child: Text(tenantOptions[index].name,
-                    style: Theme.of(context).textTheme.titleLarge
+                  child: Center(
+                    child: Text(tenantOptions[index].name,
+                      style: Theme.of(context).textTheme.titleLarge
+                    ),
                   ),
-                )
+                ),
+                onTap: () => context.read<TenantSelectionCubit>().selectTenant(tenantOptions[index])
               )
             ),
-            onTap: () => context.read<TenantSelectionCubit>().selectTenant(tenantOptions[index])
           );
         }
       )
