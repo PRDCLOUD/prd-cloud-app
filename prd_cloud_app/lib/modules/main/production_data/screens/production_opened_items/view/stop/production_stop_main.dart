@@ -11,18 +11,16 @@ class ProductionStopMain extends StatelessWidget {
   const ProductionStopMain({Key? key}) : super(key: key);
 
   Future<void> stopAddDialog(BuildContext context, List<Stop> stopOptions, List<LineUnit> lineUnits, StopAddCallback stopAddCallback, int productionBasicId) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: StopAdd(
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => 
+        StopAdd(
             productionBasicId: productionBasicId,
             stopOptions: stopOptions, 
             lineUnits: lineUnits, 
             stopAddCallback: stopAddCallback
-          ),
-        );
-      }
+          )
+      )
     );
   }
 
@@ -66,7 +64,7 @@ class ProductionStopMain extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: state.stops.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _stopCard(state, index, context);
+                    return _stopCard(state, index, context, lineUnits);
                   },
                 ),
               )
@@ -77,7 +75,7 @@ class ProductionStopMain extends StatelessWidget {
     );
   }
 
-Widget _stopCard(ProductionStopState state, int index, BuildContext context) {
+Widget _stopCard(ProductionStopState state, int index, BuildContext context, List<LineUnit> lineUnits) {
 
   Future showDeleteAlertDialog() async {
       // set up the button
@@ -127,8 +125,27 @@ Widget _stopCard(ProductionStopState state, int index, BuildContext context) {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(state.stops[index].name, style: Theme.of(context).textTheme.bodyMedium),
-                    Text(state.stops[index].getFormatedStopValue(), style: Theme.of(context).textTheme.bodySmall),
+                    Row(
+                      children: [
+                        const Icon(Icons.build_outlined, size: 12), 
+                        const SizedBox(width: 5), 
+                        Text(state.stops[index].name, style: Theme.of(context).textTheme.bodyMedium) 
+                      ]
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.precision_manufacturing_outlined, size: 12), 
+                        const SizedBox(width: 5), 
+                        Text(lineUnits.firstWhere((lineUnit) => lineUnit.id == state.stops[index].lineUnitId).name, style: Theme.of(context).textTheme.bodyMedium)
+                      ]
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.av_timer_outlined, size: 12), 
+                        const SizedBox(width: 5), 
+                        Text(state.stops[index].getFormatedStopValue(), style: Theme.of(context).textTheme.bodySmall),
+                      ]
+                    )
                   ],
                 ),
               ),

@@ -52,12 +52,20 @@ class _LossAddState extends State<LossAdd> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        Text("CADASTRO DE PERDA", style: Theme.of(context).textTheme.headline6),
-        Expanded(child: dialogBody()),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_outlined),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text("Cadastro de Perda"),
+        
+      ),
+      body: Column(
+        children: [
+          Expanded(child: dialogBody()),
+        ],
+      ),
     );
   }
 

@@ -11,18 +11,16 @@ class ProductionLossMain extends StatelessWidget {
   const ProductionLossMain({Key? key}) : super(key: key);
 
   Future<void> lossAddDialog(BuildContext context, List<Loss> lossOptions, List<LineUnit> lineUnits, LossAddCallback lossAddCallback, int productionBasicId) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return Dialog(
-          child: LossAdd(
-            productionBasicId: productionBasicId,
-            lossOptions: lossOptions, 
-            lineUnits: lineUnits, 
-            lossAddCallback: lossAddCallback
-          ),
-        );
-      }
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => 
+        LossAdd(
+          productionBasicId: productionBasicId,
+          lossOptions: lossOptions, 
+          lineUnits: lineUnits, 
+          lossAddCallback: lossAddCallback
+        )
+      )
     );
   }
 
@@ -66,7 +64,7 @@ class ProductionLossMain extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: state.losses.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _lossCard(state, index, context);
+                    return _lossCard(state, index, context, lineUnits);
                   },
                 ),
               ),
@@ -77,7 +75,7 @@ class ProductionLossMain extends StatelessWidget {
     );
   }
 
-  Widget _lossCard(ProductionLossState state, int index, BuildContext context) {
+  Widget _lossCard(ProductionLossState state, int index, BuildContext context, List<LineUnit> lineUnits) {
 
     Future showDeleteAlertDialog() async {
       // set up the button
@@ -127,8 +125,27 @@ class ProductionLossMain extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(state.losses[index].name, style: Theme.of(context).textTheme.bodyMedium),
-                    Text(state.losses[index].getFormatedLossValue(), style: Theme.of(context).textTheme.bodySmall),
+                    Row(
+                      children: [
+                        const Icon(Icons.build_outlined, size: 12), 
+                        const SizedBox(width: 5), 
+                        Text(state.losses[index].name, style: Theme.of(context).textTheme.bodyMedium) 
+                      ]
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.precision_manufacturing_outlined, size: 12), 
+                        const SizedBox(width: 5), 
+                        Text(lineUnits.firstWhere((lineUnit) => lineUnit.id == state.losses[index].lineUnitId).name, style: Theme.of(context).textTheme.bodyMedium)
+                      ]
+                    ),
+                    Row(
+                      children: [
+                        const Icon(Icons.scale_outlined, size: 12), 
+                        const SizedBox(width: 5), 
+                        Text(state.losses[index].getFormatedLossValue(), style: Theme.of(context).textTheme.bodySmall),
+                      ]
+                    )
                   ],
                 ),
               ),
