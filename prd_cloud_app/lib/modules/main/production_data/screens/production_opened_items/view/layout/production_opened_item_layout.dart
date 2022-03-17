@@ -4,7 +4,6 @@ import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'Production_opened_bloc_provider.dart';
 import 'production_selected_summary.dart';
-import 'production_summary.dart';
 
 class ProductionOpenedItemLayoutPage extends StatelessWidget {
   const ProductionOpenedItemLayoutPage({Key? key}) : super(key: key);
@@ -41,23 +40,5 @@ class _Bottom extends StatelessWidget {
       return const Center(child: Text("No Data"));
     }
     return ProductionOpenedBlocProvider(productionBasicDataId: _selectedProductionBasicData?.id as int);
-  }
-}
-
-class SelectedProductionDataSummary extends StatelessWidget {
-  const SelectedProductionDataSummary({Key? key, required this.productionData}) : super(key: key);
-
-  final ProductionBasicData? productionData;
-
-  @override
-  Widget build(BuildContext context) {
-    if (productionData == null) {
-      return GestureDetector(
-        child: const Center(child: Text("Nenhum item disponível")),
-        onTap: () => {},
-      );
-    } else {
-      return ProductionSummary(productionData: productionData!);
-    }
   }
 }

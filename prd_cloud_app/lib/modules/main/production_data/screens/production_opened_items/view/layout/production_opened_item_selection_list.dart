@@ -26,9 +26,11 @@ class ProductionOpenedItemSelectionListPage extends StatelessWidget {
       body: ListView.builder(
           itemCount: _openProductionDataCubit.state.loadedItems.length,
           itemBuilder: (BuildContext context, int index) {
-            return GestureDetector(
+            return ProductionSummary(
+              key: ValueKey(_openProductionDataCubit.state.loadedItems[index].id),
+              productionData: _openProductionDataCubit.state.loadedItems[index],
+              isSelected: _selectedProductionDataCubit.state == _openProductionDataCubit.state.loadedItems[index].id,
               onTap: () => { selectProductionData(context, _openProductionDataCubit.state.loadedItems[index]) },
-              child: ProductionSummary(productionData: _openProductionDataCubit.state.loadedItems[index],)
             );
           }
         )

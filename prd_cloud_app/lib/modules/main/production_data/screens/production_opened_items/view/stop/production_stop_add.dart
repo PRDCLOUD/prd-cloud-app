@@ -408,10 +408,15 @@ class _ListOfStopsState extends State<_ListOfStops> {
           const SizedBox(
             height: 20,
           ),
-          TextField(
-            onChanged: (value) => _runFilter(value),
-            decoration: const InputDecoration(
-                labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)),
+          SizedBox(
+            width: 500,
+            child: TextField(
+              onChanged: (value) => _runFilter(value),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
+                labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)
+              ),
+            ),
           ),
           const SizedBox(
             height: 20,

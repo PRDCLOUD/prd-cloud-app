@@ -55,7 +55,7 @@ class _LossAddState extends State<LossAdd> {
     return Column(
       children: [
         const SizedBox(height: 20),
-        Text("CADASTRO DE PERDA", style: Theme.of(context).textTheme.headline6,),
+        Text("CADASTRO DE PERDA", style: Theme.of(context).textTheme.headline6),
         Expanded(child: dialogBody()),
       ],
     );
@@ -103,21 +103,10 @@ class _LossAddState extends State<LossAdd> {
           child: Text("Selecione a Perda", style: Theme.of(context).textTheme.titleMedium)
         ),
         Expanded(
-          child: ListView.builder(
-            shrinkWrap: true,
-            itemCount: widget.lossOptions.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Card(
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    child: Text(widget.lossOptions[index].name)
-                  )
-                ),
-                onTap: () => selectLoss(widget.lossOptions[index])
-              );
-            },
-          )
+          child: _ListOfLosses(
+            losses: widget.lossOptions, 
+            selectStopCallback: selectLoss
+          ),
         ),
         flowControlButtons(),
       ],
@@ -276,6 +265,95 @@ class _LossAddState extends State<LossAdd> {
           ),
         ]
       ),
+    );
+  }
+}
+
+
+typedef SelectLossCallback = Function(Loss loss);
+class _ListOfLosses extends StatefulWidget {
+  const _ListOfLosses({ Key? key, required List<Loss> losses, required SelectLossCallback selectStopCallback }) : _losses = losses, _selectLossCallback = selectStopCallback, super(key: key);
+
+  final List<Loss> _losses;
+  final SelectLossCallback _selectLossCallback;
+
+  @override
+  State<_ListOfLosses> createState() => _ListOfLossesState();
+}
+
+class _ListOfLossesState extends State<_ListOfLosses> {
+
+  List<Loss> filteredLosses = List.empty();
+
+  void _runFilter(String? searchValue) {
+
+    var lcSearchValue = searchValue?.toLowerCase() ?? "";
+
+    List<Loss> results;
+    if (lcSearchValue.isEmpty) {
+      results = widget._losses;
+    } else {
+      results = widget._losses
+          .where((user) =>
+              user.name.toLowerCase().contains(lcSearchValue))
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+      // Refresh the UI
+    setState(() {
+      filteredLosses = results;
+    });
+
+  }
+
+  @override
+  void initState() {
+    filteredLosses = widget._losses;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+          const SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            width: 500,
+            child: TextField(
+              onChanged: (value) => _runFilter(value),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
+                labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+        Expanded(
+          child: filteredLosses.isEmpty
+            ? const Text('Nenhum resultado', style: TextStyle(fontSize: 24))
+            : ListView.builder(
+                shrinkWrap: true,
+                itemCount: filteredLosses.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return ListTile(
+                    key: ValueKey(filteredLosses[index].id),
+                    title: Card(
+                      child: Container(
+                        padding: const EdgeInsets.all(20),
+                        child: Text(filteredLosses[index].name)
+                      )
+                    ),
+                    onTap: () => widget._selectLossCallback(filteredLosses[index])
+                  );
+                },
+              ),
+        ),
+      ],
     );
   }
 }
