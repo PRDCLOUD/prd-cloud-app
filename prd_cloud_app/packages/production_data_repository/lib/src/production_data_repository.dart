@@ -24,4 +24,9 @@ class ProductionDataRepository {
   Future<void> cancelApontamento(int id) async {
     await _http.patchCancelProductionDataById(id);
   }
+
+  Future<void> reopenApontamento(int id) async {
+    await _http.patchReopenProductionDataById(id);
+  }
+
 }

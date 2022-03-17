@@ -49,7 +49,33 @@ class OpenProductionDataRepository {
     }
   }
 
+  Future<void> concludeProductionData(ProductionBasicData productionBasicData) async {
+    await _authHttpClient.patchConcludeProduction(
+      id: productionBasicData.id,
+      begin: productionBasicData.begin,
+      end: productionBasicData.end,
+      productId: productionBasicData.productId,
+      comments: productionBasicData.comments,
+      variables: productionBasicData.lineUnits.map((x) => x.lineUnit.productionVariables).expand((element) => element).toList(),
+      location: _tenantInformation.location
+    );
+
+    if (_openDataList.containsKey(productionBasicData.id)) {
+      _openDataList.removeWhere((key, value) => key == productionBasicData.id);
+    }
+
+    if (_productionDataStreamController.containsKey(productionBasicData.id)){
+      await _productionDataStreamController[productionBasicData.id]!.close();
+      _productionDataStreamController.removeWhere((key, value) => key == productionBasicData.id);
+    }
+
+    if (_openDataStreamController.hasListener) {
+      _openDataStreamController.add(_openDataList.values.toList());
+    }
+  }
+
   Future<void> cancelProductionData(int id) async {
+
     await _authHttpClient.patchCancelProductionDataById(id);
 
     if (_openDataList.containsKey(id)) {

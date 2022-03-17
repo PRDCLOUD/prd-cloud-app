@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:models/models.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -113,6 +114,10 @@ class AuthenticatedHttpClient {
 
   Future<Response> patchCancelProductionDataById(int id) async {
     return await _patchRequest('api/production/cancel/' + id.toString());
+  }
+
+  Future<Response> patchReopenProductionDataById(int id) async {
+    return await _patchRequest('api/production/open/' + id.toString());
   }
 
   Future<Response<dynamic>> patchProductionDataBegin(ProductionBasicData productionBasicData, tz.Location location) async {
@@ -246,7 +251,7 @@ class AuthenticatedHttpClient {
     return await _deleteRequest('api/production/stop/' + productionStopId.toString());
   }
 
-  Future<void> concludeProduction({
+  Future<void> patchConcludeProduction({
     required int? id,
     required DateTime? begin,
     required DateTime? end,
@@ -255,24 +260,27 @@ class AuthenticatedHttpClient {
     required List<ProductionVariable> variables,
     required tz.Location location
   }) async {
-    var data = [ 
-      {
-        'id': id,
-        'begin': dateToString(begin, location),
-        'end': dateToString(end, location),
-        'comments': comments,
-        'productId': productId,
-        'variables': variables.map((e) => {
-          'id': e.id,
-          'productionBasicDataId': e.productionBasicDataId,
-          'text': e.text,
-          'type': e.typeVariableDefinition,
-          'value': e.value,
-          'definitionName': e.definitionName
-        })
-      }
-    ];
-    await _postRequest('api/production/conclude', data);
+    var data = {
+        'list': [ {
+          'id': id,
+          'begin': dateToString(begin, location),
+          'end': dateToString(end, location),
+          'comments': comments,
+          'productId': productId,
+          'variables': variables.map((e) => {
+            'id': e.id,
+            'productionBasicDataId': e.productionBasicDataId,
+            'text': e.text,
+            'type': e.typeVariableDefinition,
+            'value': e.value,
+            'definitionName': e.definitionName
+          }).toList()
+        }
+      ]
+    };
+
+    var json = jsonEncode(data);
+    await _patchRequest('api/production/conclude', data);
   }
 
   String? dateToString(DateTime? date, tz.Location location) {

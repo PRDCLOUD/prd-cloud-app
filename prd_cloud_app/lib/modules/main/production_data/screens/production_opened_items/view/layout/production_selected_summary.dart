@@ -33,7 +33,9 @@ class ProductionSelectedSummary extends StatelessWidget {
                     primary: const Color.fromRGBO(56, 118, 29, 1),
                     fixedSize: const Size(60, 60)
                   ),
-                  onPressed: () {}),
+                  onPressed: () {
+                    context.read<OpenProductionDataCubit>().concludeProductionData(_productionData.id);
+                  }),
               ),
               Padding(
                 padding: const EdgeInsets.all(5.0),
