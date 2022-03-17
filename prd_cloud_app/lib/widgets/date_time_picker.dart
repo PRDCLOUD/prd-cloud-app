@@ -56,7 +56,7 @@ class DateTimePicker extends StatelessWidget {
           keyboardType: TextInputType.text,
           controller: _dateController,
           decoration: InputDecoration(
-            label: Text(_label + '1'),
+            label: Text(_label),
             enabled: false,
             enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
             disabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,

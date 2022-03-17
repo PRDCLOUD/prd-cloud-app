@@ -55,10 +55,23 @@ class _StopAddState extends State<StopAdd> {
 
   @override
   Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const SizedBox(height: 20),
+        Text("CADASTRO DE PARADA", style: Theme.of(context).textTheme.headline6),
+        Expanded(child: _dialogBody()),
+      ],
+    );
+  }
+
+  Widget _dialogBody() {
     switch (stopAddStates) {
       case StopAddStates.stopSelection:
         return Column(
-          children: [Expanded(child: _stopSelection()), _flowControlButtons()],
+          children: [
+            Expanded(child: _stopSelection()), 
+            _flowControlButtons()
+          ],
         );
       case StopAddStates.lineUnitSelection:
         return Column(
@@ -105,7 +118,7 @@ class _StopAddState extends State<StopAdd> {
       children: [
         Container(
           padding: const EdgeInsets.all(15),
-          child: Text("Selecione o local", style: Theme.of(context).textTheme.headline6)),
+          child: Text("Selecione o local", style: Theme.of(context).textTheme.titleMedium)),
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,
@@ -285,10 +298,9 @@ class _StopAddState extends State<StopAdd> {
           padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
           child: Row(
             children: [
-              Text("Perda:",
-                  style: textStyle.copyWith(fontWeight: FontWeight.bold)),
+              Text("Parada:", style: textStyle.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(width: 10),
-              Text(selectedStop!.codeName, style: textStyle)
+              Flexible(child: Text(selectedStop!.codeName, style: textStyle)
             ],
           ),
         )

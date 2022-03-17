@@ -69,7 +69,7 @@ class _LossAddState extends State<LossAdd> {
         var lineUnits = widget.lineUnits.where((lineUnit) => selectedLoss!.lineUnitLoss.contains(lineUnit.id)).toList();
         return lineUnitSelection(lineUnits);
       case LossAddStates.valueFill:
-        return valueFill();
+        return SingleChildScrollView(child: valueFill());
     }
   }
 
@@ -78,6 +78,10 @@ class _LossAddState extends State<LossAdd> {
         children: [
           tipoPerdaSelecionada(),
           localSelecionado(),
+          Container(
+            padding: const EdgeInsets.all(15),
+            child: Text("Preencha o quantitativo", style: Theme.of(context).textTheme.titleMedium)
+          ),
           Container(
             width: 300,
             padding: const EdgeInsets.symmetric(vertical: 30),
@@ -120,7 +124,8 @@ class _LossAddState extends State<LossAdd> {
         tipoPerdaSelecionada(),
         Container(
           padding: const EdgeInsets.all(15),
-          child: Text("Selecione o local", style: Theme.of(context).textTheme.headline6)),
+          child: Text("Selecione o local", style: Theme.of(context).textTheme.titleMedium)
+        ),
         Expanded(
           child: ListView.builder(
             shrinkWrap: true,
@@ -150,7 +155,6 @@ class _LossAddState extends State<LossAdd> {
         padding: const EdgeInsets.all(10.0),
         child: Card(
           color: Theme.of(context).primaryColor,
-          
           borderOnForeground: true,
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
