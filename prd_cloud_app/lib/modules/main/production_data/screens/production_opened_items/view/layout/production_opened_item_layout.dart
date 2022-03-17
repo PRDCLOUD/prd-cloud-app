@@ -33,8 +33,8 @@ class ProductionOpenedItemLayoutPage extends StatelessWidget {
                   const Text("Selecione os apontamentos que deseja editar na list de apontamentos"),
                   const SizedBox(height: 80),
                   ElevatedButton(
-                    child: Text("Ir para lista de apontamentos"),
-                    style: ElevatedButton.styleFrom(minimumSize: Size(50, 50)),
+                    child: const Text("Ir para lista de apontamentos"),
+                    style: ElevatedButton.styleFrom(minimumSize: const Size(50, 50)),
                     onPressed: () => context.read<MenuItemSelectedCubit>().selectPage(MenuItemSelected.productionDataList),
                   )
                 ],
@@ -56,6 +56,6 @@ class _Bottom extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ProductionOpenedBlocProvider(productionBasicDataId: _selectedProductionBasicData?.id as int);
+    return ProductionOpenedBlocProvider(productionBasicDataId: _selectedProductionBasicData.id);
   }
 }

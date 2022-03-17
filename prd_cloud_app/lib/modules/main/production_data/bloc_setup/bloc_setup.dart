@@ -47,6 +47,7 @@ class _BlocProvider extends StatelessWidget {
           create: (context) => SelectedProductionDataCubit(), lazy: false),
       BlocProvider(
           create: (context) => ProductionListFilterCubit(ProductionDataFilter(
+              filterKey: DateTime.now().toIso8601String(),
               prdLines: context
                   .read<SelectedProductionLineAndGroupsCubit>()
                   .state
