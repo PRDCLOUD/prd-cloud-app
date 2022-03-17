@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 import 'package:dio/dio.dart';
 import 'package:models/models.dart';
 import 'package:timezone/timezone.dart' as tz;
@@ -279,7 +278,6 @@ class AuthenticatedHttpClient {
       ]
     };
 
-    var json = jsonEncode(data);
     await _patchRequest('api/production/conclude', data);
   }
 

@@ -12,8 +12,47 @@ class ProductionSelectedSummary extends StatelessWidget {
 
   final ProductionBasicData _productionData;
 
+
+
   @override
   Widget build(BuildContext context) {
+
+    Future showDeleteAlertDialog() async {
+      // set up the button
+      Widget okButton = TextButton(
+        style: TextButton.styleFrom(primary: Theme.of(context).colorScheme.error),
+        child: const Text("Confirmar"),
+        onPressed: () { 
+          Navigator.of(context).pop();
+          context.read<OpenProductionDataCubit>().cancelProductionData(_productionData.id);
+          context.read<ProductionListFilterCubit>().markForRefresh();
+        },
+      );
+
+      Widget cancelButton = TextButton(
+        child: const Text("Cancelar"),
+        onPressed: () { 
+          Navigator.of(context).pop();
+        },
+      );
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: const Text("Confirmar exclusão"),
+        content: const Text("ATENÇÃO: Você tem certeza que deseja excluir o apontamento?"),
+        actions: [
+          okButton,
+          cancelButton
+        ],
+      );
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
 
     var productionLine = _productionData.lineUnits.firstWhere((e) => e.type == 'ProductionLine');
     return Card(
@@ -34,6 +73,13 @@ class ProductionSelectedSummary extends StatelessWidget {
                     fixedSize: const Size(60, 60)
                   ),
                   onPressed: () {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        const SnackBar(content: Text('Segure o botão para concluir o apontamento')),
+                      );
+                  },
+                  onLongPress: () {
                     context.read<OpenProductionDataCubit>().concludeProductionData(_productionData.id);
                   }),
               ),
@@ -46,6 +92,13 @@ class ProductionSelectedSummary extends StatelessWidget {
                     fixedSize: const Size(60, 60)
                   ),
                   onPressed: () {
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        const SnackBar(content: Text('Segure o botão para fechar a edição do apontamento')),
+                      );
+                  },
+                  onLongPress: () {
                     context.read<OpenProductionDataCubit>().closeProductionData(_productionData.id);
                   }),
               ),
@@ -58,8 +111,14 @@ class ProductionSelectedSummary extends StatelessWidget {
                     fixedSize: const Size(60, 60)
                   ),
                   onPressed: () {
-                    context.read<OpenProductionDataCubit>().cancelProductionData(_productionData.id);
-                    context.read<ProductionListFilterCubit>().markForRefresh();
+                    ScaffoldMessenger.of(context)
+                      ..hideCurrentSnackBar()
+                      ..showSnackBar(
+                        const SnackBar(content: Text('Segure o botão para excluir o apontamento')),
+                      );
+                  },
+                  onLongPress: () {
+                    showDeleteAlertDialog();
                   },
                 ),
               ),

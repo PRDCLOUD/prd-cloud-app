@@ -77,6 +77,43 @@ class ProductionStopMain extends StatelessWidget {
   }
 
 Widget _stopCard(ProductionStopState state, int index, BuildContext context) {
+
+  Future showDeleteAlertDialog() async {
+      // set up the button
+      Widget okButton = TextButton(
+        style: TextButton.styleFrom(primary: Theme.of(context).colorScheme.error),
+        child: const Text("Confirmar"),
+        onPressed: () { 
+          Navigator.of(context).pop();
+          context.read<ProductionStopCubit>().removeStop(context.read<SelectedProductionDataCubit>().state!, state.stops[index].id);
+        },
+      );
+
+      Widget cancelButton = TextButton(
+        child: const Text("Cancelar"),
+        onPressed: () { 
+          Navigator.of(context).pop();
+        },
+      );
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: const Text("Confirmar exclusão"),
+        content: const Text("ATENÇÃO: Você tem certeza que deseja excluir a parada?"),
+        actions: [
+          okButton,
+          cancelButton
+        ],
+      );
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
     return ListTile(
       title: Card(
         child: Container(
@@ -97,8 +134,8 @@ Widget _stopCard(ProductionStopState state, int index, BuildContext context) {
                 icon: const Icon(Icons.delete_outline), 
                 label: const Text("Excluir"),
                 style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.error),
-                onLongPress: () async => await context.read<ProductionStopCubit>().removeStop(context.read<SelectedProductionDataCubit>().state!, state.stops[index].id),
-                onPressed: () async => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Segure o botão para deletar")))
+                onLongPress: () => showDeleteAlertDialog(),
+                onPressed: () => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Segure o botão para deletar")))
               )
             ],
           )

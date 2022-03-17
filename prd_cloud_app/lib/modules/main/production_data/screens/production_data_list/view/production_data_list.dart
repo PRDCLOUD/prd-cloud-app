@@ -166,6 +166,43 @@ class _ListCardState extends State<ListCard> {
   }
 
   Widget unloadedItemOptions() {
+
+    Future showDeleteAlertDialog() async {
+      // set up the button
+      Widget okButton = TextButton(
+        style: TextButton.styleFrom(primary: Theme.of(context).colorScheme.error),
+        child: const Text("Confirmar"),
+        onPressed: () { 
+          Navigator.of(context).pop();
+          cancelProductionData();
+        },
+      );
+
+      Widget cancelButton = TextButton(
+        child: const Text("Cancelar"),
+        onPressed: () { 
+          Navigator.of(context).pop();
+        },
+      );
+
+      // set up the AlertDialog
+      AlertDialog alert = AlertDialog(
+        title: const Text("Confirmar exclusão"),
+        content: const Text("ATENÇÃO: Você tem certeza que deseja excluir o apontamento?"),
+        actions: [
+          okButton,
+          cancelButton
+        ],
+      );
+      // show the dialog
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return alert;
+        },
+      );
+    }
+
     return Column(
       children: [
         ElevatedButton.icon(
@@ -177,7 +214,7 @@ class _ListCardState extends State<ListCard> {
           style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.error),
           icon: const Icon(Icons.delete_outline), 
           label: const Text("Excluir"),
-          onPressed: () => cancelProductionData(),
+          onPressed: () => showDeleteAlertDialog(),
         )
       ],
     );
@@ -216,7 +253,7 @@ class _ListCardState extends State<ListCard> {
   }
 
   void unloadProductionData() async {
-    context.read<OpenProductionDataCubit>().closeProductionData(widget._productionItemOfList.id);
+     context.read<OpenProductionDataCubit>().closeProductionData(widget._productionItemOfList.id);
   }
 
   void editProductionData() async {
