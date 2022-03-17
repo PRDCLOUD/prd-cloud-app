@@ -300,7 +300,7 @@ class _StopAddState extends State<StopAdd> {
             children: [
               Text("Parada:", style: textStyle.copyWith(fontWeight: FontWeight.bold)),
               const SizedBox(width: 10),
-              Flexible(child: Text(selectedStop!.codeName, style: textStyle)
+              Flexible(child: Text(selectedStop!.codeName, style: textStyle))
             ],
           ),
         )

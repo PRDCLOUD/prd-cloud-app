@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:intl/intl.dart';
 import 'package:models/src/utils/date_time_functions.dart';
 import 'package:timezone/timezone.dart' as tz;
 
@@ -10,7 +11,7 @@ abstract class ProductionStop extends Equatable {
   final String? code;
   final String name;
   final String? typeProductionStop;
-  final double totalTime;
+  final double? totalTime;
 
   String get codeName {
     if (code != null) {
@@ -362,5 +363,17 @@ class ProductionStopClaim extends Equatable {
       valueList,
       required,
     ];
+  }
+}
+
+extension ProductionStopExtensions on ProductionStop {
+
+  String getFormatedStopValue() {
+    var f = NumberFormat("##0.0#", "en_US");
+    if (totalTime == null) {
+      return "";
+    } else {
+      return f.format(totalTime) + " min";
+    }
   }
 }

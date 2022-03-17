@@ -56,21 +56,56 @@ class ProductionStopMain extends StatelessWidget {
               stopAddDialog(context, stopOptions, lineUnits, context.read<ProductionStopCubit>().addStop, productionDataId);
             },
           ),
-          body: ListView.builder(
-            shrinkWrap: true,
-            itemCount: state.stops.length,
-            itemBuilder: (BuildContext context, int index) {
-              return ListTile(
-                title: Text(state.stops[index].name),
-                onLongPress: () async => await context.read<ProductionStopCubit>().removeStop(context.read<SelectedProductionDataCubit>().state!, state.stops[index].id),
-              );
-            },
-          ),
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Paradas Cadastradas:", style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),),
+              Expanded(
+                child:ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: state.stops.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _stopCard(state, index, context);
+                  },
+                ),
+              )
+            ]
+          )
         );
       },
     );
   }
 
+Widget _stopCard(ProductionStopState state, int index, BuildContext context) {
+    return ListTile(
+      title: Card(
+        child: Container(
+          padding: const EdgeInsets.all(13),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(state.stops[index].name, style: Theme.of(context).textTheme.bodyMedium),
+                    Text(state.stops[index].getFormatedStopValue(), style: Theme.of(context).textTheme.bodySmall),
+                  ],
+                ),
+              ),
+              ElevatedButton.icon(
+                icon: const Icon(Icons.delete_outline), 
+                label: const Text("Excluir"),
+                style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.error),
+                onLongPress: () async => await context.read<ProductionStopCubit>().removeStop(context.read<SelectedProductionDataCubit>().state!, state.stops[index].id),
+                onPressed: () async => ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Segure o botão para deletar")))
+              )
+            ],
+          )
+        )
+      ),
+    );
+  }
   
   
 

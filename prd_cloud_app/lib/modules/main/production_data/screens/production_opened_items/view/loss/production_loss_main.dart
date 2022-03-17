@@ -56,19 +56,27 @@ class ProductionLossMain extends StatelessWidget {
               lossAddDialog(context, lossesOptions, lineUnits, context.read<ProductionLossCubit>().addLoss, productionDataId);
             },
           ),
-          body: ListView.builder(
-            shrinkWrap: true,
-            itemCount: state.losses.length,
-            itemBuilder: (BuildContext context, int index) {
-              return _lossCard(state, index, context);
-            },
+          body: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text("Perdas Cadastradas:", style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),),
+              Expanded(
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: state.losses.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return _LossCard(state, index, context);
+                  },
+                ),
+              ),
+            ],
           ),
         );
       },
     );
   }
 
-  Widget _lossCard(ProductionLossState state, int index, BuildContext context) {
+  Widget _LossCard(ProductionLossState state, int index, BuildContext context) {
     return ListTile(
       title: Card(
         child: Container(
