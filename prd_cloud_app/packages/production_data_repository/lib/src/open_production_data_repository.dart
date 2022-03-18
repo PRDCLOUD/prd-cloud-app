@@ -131,7 +131,16 @@ class OpenProductionDataRepository {
 
   Future _updateProductApi(ProductionBasicData productionBasicData) async {
     try {
-      await _authHttpClient.patchProductionDataProduct(productionBasicData, _tenantInformation.location);
+      var result = await _authHttpClient.patchProductionDataProduct(productionBasicData, _tenantInformation.location);
+      if (result.data != null && result.data is List<dynamic>) {
+        for (var newVariableValue in result.data) {
+          if (newVariableValue['typeVariableDefinition'] == "Numeric") {
+            updateVariableNumeric(newVariableValue['productionBasicDataId'], newVariableValue['id'], newVariableValue['value']);
+          } else if (newVariableValue['typeVariableDefinition'] == "Text") {
+            updateVariableText(newVariableValue['productionBasicDataId'], newVariableValue['id'], newVariableValue['text']);
+          }
+        }
+      }
     } catch (e) {
       _errorRepository.communicateError(e);
     }
@@ -215,7 +224,9 @@ class OpenProductionDataRepository {
 
         prdData = prdData.copyWith(lineUnits: newProcutionLineUnitList);
         emitProductionChange(id, prdData);
-        EasyDebounce.debounce(id.toString() + '-update-variable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+        if (!newVariable.isReadOnly) {
+          EasyDebounce.debounce(id.toString() + '-update-variable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+        }
       }
     }
   }
@@ -254,7 +265,9 @@ class OpenProductionDataRepository {
 
         prdData = prdData.copyWith(lineUnits: newProcutionLineUnitList);
         emitProductionChange(id, prdData);
-        EasyDebounce.debounce(id.toString() + '-updateVariable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+        if (!newVariable.isReadOnly) {
+          EasyDebounce.debounce(id.toString() + '-updateVariable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+        }
       }
     }
   }

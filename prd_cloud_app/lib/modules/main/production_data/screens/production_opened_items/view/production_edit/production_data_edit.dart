@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
+import 'package:prd_cloud_app/theme.dart';
 import 'package:prd_cloud_app/widgets/widgets.dart';
 
 import 'product_selection_page.dart';
@@ -26,20 +27,20 @@ class ProductionDataEdit extends StatelessWidget {
               children: [
                 Row(children: const [
                   Padding(
-                    padding: EdgeInsets.all(3.0),
+                    padding: EdgeInsets.all(5.0),
                     child: _Begin(),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(3.0),
+                    padding: EdgeInsets.all(5.0),
                     child: _End(),
                   ),
                 ]),
                 const Padding(
-                  padding: EdgeInsets.all(3.0),
+                  padding: EdgeInsets.all(5.0),
                   child: _Comments(),
                 ),
                 const Padding(
-                  padding: EdgeInsets.all(3.0),
+                  padding: EdgeInsets.all(5.0),
                   child: _Products(),
                 ),
                 ...getVariableWidgets(context)
@@ -81,17 +82,32 @@ class ProductionDataEdit extends StatelessWidget {
 
     var widgetRows = List<Widget>.empty(growable: true);
 
-    for(var lineUnits in variableLineUnits) {
-      for(var row in lineUnits.rows) {
+    for(var lineUnit in variableLineUnits) {
+      var cardWidgets = List<Widget>.empty(growable: true); 
+      for(var row in lineUnit.rows) {
         for(var column in row.columns) {
-          widgetRows.add(
+          cardWidgets.add(
             Padding(
-              padding: const EdgeInsets.all(3.0),
+              padding: const EdgeInsets.all(5.0),
               child: ProductionVariableEdit(productionVariable: column.productionVariable),
             )
           );
         }
       }
+      var card = Card(
+        shape: AppTheme.cardShape,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+            Text(lineUnit.productionLineUnit.name, style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.black87, fontWeight: FontWeight.bold),),
+            ...cardWidgets
+          ]),
+        )
+      );
+
+      widgetRows.add(card);
     }
 
     return widgetRows;
