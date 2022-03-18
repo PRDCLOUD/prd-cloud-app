@@ -82,8 +82,6 @@ class _AppViewState extends State<AppView> {
         ],
         // The Mandy red, light theme.
         theme: FlexThemeData.light(scheme: FlexScheme.bigStone),
-        // The Mandy red, dark theme.
-        darkTheme: FlexThemeData.dark(scheme: FlexScheme.outerSpace),
         // Use dark or light theme based on system setting.
         themeMode: ThemeMode.light,
         navigatorKey: _navigatorKey,

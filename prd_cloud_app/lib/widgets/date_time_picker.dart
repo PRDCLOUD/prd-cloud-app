@@ -24,6 +24,7 @@ class DateTimePicker extends StatelessWidget {
   final TextEditingController _dateController;
 
   Future<void> _selectDate(BuildContext context) async {
+    FocusScope.of(context).unfocus();
     final DateTime? pickedDate = await showDatePicker(
       context: context,
       initialDate: _date ?? DateTime.now(),
@@ -56,15 +57,13 @@ class DateTimePicker extends StatelessWidget {
           keyboardType: TextInputType.text,
           controller: _dateController,
           decoration: InputDecoration(
-            label: Text(_label),
+            label: Text(_label, style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.black54)),
             enabled: false,
-            enabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
-            disabledBorder: Theme.of(context).inputDecorationTheme.enabledBorder,
-            border:  Theme.of(context).inputDecorationTheme.enabledBorder
+          ).copyWith(
+            disabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black54))
           ),
         ),
       ),
     );
   }
-  
 }

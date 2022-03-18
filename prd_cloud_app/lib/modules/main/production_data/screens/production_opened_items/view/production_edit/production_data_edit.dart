@@ -162,6 +162,7 @@ class _Products extends StatelessWidget {
   const _Products({Key? key}) : super(key: key);
 
   void productSelection({required BuildContext context, required List<Product> products, required ProductSetter onChange, required int? selectedProductId}) {
+    FocusScope.of(context).unfocus();
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => 
@@ -199,11 +200,10 @@ class _Products extends StatelessWidget {
           child: TextFormField(
             initialValue: state.fieldValue == null ? null : products.firstWhere((element) => element.id == state.fieldValue).name,
             enabled: false,
-            decoration: const InputDecoration(
-              label: Text("Produto"),
+            decoration: InputDecoration(
+              label: Text("Produto", style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.black54),),
             ).copyWith(
-              disabledBorder: const UnderlineInputBorder(borderSide: BorderSide()),
-              labelStyle: Theme.of(context).inputDecorationTheme.labelStyle
+              disabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black54)),
             ),
           )
         );
