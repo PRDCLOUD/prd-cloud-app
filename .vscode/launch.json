@@ -5,18 +5,26 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "prd_cloud_app",
+      "name": "prd_cloud_app (development)",
       "cwd": "prd_cloud_app",
       "request": "launch",
       "type": "dart",
-      "program": "lib/main.dart"
+      "program": "lib/development_main.dart"
     },
     {
-      "name": "prd_cloud_app (profile mode)",
+      "name": "prd_cloud_app - profile (development)",
       "cwd": "prd_cloud_app",
       "request": "launch",
       "type": "dart",
+      "program": "lib/production_main.dart",
       "flutterMode": "profile"
+    },
+    {
+      "name": "prd_cloud_app (production)",
+      "cwd": "prd_cloud_app",
+      "request": "launch",
+      "type": "dart",
+      "program": "lib/main.dart",
     }
   ]
 }

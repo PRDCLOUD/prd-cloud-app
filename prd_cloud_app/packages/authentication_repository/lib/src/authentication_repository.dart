@@ -5,14 +5,21 @@ import 'package:authentication_repository/src/utils/jwt-parser.dart';
 import 'package:flutter_appauth/flutter_appauth.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart' as http;
+import 'package:models/models.dart';
 
 enum AuthenticationStatus { unknown, authenticated, unauthenticated }
 
 class AuthenticationRepository {
 
-  final issuer = 'https://dev-244599.oktapreview.com/oauth2/default';
-  final clientId = '0oa15rgy0m4Y8k9Ik0h8';
-  final redirectUrl = 'cloud.prd.auth:/callback';
+  AuthenticationRepository(Config config) {
+    issuer = config.authIssuer;
+    clientId = config.authClientId;
+    redirectUrl = config.authRedirectUrl;
+  }
+
+  late String issuer;
+  late String clientId;
+  late String redirectUrl;
 
   final _storage = new FlutterSecureStorage();
   final _statusController = StreamController<AuthenticationStatus>();
