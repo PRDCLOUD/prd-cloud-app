@@ -6,7 +6,6 @@ import 'package:prd_cloud_app/modules/initial/bloc/auth_data_cubit/auth_data_cub
 import 'package:prd_cloud_app/modules/initial/bloc/authentication/authentication_bloc.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_data_list/production_data_list.dart';
-import 'package:prd_cloud_app/modules/main/production_data/screens/production_line_selection/production_line_selection.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/production_opened_items.dart';
 
 class DrawerMenu extends StatelessWidget {
@@ -33,8 +32,6 @@ class DrawerMenu extends StatelessWidget {
     switch (menuItemSelected) {
       case MenuItemSelected.productionOpenedItems:
         return AppBar(title: const Text('Edição de Apontamentos'));
-      case MenuItemSelected.productionLines:
-        return AppBar(title: const Text('Linhas de Produção'));
       default:
         return AppBar(title: const Text('Apontamentos'));
     }
@@ -44,8 +41,6 @@ class DrawerMenu extends StatelessWidget {
     switch (menuItemSelected) {
       case MenuItemSelected.productionOpenedItems:
         return const ProductionOpenedItemLayoutPage();
-      case MenuItemSelected.productionLines:
-        return const ProductionLineSelectionPage();
       default:
         return const ProductionDataListPage();
     }
@@ -132,20 +127,6 @@ class DrawerMenuList extends StatelessWidget {
                     Navigator.pop(context);
                   },
                 ),
-                ListTile(
-                  title: _menuTitleItem(
-                    context,
-                    Icons.precision_manufacturing_outlined,
-                    "Linhas de Produção",
-                    state.menuItemSelected == MenuItemSelected.productionLines
-                  ),
-                  onTap: () {
-                    context
-                        .read<MenuItemSelectedCubit>()
-                        .selectPage(MenuItemSelected.productionLines);
-                    Navigator.pop(context);
-                  },
-                )
               ],
             );
           },

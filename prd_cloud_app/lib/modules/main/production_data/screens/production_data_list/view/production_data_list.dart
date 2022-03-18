@@ -402,7 +402,7 @@ class _ListCardState extends State<ListCard> {
     switch (productionDataStatus) {
       case ProductionDataStatus.opened:
         return Container(
-            padding: const EdgeInsets.all(2),
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.secondary,
                 border: Border.all(
@@ -416,7 +416,7 @@ class _ListCardState extends State<ListCard> {
                     .copyWith(color: Colors.white)));
       case ProductionDataStatus.canceled:
         return Container(
-            padding: const EdgeInsets.all(2),
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.error,
                 border: Border.all(
@@ -430,7 +430,7 @@ class _ListCardState extends State<ListCard> {
                     .copyWith(color: Colors.white)));
       case ProductionDataStatus.concluded:
         return Container(
-            padding: const EdgeInsets.all(2),
+            padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 5),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.primary,
                 border: Border.all(

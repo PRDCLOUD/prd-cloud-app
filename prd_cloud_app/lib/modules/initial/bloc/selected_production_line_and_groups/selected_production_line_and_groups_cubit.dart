@@ -10,17 +10,21 @@ class SelectedProductionLineAndGroupsCubit extends Cubit<SelectedProductionLineA
   
   SelectedProductionLineAndGroupsCubit(List<ProductionLineAndGroup> initialSelection) : super(SelectedProductionLineAndGroupsState(initialSelection));
 
-    void select(ProductionLineAndGroup productionLineAndGroup) {
-      if (!state.selectedProductionLinesAndGroups.contains(productionLineAndGroup)) {
-        var newList = state.selectedProductionLinesAndGroups.toList()..add(productionLineAndGroup);
-        emit(state.copyWith(selectedProductionLinesAndGroups: newList));
-      }
-    }
+  void setNewSelectedItems(List<ProductionLineAndGroup> productionLineAndGroupList) {
+    emit(state.copyWith(selectedProductionLinesAndGroups: productionLineAndGroupList.toList()));
+  }
 
-    void remove(ProductionLineAndGroup productionLineAndGroup) {
-      var copyWithItemRemoved = state.selectedProductionLinesAndGroups.toList()..remove(productionLineAndGroup);
-      emit(state.copyWith(selectedProductionLinesAndGroups: copyWithItemRemoved));
+  void select(ProductionLineAndGroup productionLineAndGroup) {
+    if (!state.selectedProductionLinesAndGroups.contains(productionLineAndGroup)) {
+      var newList = state.selectedProductionLinesAndGroups.toList()..add(productionLineAndGroup);
+      emit(state.copyWith(selectedProductionLinesAndGroups: newList));
     }
+  }
+
+  void remove(ProductionLineAndGroup productionLineAndGroup) {
+    var copyWithItemRemoved = state.selectedProductionLinesAndGroups.toList()..remove(productionLineAndGroup);
+    emit(state.copyWith(selectedProductionLinesAndGroups: copyWithItemRemoved));
+  }
 
   @override
   Future<void> close() {
