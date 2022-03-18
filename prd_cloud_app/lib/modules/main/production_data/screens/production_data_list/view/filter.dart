@@ -13,36 +13,53 @@ class Filter extends StatelessWidget {
       builder: (context, state) {
         return Row(
           children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: ChoiceChip(
-                label: const Text("Em Aberto"),
-                avatar: avatar(isOpened(state.status)),
-                selected: isOpened(state.status),
-                onSelected: (selected) => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.opened)
-              )
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: ChoiceChip(
-                label: const Text("Concluído"),
-                avatar: avatar(isConcluded(state.status)),
-                selected: isConcluded(state.status),
-                onSelected: (selected) => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.concluded),
-              )
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: ChoiceChip(
-                label: const Text("Cancelado"),
-                avatar: avatar(isCanceled(state.status)),
-                selected: isCanceled(state.status),
-                onSelected: (selected) => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.canceled),
-              )
-            ),
+            Expanded(child: choiceChips(state, context)),
+            TextButton(
+              child: Row(
+                children: const [
+                  Text("Linhas de Produção"),
+                  Icon(Icons.filter_alt),
+                ]
+              ),
+              onPressed: () {},
+            )
           ],
         );
       },
+    );
+  }
+
+  Widget choiceChips(ProductionDataFilter state, BuildContext context) {
+    return Row(
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: ChoiceChip(
+            label: const Text("Em Aberto"),
+            avatar: avatar(isOpened(state.status)),
+            selected: isOpened(state.status),
+            onSelected: (selected) => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.opened)
+          )
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: ChoiceChip(
+            label: const Text("Concluído"),
+            avatar: avatar(isConcluded(state.status)),
+            selected: isConcluded(state.status),
+            onSelected: (selected) => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.concluded),
+          )
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 10),
+          child: ChoiceChip(
+            label: const Text("Cancelado"),
+            avatar: avatar(isCanceled(state.status)),
+            selected: isCanceled(state.status),
+            onSelected: (selected) => context.read<ProductionListFilterCubit>().updateStatus(ProductionDataStatus.canceled),
+          )
+        )
+      ]
     );
   }
 

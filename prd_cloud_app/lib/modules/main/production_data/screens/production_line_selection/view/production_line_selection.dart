@@ -8,27 +8,36 @@ class ProductionLineSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return const Scaffold(
+      body: ProductionLineSelectionList(),
+      );
+  }
+}
+
+class ProductionLineSelectionList extends StatelessWidget {
+  const ProductionLineSelectionList({Key? key,}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
     var productionLineOptions = (context.read<ProductionLineAndGroupsCubit>().state as ProductionLineAndGroupLoaded).productionLineAndGroups;
-    return Scaffold(
-      body: BlocBuilder<SelectedProductionLineAndGroupsCubit, SelectedProductionLineAndGroupsState>(
-          builder: (BuildContext context, state) {
-            return ListView.builder(
-              itemCount: productionLineOptions.length,
-              itemBuilder: (BuildContext context, int index) {
-                var selected = state.isSelected(productionLineOptions[index]);
-                return Card(
-                  child: ListTile(
-                    leading: selected ? const Icon(Icons.check) : const Icon(Icons.circle_outlined),
-                    title: Text(productionLineOptions[index].name),
-                    onTap: selected ? 
-                      () => context.read<SelectedProductionLineAndGroupsCubit>().remove(productionLineOptions[index]) :
-                      () => context.read<SelectedProductionLineAndGroupsCubit>().select(productionLineOptions[index])
-                  )
-                );
-              }
-            );
-          },
-        ),
+    return BlocBuilder<SelectedProductionLineAndGroupsCubit, SelectedProductionLineAndGroupsState>(
+        builder: (BuildContext context, state) {
+          return ListView.builder(
+            itemCount: productionLineOptions.length,
+            itemBuilder: (BuildContext context, int index) {
+              var selected = state.isSelected(productionLineOptions[index]);
+              return Card(
+                child: ListTile(
+                  leading: selected ? const Icon(Icons.check) : const Icon(Icons.circle_outlined),
+                  title: Text(productionLineOptions[index].name),
+                  onTap: selected ? 
+                    () => context.read<SelectedProductionLineAndGroupsCubit>().remove(productionLineOptions[index]) :
+                    () => context.read<SelectedProductionLineAndGroupsCubit>().select(productionLineOptions[index])
+                )
+              );
+            }
+          );
+        },
       );
   }
 }
