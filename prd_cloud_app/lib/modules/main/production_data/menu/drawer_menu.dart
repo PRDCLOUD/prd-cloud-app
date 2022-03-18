@@ -86,73 +86,118 @@ class DrawerMenuList extends StatelessWidget {
         // space to fit everything.
         child: Column(
       children: [
-        Expanded(
-            child: ListView(
-          // Important: Remove any padding from the ListView.
-          padding: EdgeInsets.zero,
-          children: [
-            DrawerHeader(
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary,
-              ),
-              child: Container(
-                decoration: const BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage("assets/img/logotipo.png"),
-                      fit: BoxFit.scaleDown)),
-              ),
-              padding: const EdgeInsets.all(40),
-            ),
-            ListTile(
-              title: Row(
-                children: const [
-                  Icon(Icons.list),
-                  SizedBox(width: 10,),
-                  Text('Lista de Apontamentos'),
-                ],
-              ),
-              onTap: () {
-                context
-                    .read<MenuItemSelectedCubit>()
-                    .selectPage(MenuItemSelected.productionDataList);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-              title: Row(
-                children: const [
-                  Icon(Icons.file_download_outlined),
-                  SizedBox(width: 10,),
-                  Text('Apontamentos Carregados'),
-                ],
-              ),
-              onTap: () {
-                context
-                    .read<MenuItemSelectedCubit>()
-                    .selectPage(MenuItemSelected.productionOpenedItems);
-                Navigator.pop(context);
-              },
-            ),
-            ListTile(
-             title: Row(
-                children: const [
-                  Icon(Icons.precision_manufacturing_outlined),
-                  SizedBox(width: 10,),
-                  Text('Linhas de Produção'),
-                ],
-              ),
-              onTap: () {
-                context
-                    .read<MenuItemSelectedCubit>()
-                    .selectPage(MenuItemSelected.productionLines);
-                Navigator.pop(context);
-              },
-            )
-          ],
+        Expanded(child: BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
+          builder: (context, state) {
+            return ListView(
+              // Important: Remove any padding from the ListView.
+              padding: EdgeInsets.zero,
+              children: [
+                DrawerHeader(
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.primary,
+                  ),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                        image: DecorationImage(
+                            image: AssetImage("assets/img/logotipo.png"),
+                            fit: BoxFit.scaleDown)),
+                  ),
+                  padding: const EdgeInsets.all(40),
+                ),
+                ListTile(
+                  title: _menuTitleItem(
+                    context,
+                    Icons.list,
+                    "Lista de Apontamentos",
+                    state.menuItemSelected == MenuItemSelected.productionDataList
+                  ),
+                  onTap: () {
+                    context
+                        .read<MenuItemSelectedCubit>()
+                        .selectPage(MenuItemSelected.productionDataList);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: _menuTitleItem(
+                    context,
+                    Icons.file_download_outlined,
+                    "Apontamentos Carregados",
+                    state.menuItemSelected == MenuItemSelected.productionOpenedItems
+                  ),
+                  onTap: () {
+                    context
+                        .read<MenuItemSelectedCubit>()
+                        .selectPage(MenuItemSelected.productionOpenedItems);
+                    Navigator.pop(context);
+                  },
+                ),
+                ListTile(
+                  title: _menuTitleItem(
+                    context,
+                    Icons.precision_manufacturing_outlined,
+                    "Linhas de Produção",
+                    state.menuItemSelected == MenuItemSelected.productionLines
+                  ),
+                  onTap: () {
+                    context
+                        .read<MenuItemSelectedCubit>()
+                        .selectPage(MenuItemSelected.productionLines);
+                    Navigator.pop(context);
+                  },
+                )
+              ],
+            );
+          },
         )),
         const _User()
       ],
     ));
+  }
+
+  Widget _menuTitleItem(BuildContext context, IconData icon, String label, bool isSelected) {
+    if (isSelected) {
+      return Row(
+        children: [
+          Icon(
+            icon,
+            color: Theme.of(context).colorScheme.secondary,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            label,
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge!
+                .copyWith(
+                  color: Theme.of(context).colorScheme.secondary,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 15
+                ),
+          ),
+        ],
+      );
+    } else {
+      return Row(
+        children: [
+          Icon(
+            icon,
+            color: Theme.of(context).colorScheme.primary,
+          ),
+          const SizedBox(width: 10),
+          Text(
+            label,
+            style: Theme.of(context)
+                .textTheme
+                .labelLarge!
+                .copyWith(
+                  color: Theme.of(context).colorScheme.primary,
+                  fontSize: 15
+                ),
+          ),
+        ],
+      );
+    }
   }
 }
 
@@ -186,43 +231,39 @@ class _LogoutArea extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-        border: Border(
-          top: BorderSide(
-            width: 1.0, 
-            color: Theme.of(context).colorScheme.primary
-          )
-        )
-      ),
+          color: Theme.of(context).colorScheme.primary,
+          border: Border(
+              top: BorderSide(
+                  width: 1.0, color: Theme.of(context).colorScheme.primary))),
       height: 70,
-      child: Row(
-        children: [
-          const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10),
-            child: Icon(
-              Icons.person,
-              size: 30.0,
-              color: Colors.white,
-            ),
+      child: Row(children: [
+        const Padding(
+          padding: EdgeInsets.symmetric(horizontal: 10),
+          child: Icon(
+            Icons.person,
+            size: 30.0,
+            color: Colors.white,
           ),
-          Expanded(
-            child: Text(
-              _authData.name, 
-              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white)
-            )
+        ),
+        Expanded(
+            child: Text(_authData.name,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium!
+                    .copyWith(color: Colors.white))),
+        IconButton(
+          icon: const Icon(
+            Icons.logout,
+            size: 30.0,
+            color: Colors.white,
           ),
-          IconButton(
-            icon: const Icon(
-              Icons.logout,
-              size: 30.0,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              context.read<AuthenticationBloc>().add(AuthenticationLogoutRequested());
-            },
-          )
-        ]
-      ),
+          onPressed: () {
+            context
+                .read<AuthenticationBloc>()
+                .add(AuthenticationLogoutRequested());
+          },
+        )
+      ]),
     );
   }
 }

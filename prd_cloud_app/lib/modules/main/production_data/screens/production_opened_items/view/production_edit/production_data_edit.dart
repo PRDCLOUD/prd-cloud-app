@@ -4,8 +4,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/widgets/widgets.dart';
-import 'package:responsive_grid/responsive_grid.dart';
 
+import 'product_selection_page.dart';
 import 'production_variable_edit.dart';
 
 class ProductionDataEdit extends StatelessWidget {
@@ -83,18 +83,14 @@ class ProductionDataEdit extends StatelessWidget {
 
     for(var lineUnits in variableLineUnits) {
       for(var row in lineUnits.rows) {
-        List<ResponsiveGridCol> columnWidgets = List.empty(growable: true);
         for(var column in row.columns) {
-          columnWidgets.add(
-            ResponsiveGridCol(
-              child: Padding(
-                padding: const EdgeInsets.all(3.0),
-                child: ProductionVariableEdit(productionVariable: column.productionVariable),
-              )
+          widgetRows.add(
+            Padding(
+              padding: const EdgeInsets.all(3.0),
+              child: ProductionVariableEdit(productionVariable: column.productionVariable),
             )
           );
         }
-        widgetRows.add(ResponsiveGridRow(children: columnWidgets));
       }
     }
 
@@ -161,14 +157,20 @@ class _Comments extends StatelessWidget {
   }
 }
 
-typedef ProductSetter = void Function(int? newValue);
+
 class _Products extends StatelessWidget {
   const _Products({Key? key}) : super(key: key);
 
-  void productSelection(BuildContext context, List<Product> products, ProductSetter onChange) {
+  void productSelection({required BuildContext context, required List<Product> products, required ProductSetter onChange, required int? selectedProductId}) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => ProductSelectionPage(products: products, onChange: onChange))
+      MaterialPageRoute(builder: (context) => 
+        ProductSelectionPage(
+          products: products, 
+          onChange: onChange,
+          selectedProductId: selectedProductId,
+          )
+        )
     );
   }
 
@@ -183,16 +185,25 @@ class _Products extends StatelessWidget {
         .firstWhere((element) => element.id == selectedProductionDataId);
 
     var products = selectedProductionData.products;
-
+      
     return BlocBuilder<FieldProductCubit, FieldProductState>(
       builder: (context, state) {
         return InkWell(
-          onTap: () => productSelection(context, products, context.read<FieldProductCubit>().updateField),
+          key: ValueKey("Product_Id_" + (state.fieldValue?.toString() ?? "")),
+          onTap: () => productSelection(
+            context: context, 
+            selectedProductId: state.fieldValue,
+            products: products, 
+            onChange: context.read<FieldProductCubit>().updateField
+          ),
           child: TextFormField(
             initialValue: state.fieldValue == null ? null : products.firstWhere((element) => element.id == state.fieldValue).name,
             enabled: false,
             decoration: const InputDecoration(
               label: Text("Produto"),
+            ).copyWith(
+              disabledBorder: const UnderlineInputBorder(borderSide: BorderSide()),
+              labelStyle: Theme.of(context).inputDecorationTheme.labelStyle
             ),
           )
         );
@@ -202,106 +213,7 @@ class _Products extends StatelessWidget {
   
 }
 
-class ProductSelectionPage extends StatefulWidget {
-  const ProductSelectionPage({
-    Key? key,
-    required this.products, 
-    required this.onChange
-  }) : super(key: key);
 
-  final List<Product> products;
-  final ProductSetter onChange;
-
-  @override
-  State<ProductSelectionPage> createState() => _ProductSelectionPageState();
-}
-
-class _ProductSelectionPageState extends State<ProductSelectionPage> {
-
-  List<Product> filteredProducts = List.empty();
-
-  void _runFilter(String? searchValue) {
-
-    var lcSearchValue = searchValue?.toLowerCase() ?? "";
-
-    List<Product> results;
-    if (lcSearchValue.isEmpty) {
-      results = widget.products;
-    } else {
-      results = widget.products
-          .where((user) {
-            if (user.code != null && user.code!.toLowerCase().contains(lcSearchValue)) {
-              return true;
-            }
-            if (user.name.toLowerCase().contains(lcSearchValue)) {
-              return true;
-            }
-            return false;
-          })
-          .toList();
-      // we use the toLowerCase() method to make it case-insensitive
-    }
-
-      // Refresh the UI
-    setState(() {
-      filteredProducts = results;
-    });
-
-  }
-
-    @override
-  void initState() {
-    filteredProducts = widget.products;
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_outlined),
-          onPressed: () => Navigator.pop(context),
-        ),
-        title: const Text("Produtos"),
-        
-      ),
-      body: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            width: 500,
-            child: TextField(
-              onChanged: (value) => _runFilter(value),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
-                labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          ListView.builder(
-              shrinkWrap: true,
-              itemCount: filteredProducts.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ListTile(
-                  title: Text(filteredProducts[index].name),
-                  onTap: () { 
-                    widget.onChange(filteredProducts[index].id);
-                    Navigator.pop(context);
-                  }
-                );
-              },
-            ),
-        ],
-      ),
-    );
-  }
-}
 
 
 class _VariableLineUnit {
