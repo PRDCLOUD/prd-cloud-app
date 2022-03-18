@@ -165,15 +165,10 @@ typedef ProductSetter = void Function(int? newValue);
 class _Products extends StatelessWidget {
   const _Products({Key? key}) : super(key: key);
 
-  Future<void> productSelection(BuildContext context, List<Product> products, ProductSetter onChange) async {
-    await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Produtos:'),
-          content: setupAlertDialoadContainer(context, products, onChange),
-        );
-      }
+  void productSelection(BuildContext context, List<Product> products, ProductSetter onChange) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => ProductSelectionPage(products: products, onChange: onChange))
     );
   }
 
@@ -205,22 +200,104 @@ class _Products extends StatelessWidget {
     );
   }
   
-  Widget setupAlertDialoadContainer(BuildContext context, List<Product> products, ProductSetter onChange) {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: ListView.builder(
-        shrinkWrap: true,
-        itemCount: products.length,
-        itemBuilder: (BuildContext context, int index) {
-          return ListTile(
-            title: Text(products[index].name),
-            onTap: () { 
-              onChange(products[index].id);
-              Navigator.pop(context);
+}
+
+class ProductSelectionPage extends StatefulWidget {
+  const ProductSelectionPage({
+    Key? key,
+    required this.products, 
+    required this.onChange
+  }) : super(key: key);
+
+  final List<Product> products;
+  final ProductSetter onChange;
+
+  @override
+  State<ProductSelectionPage> createState() => _ProductSelectionPageState();
+}
+
+class _ProductSelectionPageState extends State<ProductSelectionPage> {
+
+  List<Product> filteredProducts = List.empty();
+
+  void _runFilter(String? searchValue) {
+
+    var lcSearchValue = searchValue?.toLowerCase() ?? "";
+
+    List<Product> results;
+    if (lcSearchValue.isEmpty) {
+      results = widget.products;
+    } else {
+      results = widget.products
+          .where((user) {
+            if (user.code != null && user.code!.toLowerCase().contains(lcSearchValue)) {
+              return true;
             }
-          );
-        },
+            if (user.name.toLowerCase().contains(lcSearchValue)) {
+              return true;
+            }
+            return false;
+          })
+          .toList();
+      // we use the toLowerCase() method to make it case-insensitive
+    }
+
+      // Refresh the UI
+    setState(() {
+      filteredProducts = results;
+    });
+
+  }
+
+    @override
+  void initState() {
+    filteredProducts = widget.products;
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back_outlined),
+          onPressed: () => Navigator.pop(context),
+        ),
+        title: const Text("Produtos"),
+        
+      ),
+      body: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            width: 500,
+            child: TextField(
+              onChanged: (value) => _runFilter(value),
+              decoration: const InputDecoration(
+                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
+                labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          ListView.builder(
+              shrinkWrap: true,
+              itemCount: filteredProducts.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ListTile(
+                  title: Text(filteredProducts[index].name),
+                  onTap: () { 
+                    widget.onChange(filteredProducts[index].id);
+                    Navigator.pop(context);
+                  }
+                );
+              },
+            ),
+        ],
       ),
     );
   }

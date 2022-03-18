@@ -10,7 +10,7 @@ import 'production_stop_add.dart';
 class ProductionStopMain extends StatelessWidget {
   const ProductionStopMain({Key? key}) : super(key: key);
 
-  Future<void> stopAddDialog(BuildContext context, List<Stop> stopOptions, List<LineUnit> lineUnits, StopAddCallback stopAddCallback, int productionBasicId) async {
+  void stopAddDialog(BuildContext context, List<Stop> stopOptions, List<LineUnit> lineUnits, StopAddCallback stopAddCallback, int productionBasicId) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => 

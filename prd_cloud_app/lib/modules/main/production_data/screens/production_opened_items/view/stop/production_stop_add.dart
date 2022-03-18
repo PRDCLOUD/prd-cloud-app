@@ -418,22 +418,22 @@ class _ListOfStopsState extends State<_ListOfStops> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-          const SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            width: 500,
-            child: TextField(
-              onChanged: (value) => _runFilter(value),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
-                labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)
-              ),
+        const SizedBox(
+          height: 20,
+        ),
+        SizedBox(
+          width: 500,
+          child: TextField(
+            onChanged: (value) => _runFilter(value),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
+              labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)
             ),
           ),
-          const SizedBox(
-            height: 20,
-          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
         Expanded(
           child: filteredStops.isEmpty
             ? const Text('Nenhum resultado', style: TextStyle(fontSize: 24))

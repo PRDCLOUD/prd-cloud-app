@@ -10,7 +10,7 @@ import 'package:prd_cloud_app/theme.dart';
 class ProductionLossMain extends StatelessWidget {
   const ProductionLossMain({Key? key}) : super(key: key);
 
-  Future<void> lossAddDialog(BuildContext context, List<Loss> lossOptions, List<LineUnit> lineUnits, LossAddCallback lossAddCallback, int productionBasicId) async {
+  void lossAddDialog(BuildContext context, List<Loss> lossOptions, List<LineUnit> lineUnits, LossAddCallback lossAddCallback, int productionBasicId) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => 
