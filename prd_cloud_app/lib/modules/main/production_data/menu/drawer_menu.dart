@@ -92,11 +92,14 @@ class DrawerMenuList extends StatelessWidget {
           padding: EdgeInsets.zero,
           children: [
             DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.primary,
+              ),
               child: Container(
                 decoration: const BoxDecoration(
-                    image: DecorationImage(
-                        image: AssetImage("assets/img/logo_dark.png"),
-                        fit: BoxFit.scaleDown)),
+                  image: DecorationImage(
+                      image: AssetImage("assets/img/logotipo.png"),
+                      fit: BoxFit.scaleDown)),
               ),
               padding: const EdgeInsets.all(40),
             ),
@@ -147,19 +150,15 @@ class _User extends StatelessWidget {
         if (state == null) {
           return const SizedBox.shrink();
         } else {
-          return InkWell(
-              onTap: () => context
-                  .read<AuthenticationBloc>()
-                  .add(AuthenticationLogoutRequested()),
-              child: _LogoutButton(authData: state));
+          return _LogoutArea(authData: state);
         }
       },
     );
   }
 }
 
-class _LogoutButton extends StatelessWidget {
-  const _LogoutButton({Key? key, required AuthData authData})
+class _LogoutArea extends StatelessWidget {
+  const _LogoutArea({Key? key, required AuthData authData})
       : _authData = authData,
         super(key: key);
 
@@ -168,26 +167,39 @@ class _LogoutButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-          border: Border(top: BorderSide(width: 1.0, color: Colors.white))),
-      height: 70,
-      child: Row(children: [
-        const Padding(
-          padding: EdgeInsets.symmetric(horizontal: 10),
-          child: Icon(
-            Icons.person,
-            size: 30.0,
-          ),
-        ),
-        Expanded(child: Text(_authData.name)),
-        const Padding(
-          padding: EdgeInsets.only(right: 10),
-          child: Icon(
-            Icons.logout,
-            size: 30.0,
-          ),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        border: Border(
+          top: BorderSide(
+            width: 1.0, 
+            color: Theme.of(context).colorScheme.primary
+          )
         )
-      ]),
+      ),
+      height: 70,
+      child: Row(
+        children: [
+          const Padding(
+            padding: EdgeInsets.symmetric(horizontal: 10),
+            child: Icon(
+              Icons.person,
+              size: 30.0,
+              color: Colors.white,
+            ),
+          ),
+          Expanded(child: Text(_authData.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),)),
+          IconButton(
+            icon: const Icon(
+              Icons.logout,
+              size: 30.0,
+              color: Colors.white,
+            ),
+            onPressed: () {
+              context.read<AuthenticationBloc>().add(AuthenticationLogoutRequested());
+            },
+          )
+        ]
+      ),
     );
   }
 }
