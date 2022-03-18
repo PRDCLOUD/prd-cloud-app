@@ -233,7 +233,14 @@ class _ListCardState extends State<ListCard> {
           style: ElevatedButton.styleFrom(primary: Theme.of(context).colorScheme.error),
           icon: const Icon(Icons.delete_outline), 
           label: const Text("Excluir"),
-          onPressed: () => showDeleteAlertDialog(),
+          onPressed: () {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(content: Text('Segure o botão para exluir o apontamento')),
+              );
+          },
+          onLongPress: () => showDeleteAlertDialog(),
         )
       ],
     );

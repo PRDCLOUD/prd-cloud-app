@@ -104,7 +104,13 @@ class DrawerMenuList extends StatelessWidget {
               padding: const EdgeInsets.all(40),
             ),
             ListTile(
-              title: const Text('Lista de Apontamentos'),
+              title: Row(
+                children: const [
+                  Icon(Icons.list),
+                  SizedBox(width: 10,),
+                  Text('Lista de Apontamentos'),
+                ],
+              ),
               onTap: () {
                 context
                     .read<MenuItemSelectedCubit>()
@@ -113,7 +119,13 @@ class DrawerMenuList extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Apontamentos Abertos'),
+              title: Row(
+                children: const [
+                  Icon(Icons.file_download_outlined),
+                  SizedBox(width: 10,),
+                  Text('Apontamentos Carregados'),
+                ],
+              ),
               onTap: () {
                 context
                     .read<MenuItemSelectedCubit>()
@@ -122,7 +134,13 @@ class DrawerMenuList extends StatelessWidget {
               },
             ),
             ListTile(
-              title: const Text('Linhas de Produção'),
+             title: Row(
+                children: const [
+                  Icon(Icons.precision_manufacturing_outlined),
+                  SizedBox(width: 10,),
+                  Text('Linhas de Produção'),
+                ],
+              ),
               onTap: () {
                 context
                     .read<MenuItemSelectedCubit>()
@@ -187,7 +205,12 @@ class _LogoutArea extends StatelessWidget {
               color: Colors.white,
             ),
           ),
-          Expanded(child: Text(_authData.name, style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),)),
+          Expanded(
+            child: Text(
+              _authData.name, 
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white)
+            )
+          ),
           IconButton(
             icon: const Icon(
               Icons.logout,
