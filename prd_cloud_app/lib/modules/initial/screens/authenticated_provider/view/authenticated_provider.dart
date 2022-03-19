@@ -3,6 +3,7 @@ import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:http_connections/http_connections.dart';
+import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/auth_data_cubit/auth_data_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/production_line_and_groups/production_line_and_groups_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/selected_production_line_and_groups/selected_production_line_and_groups_cubit.dart';
@@ -26,7 +27,7 @@ class AuthenticatedProviderPage extends StatelessWidget {
   Widget build(BuildContext context) {
     var authenticationRepository = context.read<AuthenticationRepository>();
     var tenantSelection = context.read<TenantSelectionCubit>().state as TenantSelectedState;
-    var httpConnections = AuthenticatedHttpClient('prod-api-v15.prdcloud.net', tenantSelection.tenant, authenticationRepository.getAccessToken);
+    var httpConnections = AuthenticatedHttpClient(context.read<Config>().apiDomain, tenantSelection.tenant, authenticationRepository.getAccessToken);
 
     return MultiRepositoryProvider(providers: [
         RepositoryProvider(create: (context) => TenantDataRepository(httpConnections), lazy: false),

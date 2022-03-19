@@ -11,20 +11,27 @@ import 'package:prd_cloud_app/modules/main/production_data/screens/production_op
 class DrawerMenu extends StatelessWidget {
   const DrawerMenu({Key? key}) : super(key: key);
 
+  Future<bool> _onWillPop(BuildContext context) async {
+    return false;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
-      builder: (context, state) {
-        var menuItemSelected = state.menuItemSelected;
-        return Scaffold(
-          appBar: menuItemAppBar(menuItemSelected),
-          drawer: const DrawerMenuList(),
-          body: BlocListener<ErrorCubit, ErrorState>(
-            listener: snackBarErrorHandler,
-            child: menuItemSelectedPage(menuItemSelected),
-          ),
-        );
-      },
+    return WillPopScope(
+      onWillPop: () => _onWillPop(context),
+      child: BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
+        builder: (context, state) {
+          var menuItemSelected = state.menuItemSelected;
+          return Scaffold(
+            appBar: menuItemAppBar(menuItemSelected),
+            drawer: const DrawerMenuList(),
+            body: BlocListener<ErrorCubit, ErrorState>(
+              listener: snackBarErrorHandler,
+              child: menuItemSelectedPage(menuItemSelected),
+            ),
+          );
+        },
+      ),
     );
   }
 

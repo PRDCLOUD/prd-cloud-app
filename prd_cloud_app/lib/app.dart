@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:loader_overlay/loader_overlay.dart';
+import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/auth_data_cubit/auth_data_cubit.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/authentication/authentication_bloc.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/tenant_options/tenant_options_cubit.dart';
@@ -17,17 +18,21 @@ import 'package:flex_color_scheme/flex_color_scheme.dart';
 
 class App extends StatelessWidget {
   const App({
-    Key? key,
-    required this.authenticationRepository
-  }) : super(key: key);
+    Key? key, 
+    required this.authenticationRepository,
+    required this.config
+    }) : super(key: key);
 
   final AuthenticationRepository authenticationRepository;
-
+  final Config config;
+  
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(providers:[
+    return MultiRepositoryProvider(
+      providers:[
         RepositoryProvider.value(value: authenticationRepository),
-        RepositoryProvider(create: (context) => ErrorRepository())
+        RepositoryProvider(create: (context) => ErrorRepository()),
+        RepositoryProvider(create: (context) => config)
       ],
       child: MultiBlocProvider(
         providers: [

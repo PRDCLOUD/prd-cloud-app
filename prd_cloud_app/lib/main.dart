@@ -11,6 +11,7 @@ void mainWithConfig(Config config) {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight, DeviceOrientation.portraitDown, DeviceOrientation.portraitUp]).then((_){
     runApp(App(
+      config: config,
       authenticationRepository: AuthenticationRepository(config)
     ));
   });

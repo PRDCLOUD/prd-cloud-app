@@ -12,7 +12,7 @@ class ProductionEnvConfig extends Config {
 }
 
 
-class DevelopemntEnvConfig extends Config {
+class DevelopmentEnvConfig extends Config {
   @override
   final String apiDomain = 'prod-api-v15.prdcloud.net';
   @override
