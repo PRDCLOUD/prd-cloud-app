@@ -370,7 +370,7 @@ class _ListCardState extends State<ListCard> {
     if (reopenSucceded) {
       await loadProductionDataFunc(widget._productionItemOfList.id);
 
-      selectProductionDataFunc;
+      selectProductionDataFunc(widget._productionItemOfList.id);
 
       selectPageFunc(MenuItemSelected.productionOpenedItems);
     }
