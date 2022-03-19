@@ -55,77 +55,86 @@ class ProductionSelectedSummary extends StatelessWidget {
     }
 
     var productionLine = _productionData.lineUnits.firstWhere((e) => e.type == 'ProductionLine');
-    return Card(
+    return Container(
+      margin: const EdgeInsets.only(bottom: 5),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.6),
+            offset: const Offset(0, 2),
+            blurRadius: 3.0,
+            spreadRadius: 0
+          )
+        ]      
+      ),
       child: Padding(
-        padding: const EdgeInsets.all(0.0),
-        child: Padding(
-          padding: const EdgeInsets.all(5.0),
-          child: Row(
-            children: [
-              _ProductionLineSelectionButton(productionData: _productionData, productionLine: productionLine),
+        padding: const EdgeInsets.all(5.0),
+        child: Row(
+          children: [
+            _ProductionLineSelectionButton(productionData: _productionData, productionLine: productionLine),
 
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: ElevatedButton(
-                  child: const Icon(Icons.check, size: 35,),
-                  style: ElevatedButton.styleFrom(
-                    primary: const Color.fromRGBO(56, 118, 29, 1),
-                    fixedSize: const Size(60, 60)
-                  ),
-                  onPressed: () {
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        const SnackBar(content: Text('Segure o botão para concluir o apontamento')),
-                      );
-                  },
-                  onLongPress: () {
-                    context.read<OpenProductionDataCubit>().concludeProductionData(_productionData.id);
-                  }),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(5.0),
-                child: ElevatedButton(
-                  child: const Icon(Icons.close, size: 35,),
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).colorScheme.secondary,
-                    fixedSize: const Size(60, 60)
-                  ),
-                  onPressed: () {
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        const SnackBar(content: Text('Segure o botão para fechar a edição do apontamento')),
-                      );
-                  },
-                  onLongPress: () {
-                    context.read<OpenProductionDataCubit>().closeProductionData(_productionData.id);
-                  }),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 5.0),
-                child: ElevatedButton(
-                  child: const Icon(Icons.delete_outline, size: 35,),
-                  style: ElevatedButton.styleFrom(
-                    primary: Theme.of(context).colorScheme.error,
-                    fixedSize: const Size(60, 60)
-                  ),
-                  onPressed: () {
-                    ScaffoldMessenger.of(context)
-                      ..hideCurrentSnackBar()
-                      ..showSnackBar(
-                        const SnackBar(content: Text('Segure o botão para excluir o apontamento')),
-                      );
-                  },
-                  onLongPress: () {
-                    showDeleteAlertDialog();
-                  },
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: ElevatedButton(
+                child: const Icon(Icons.check, size: 35,),
+                style: ElevatedButton.styleFrom(
+                  primary: const Color.fromRGBO(56, 118, 29, 1),
+                  fixedSize: const Size(60, 60)
                 ),
+                onPressed: () {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      const SnackBar(content: Text('Segure o botão para concluir o apontamento')),
+                    );
+                },
+                onLongPress: () {
+                  context.read<OpenProductionDataCubit>().concludeProductionData(_productionData.id);
+                }),
+            ),
+            Padding(
+              padding: const EdgeInsets.all(5.0),
+              child: ElevatedButton(
+                child: const Icon(Icons.close, size: 35,),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).colorScheme.secondary,
+                  fixedSize: const Size(60, 60)
+                ),
+                onPressed: () {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      const SnackBar(content: Text('Segure o botão para fechar a edição do apontamento')),
+                    );
+                },
+                onLongPress: () {
+                  context.read<OpenProductionDataCubit>().closeProductionData(_productionData.id);
+                }),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 5.0),
+              child: ElevatedButton(
+                child: const Icon(Icons.delete_outline, size: 35,),
+                style: ElevatedButton.styleFrom(
+                  primary: Theme.of(context).colorScheme.error,
+                  fixedSize: const Size(60, 60)
+                ),
+                onPressed: () {
+                  ScaffoldMessenger.of(context)
+                    ..hideCurrentSnackBar()
+                    ..showSnackBar(
+                      const SnackBar(content: Text('Segure o botão para excluir o apontamento')),
+                    );
+                },
+                onLongPress: () {
+                  showDeleteAlertDialog();
+                },
               ),
-            ]
-          ),
+            ),
+          ]
         ),
-      )
+      ),
     );
   }
 }
@@ -143,8 +152,11 @@ class _ProductionLineSelectionButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Expanded(
-      child: TextButton(
-        style: TextButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1)),
+      child: ElevatedButton(
+        style: TextButton.styleFrom(
+          primary: Theme.of(context).colorScheme.primary,
+          minimumSize: const Size(60, 60)
+        ),
         onPressed: () => Navigator.of(context).push(ProductionOpenedItemSelectionListPage.route(context.read<OpenProductionDataCubit>(), context.read<SelectedProductionDataCubit>())),
         child: Row(
           children: [ 
@@ -152,12 +164,12 @@ class _ProductionLineSelectionButton extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text("Linha: " + productionLine.name, style: Theme.of(context).textTheme.headline6),
-                  Text("ID " + _productionData.id.toString(), style: Theme.of(context).textTheme.bodyLarge,)
+                  Text("Linha: " + productionLine.name, style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white)),
+                  Text("ID " + _productionData.id.toString(), style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),)
                 ],
               ),
             ),
-            const Icon(Icons.arrow_drop_down_sharp)
+            const Icon(Icons.arrow_drop_down_sharp, size: 40, color: Colors.white,)
           ],
         ),
       )

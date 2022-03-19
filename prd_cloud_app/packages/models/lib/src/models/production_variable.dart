@@ -33,6 +33,7 @@ class ProductionVariable extends Equatable {
         if (text != null && !list.contains(text)) {
           list.add(text!);
         }
+        list.sort(((a, b) => a.compareTo(b)));
         return list;
       }
     }

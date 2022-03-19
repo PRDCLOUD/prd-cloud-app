@@ -53,7 +53,7 @@ class _NumericVariable extends StatelessWidget {
       builder: (context, state) {
         if (state.enabled) {
           return NumberInput(
-            key: UniqueKey(),
+            key: ValueKey(state.variableDataId),
             label: state.label,
             allowDecimal: state.decimals > 0,
             value: state.fieldValue,
