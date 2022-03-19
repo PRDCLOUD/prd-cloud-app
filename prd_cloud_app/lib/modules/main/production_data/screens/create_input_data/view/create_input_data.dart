@@ -73,7 +73,7 @@ class _CreateInputProductionLineSelectionListState extends State<CreateInputProd
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Selecione as linhas de produção')),
+      appBar: AppBar(centerTitle: true, title: const Text('Criação de Apontamentos')),
       body: Column(
         children: [
           Expanded(

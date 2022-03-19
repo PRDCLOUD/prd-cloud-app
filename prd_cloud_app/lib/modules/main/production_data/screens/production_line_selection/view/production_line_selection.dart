@@ -73,7 +73,7 @@ class _ProductionLineSelectionListState extends State<ProductionLineSelectionLis
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Selectione as linhas de produção')),
+      appBar: AppBar(centerTitle: true, title: const Text('Selecione as Linhas de Produção')),
       body: Column(
         children: [
           Expanded(
