@@ -27,6 +27,25 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
   final OpenProductionDataRepository _openProductionDataRepository;
   late StreamSubscription<List<ProductionBasicData>> _openProductionDataSubscription;
 
+  Future openNewProductionData(List<ProductionLineAndGroup> productionLineAndGroups) async {
+    if (state.loadingItem) return;
+
+    try {
+      emit(state.copyWith(loadingItem: true));
+      
+      try {
+        await _openProductionDataRepository.openNewProductionData(productionLineAndGroups); 
+      } catch (e) {
+        _errorRespository.communicateError(e);
+      }
+
+    } catch (e) {
+      return null;
+    } finally {
+      emit(state.copyWith(loadingItem: false));
+    }
+  }
+
   Future loadProductionData(int id) async {
 
     if (state.loadingItem) return null;

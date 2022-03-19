@@ -35,8 +35,8 @@ class Filter extends StatelessWidget {
     return BlocBuilder<ProductionListFilterCubit, ProductionDataFilter>(
       builder: (context, state) {
         return Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(child: choiceChips(state, context)),
             TextButton(
               child: Row(
                 children: const [
@@ -47,7 +47,8 @@ class Filter extends StatelessWidget {
               onPressed: () {
                 showSelectionProductionLines(context);
               },
-            )
+            ),
+            choiceChips(state, context),
           ],
         );
       },

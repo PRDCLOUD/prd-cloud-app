@@ -49,6 +49,27 @@ class OpenProductionDataRepository {
     }
   }
 
+  Future<void> openNewProductionData(List<ProductionLineAndGroup> productionLineAndGroups) async {
+    var openedItems = List<ProductionBasicData>.empty(growable: true);
+    
+    for (var item in productionLineAndGroups) {
+      var productionId = await _authHttpClient.postOpenInputProductionData(item.id, item.isGroup());
+      var response = await _authHttpClient.getProductionDataById(productionId);
+      var productionBasicData = ProductionBasicData.fromJson(response.data[0], _tenantInformation.location);
+      openedItems.add(productionBasicData);
+    }
+    
+    for (var openedItem in openedItems) {
+      _openDataList[openedItem.id] = openedItem;
+      _productionDataStreamController[openedItem.id] = StreamController<ProductionBasicData>.broadcast();
+    }
+
+    if (_openDataStreamController.hasListener) {
+      _openDataStreamController.add(_openDataList.values.toList());
+    }
+
+  }
+
   Future<void> concludeProductionData(ProductionBasicData productionBasicData) async {
     await _authHttpClient.patchConcludeProduction(
       id: productionBasicData.id,

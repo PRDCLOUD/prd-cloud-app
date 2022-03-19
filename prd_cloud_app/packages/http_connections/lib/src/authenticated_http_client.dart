@@ -27,7 +27,7 @@ class AuthenticatedHttpClient {
     return response;  
   }
 
-    Future<Response> _patchRequest(String path, [ dynamic data = null ]) async {
+  Future<Response> _patchRequest(String path, [ dynamic data = null ]) async {
 
     var accessToken = await _getAccessToken();
 
@@ -42,11 +42,11 @@ class AuthenticatedHttpClient {
     return response;  
   }
 
-  Future<Response> _postRequest(String path, [ dynamic data = null ]) async {
+  Future<Response> _postRequest(String path, [ dynamic data = null, Map<String, dynamic>? queryParams = null ]) async {
 
     var accessToken = await _getAccessToken();
 
-    var response = await _dio.postUri(Uri.https(_authority, _tenant.name + '/' + path), data: data, options: Options(
+    var response = await _dio.postUri(Uri.https(_authority, _tenant.name + '/' + path, queryParams), data: data, options: Options(
       contentType: Headers.jsonContentType,
       responseType: ResponseType.json,
       headers: {
@@ -109,6 +109,16 @@ class AuthenticatedHttpClient {
 
   Future<Response> getProductionDataById(int id) async {
     return await _getRequest('api/production/' + id.toString());
+  }
+
+  Future<int> postOpenInputProductionData(String lineId, bool isGroup) async {
+    if (isGroup) {
+      var response = await _postRequest('api/production/open/group', { 'group': lineId});
+      return response.data['id'] as int; 
+    } else {
+      var response = await _postRequest('api/production/open/' + lineId);
+      return response.data['id'] as int; 
+    }
   }
 
   Future<Response> patchCancelProductionDataById(int id) async {

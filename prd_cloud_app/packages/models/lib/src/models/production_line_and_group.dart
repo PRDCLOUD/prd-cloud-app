@@ -20,7 +20,6 @@ class ProductionLineAndGroup extends Equatable {
     );
   }
 
-
   @override
   List<Object> get props => [id, name, type];
 
@@ -35,4 +34,6 @@ class ProductionLineAndGroup extends Equatable {
       type: type ?? this.type,
     );
   }
+
+  bool isGroup() => type.toLowerCase() == "group";
 }

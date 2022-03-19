@@ -357,10 +357,10 @@ class _ListCardState extends State<ListCard> {
   }
 
   void reopenAndEditProductionData() async {
-    var loadProductionDataFunc =
-        context.read<OpenProductionDataCubit>().loadProductionData;
-    var selectProductionDataFunc =
-        context.read<SelectedProductionDataCubit>().selectProductionData;
+    var loadProductionDataFunc = context.read<OpenProductionDataCubit>().loadProductionData;
+
+    var selectProductionDataFunc = context.read<SelectedProductionDataCubit>().selectProductionData;
+
     var selectPageFunc = context.read<MenuItemSelectedCubit>().selectPage;
 
     var reopenSucceded = await context

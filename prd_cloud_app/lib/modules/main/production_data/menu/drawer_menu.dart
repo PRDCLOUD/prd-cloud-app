@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/selected_production_line_and_groups/selected_production_line_and_groups_cubit.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/create_input_data/create_input_data.dart';
@@ -96,7 +97,13 @@ class DrawerMenu extends StatelessWidget {
 
   showSelectionProductionLines(BuildContext context) {
     var selectedProductionLines = context.read<SelectedProductionLineAndGroupsCubit>().state.selectedProductionLinesAndGroups;
-    var confirmation = context.read<SelectedProductionLineAndGroupsCubit>().setNewSelectedItems;
+    var confirmation = context.read<OpenProductionDataCubit>().openNewProductionData;
+    var refresh = context.read<ProductionListFilterCubit>().markForRefresh;
+
+    Future<void> confirmationAndSetRefresh(List<ProductionLineAndGroup> productionLineAndGroups) async {
+      await confirmation(productionLineAndGroups);
+      refresh();
+    }
 
     Navigator.push(
       context,
@@ -104,7 +111,7 @@ class DrawerMenu extends StatelessWidget {
         return CreateInputProductionLineSelectionList(
           allProductionLines: selectedProductionLines,
           initalSelectionProductionLines: const [],
-          confirmation: confirmation,
+          confirmation: confirmationAndSetRefresh,
           enableCancel: true,
           popAfterConfirm: true,
         );
