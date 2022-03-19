@@ -21,6 +21,7 @@ class ProductionVariableEdit extends StatelessWidget {
             variableDataId: productionVariable.id,
             label: productionVariable.implementationLabel,
             enabled: !productionVariable.isReadOnly,
+            required: productionVariable.required,
             decimals: productionVariable.decimalPlaces ?? 0,
             initialValue: productionVariable.value,
             openProductionDataRepository:
@@ -54,7 +55,7 @@ class _NumericVariable extends StatelessWidget {
         if (state.enabled) {
           return NumberInput(
             key: ValueKey(state.variableDataId),
-            label: state.label,
+            label: state.label + (state.required ? "*" : ""),
             allowDecimal: state.decimals > 0,
             value: state.fieldValue,
             onChanged: (newValue) => context.read<FieldVariableNumericCubit>().updateField(newValue),

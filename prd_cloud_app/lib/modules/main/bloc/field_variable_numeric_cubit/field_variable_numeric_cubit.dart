@@ -15,6 +15,7 @@ class FieldVariableNumericCubit extends Cubit<FieldVariableNumericState> {
     required int variableDataId,
     required String label, 
     required bool enabled,
+    required bool required,
     required int decimals,
     required double? initialValue,
   }) : _openProductionDataRepository = openProductionDataRepository, 
@@ -23,6 +24,7 @@ class FieldVariableNumericCubit extends Cubit<FieldVariableNumericState> {
     variableDataId: variableDataId, 
     enabled: enabled, 
     label: label, 
+    required: required,
     decimals: decimals, 
     fieldValue: initialValue)
   ) {
