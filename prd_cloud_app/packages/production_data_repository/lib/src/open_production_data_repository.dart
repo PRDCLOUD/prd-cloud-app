@@ -86,13 +86,14 @@ class OpenProductionDataRepository {
     await _authHttpClient.patchConcludeProduction(productionDataGroup, _tenantInformation.location);
 
     if (_openProductionGroup.containsKey(productionDataGroup.getId())) {
-      _openProductionGroup.remove(productionDataGroup);
+      _openProductionGroup.remove(productionDataGroup.getId());
     }
 
     for (var item in productionDataGroup.productionDataGroup) {
+      _openProductionDataList.remove(item.id);
       if (_productionDataStreamController.containsKey(item.id)){
         await _productionDataStreamController[item.id]!.close();
-        _productionDataStreamController.removeWhere((key, value) => key == item.id);
+        _productionDataStreamController.remove(item.id);
       }
     }
 
@@ -108,13 +109,14 @@ class OpenProductionDataRepository {
     var productionGroup = _getProductionGroupData(id);
 
     if (_openProductionGroup.containsKey(productionGroup.getId())) {
-      _openProductionGroup.remove(productionGroup);
+      _openProductionGroup.remove(productionGroup.getId());
     }
 
     for (var item in productionGroup.productionDataGroup) {
+      _openProductionDataList.remove(item.id);
       if (_productionDataStreamController.containsKey(item.id)){
         await _productionDataStreamController[item.id]!.close();
-        _productionDataStreamController.removeWhere((key, value) => key == item.id);
+        _productionDataStreamController.remove(item.id);
       }
     }
 
