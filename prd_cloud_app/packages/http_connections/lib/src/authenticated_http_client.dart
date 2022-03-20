@@ -262,23 +262,26 @@ class AuthenticatedHttpClient {
 
   Future<void> patchConcludeProduction(ProductionDataGroup productionDataGroup, tz.Location location) async {
 
-    var dataRows = productionDataGroup.productionDataGroup.map((e) =>
-    {
-      {
+    var dataRows = productionDataGroup.productionDataGroup.map((e) {
+
+      var variables = e.lineUnits.expand((x) => x.lineUnit.productionVariables).toList().map((e) => {
+        'id': e.id,
+        'productionBasicDataId': e.productionBasicDataId,
+        'text': e.text,
+        'type': e.typeVariableDefinition,
+        'value': e.value,
+        'definitionName': e.definitionName
+      }).toList();
+
+      return Map<String, dynamic>.from( {
         'id': e.id,
         'begin': dateToString(e.begin, location),
         'end': dateToString(e.end, location),
         'comments': e.comments,
         'productId': e.productId,
-        'variables': e.lineUnits.expand((x) => x.lineUnit.productionVariables).map((e) => {
-          'id': e.id,
-          'productionBasicDataId': e.productionBasicDataId,
-          'text': e.text,
-          'type': e.typeVariableDefinition,
-          'value': e.value,
-          'definitionName': e.definitionName
-        }).toList()
-      }
+        'variables': variables.toList()
+      });
+      
     }).toList();
 
     await _patchRequest('api/production/conclude', data: { 'list': dataRows});

@@ -35,7 +35,7 @@ class _StopQtyAverageTimeState extends State<StopQtyAverageTime> {
     return BlocListener<StopAddCubit, DateTime>(
       listener: (context, state) async {
         var result = await widget.stopAddCallback(
-            lineUnitId: widget.selectedLineUnit.id,
+            lineUnitId: widget.selectedLineUnit.lineUnitId,
             productionBasicDataId: widget.selectedLineUnit.productionBasicDataId,
             stopCurrentDefinitionId: widget.selectedStop.id,
             stopType: widget.selectedStop.stopTypeOf,

@@ -321,8 +321,8 @@ class OpenProductionDataRepository {
     var newPrdData = prdData.copyWith(losses: allLosses);
 
     var prdGroup = _getProductionGroupData(productionDataId);
-    prdGroup.copyWithProductionData(newPrdData);
-    emitProductionChanges(prdGroup);
+    var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
+    emitProductionChanges(newPrdGroup);
 
   }
 
@@ -332,8 +332,8 @@ class OpenProductionDataRepository {
     var filteredLosses = prdData.losses.where((e) => e.id != productionLossId).toList(); 
     var newPrdData = prdData.copyWith(losses: filteredLosses);
     var prdGroup = _getProductionGroupData(productionDataId);
-    prdGroup.copyWithProductionData(newPrdData);
-    emitProductionChanges(prdGroup);
+    var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
+    emitProductionChanges(newPrdGroup);
   }
 
   Future<void> addStop({
@@ -377,8 +377,8 @@ class OpenProductionDataRepository {
     var newPrdData = prdData.copyWith(stops: allStops);
 
     var prdGroup = _getProductionGroupData(productionDataId);
-    prdGroup.copyWithProductionData(newPrdData);
-    emitProductionChanges(prdGroup);
+    var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
+    emitProductionChanges(newPrdGroup);
   }
 
   Future<void> deleteStop(int productionDataId, int productionStopId) async {
@@ -389,8 +389,8 @@ class OpenProductionDataRepository {
     var newPrdData = prdData.copyWith(stops: filteredStops);
 
     var prdGroup = _getProductionGroupData(productionDataId);
-    prdGroup.copyWithProductionData(newPrdData);
-    emitProductionChanges(prdGroup);
+    var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
+    emitProductionChanges(newPrdGroup);
   }
 
   void emitProductionChanges(ProductionDataGroup productionDataGroup) {

@@ -134,7 +134,7 @@ class ProductionLossMain extends StatelessWidget {
                       children: [
                         const Icon(Icons.precision_manufacturing_outlined, size: 12), 
                         const SizedBox(width: 5), 
-                        Text(lineUnits.firstWhere((lineUnit) => lineUnit.id == state.losses[index].lineUnitId).lineUnit.name, style: Theme.of(context).textTheme.bodyMedium)
+                        Text(lineUnits.firstWhere((lineUnit) => lineUnit.lineUnitId == state.losses[index].lineUnitId).lineUnit.name, style: Theme.of(context).textTheme.bodyMedium)
                       ]
                     ),
                     Row(

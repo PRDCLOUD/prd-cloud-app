@@ -257,7 +257,7 @@ class _LossAddState extends State<LossAdd> {
               onPressed: lossValue == null ? 
                 null : 
                 () async {
-                var result = await widget.lossAddCallback(selectedLineUnit!.productionBasicDataId, selectedLoss!.id, lossValue!, selectedLineUnit!.id);
+                var result = await widget.lossAddCallback(selectedLineUnit!.productionBasicDataId, selectedLoss!.id, lossValue!, selectedLineUnit!.lineUnitId);
                 if (result) {
                   Navigator.pop(context);
                 }
