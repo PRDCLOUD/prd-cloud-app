@@ -100,7 +100,7 @@ class AuthenticatedHttpClient {
       'prdLine': prdLines
     });
 
-    if (response.statusCode == 204) {
+    if (response.statusCode == 204 || response.data == null || response.data == "") {
       return List.empty();
     } else {
       return response.data;

@@ -66,14 +66,7 @@ class _ProductionDataListState extends State<ProductionDataList> {
                 case ProductionDataLoadState.loaded:
                   return RefreshIndicator(
                       onRefresh: context.read<ProductionDataCubit>().refresh,
-                      child: ListView.builder(
-                          itemCount: state.loadedResult.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            var item = state.loadedResult[index];
-                            return ListCard(
-                                key: ObjectKey(item),
-                                productionItemOfList: item);
-                          }));
+                      child: listOrNoData(state));
                 case ProductionDataLoadState.notLoaded:
                   return const Center(child: Text("Não carregado!"));
               }
@@ -82,6 +75,25 @@ class _ProductionDataListState extends State<ProductionDataList> {
         ),
       ),
     );
+  }
+
+  Widget listOrNoData(ProductionDataState state) {
+    if (state.loadedResult.isNotEmpty) {
+      return ListView.builder(
+        itemCount: state.loadedResult.length,
+        itemBuilder: (BuildContext context, int index) {
+          var item = state.loadedResult[index];
+          return ListCard(
+              key: ObjectKey(item),
+              productionItemOfList: item);
+        }
+      );
+    } else {
+      return const Align(
+        alignment: Alignment.center,
+        child: Text("Sem dados para o filtro selecionado"),
+      );
+    }
   }
 }
 
