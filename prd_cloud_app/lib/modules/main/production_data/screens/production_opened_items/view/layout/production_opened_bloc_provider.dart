@@ -15,21 +15,19 @@ class ProductionOpenedBlocProvider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
-    var productionData = context.read<OpenProductionDataCubit>().state.loadedItems.firstWhere((element) => element.id == _productionBasicDataId);
+    var productionGroup = context.read<OpenProductionDataCubit>().state.loadedItems.firstWhere((element) => element.hasProductionData(_productionBasicDataId));
     var openProductionDataRepository = context.read<OpenProductionDataRepository>();
     var errorRepository = context.read<ErrorRepository>();
 
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) => FieldBeginCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.begin)),
-        BlocProvider(create: (context) => FieldEndCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.end)),
-        BlocProvider(create: (context) => FieldCommentsCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.comments)),
-        BlocProvider(create: (context) => FieldProductCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.productId)),
-        BlocProvider(create: (context) => ProductionLossCubit(errorRepository: errorRepository, openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.losses)),
-        BlocProvider(create: (context) => ProductionStopCubit(errorRepository: errorRepository, openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionData.stops))
+        BlocProvider(create: (context) => FieldBeginCubit(openProductionDataRepository: openProductionDataRepository, productionGroupId: productionGroup.getId(), initialValue: productionGroup.productionDataGroup.first.begin)),
+        BlocProvider(create: (context) => FieldEndCubit(openProductionDataRepository: openProductionDataRepository, productionGroupId: productionGroup.getId(), initialValue: productionGroup.productionDataGroup.first.end)),
+        BlocProvider(create: (context) => FieldCommentsCubit(openProductionDataRepository: openProductionDataRepository, productionGroupId: productionGroup.getId(), initialValue: productionGroup.productionDataGroup.first.comments)),
+        BlocProvider(create: (context) => ProductionLossCubit(errorRepository: errorRepository, openProductionDataRepository: openProductionDataRepository, productionGroupId: productionGroup.getId(), initialValue: productionGroup.getProductionLosses())),
+        BlocProvider(create: (context) => ProductionStopCubit(errorRepository: errorRepository, openProductionDataRepository: openProductionDataRepository, productionGroupId: productionGroup.getId(), initialValue: productionGroup.getProductionStops()))
       ], 
       child: const ProductionOpenedItemNavigation()
     );
   }
-
 }

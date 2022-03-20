@@ -8,9 +8,9 @@ part 'field_comments_state.dart';
 class FieldCommentsCubit extends Cubit<FieldCommentsState> {
   FieldCommentsCubit({
     required OpenProductionDataRepository openProductionDataRepository, 
-    required int productionBasicDataId, 
+    required int productionGroupId, 
     required String? initialValue,
-  }) : _openProductionDataRepository = openProductionDataRepository, super(FieldCommentsState(productionBasicDataId: productionBasicDataId, fieldValue: initialValue));
+  }) : _openProductionDataRepository = openProductionDataRepository, super(FieldCommentsState(productionBasicDataId: productionGroupId, fieldValue: initialValue));
 
   final OpenProductionDataRepository _openProductionDataRepository;
 

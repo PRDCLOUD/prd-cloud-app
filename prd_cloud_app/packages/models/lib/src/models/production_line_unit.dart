@@ -5,6 +5,7 @@ class ProductionLineUnit extends Equatable {
 
   final int id;
   final String name;
+  final int productionBasicDataId;
   final int lineUnitId;
   final LineUnit lineUnit;
   final int order;
@@ -13,6 +14,7 @@ class ProductionLineUnit extends Equatable {
   ProductionLineUnit({ 
     required this.id,
     required this.name,
+    required this.productionBasicDataId,
     required this.lineUnitId,
     required this.lineUnit,
     required this.order,
@@ -25,6 +27,7 @@ class ProductionLineUnit extends Equatable {
       id: json['id'],
       lineUnit: LineUnit.fromJson(json['lineUnit']),
       lineUnitId: json['lineUnitId'],
+      productionBasicDataId: json['productionBasicDataId'],
       name: json['name'],
       order: json['order'],
       type: json['type']
@@ -38,6 +41,7 @@ class ProductionLineUnit extends Equatable {
       id,
       name,
       lineUnitId,
+      productionBasicDataId,
       lineUnit,
       order,
       type,
@@ -48,6 +52,7 @@ class ProductionLineUnit extends Equatable {
     int? id,
     String? name,
     int? lineUnitId,
+    int? productionBasicDataId,
     LineUnit? lineUnit,
     int? order,
     String? type,
@@ -56,6 +61,7 @@ class ProductionLineUnit extends Equatable {
       id: id ?? this.id,
       name: name ?? this.name,
       lineUnitId: lineUnitId ?? this.lineUnitId,
+      productionBasicDataId: productionBasicDataId ?? this.productionBasicDataId,
       lineUnit: lineUnit ?? this.lineUnit,
       order: order ?? this.order,
       type: type ?? this.type,

@@ -14,31 +14,32 @@ class ProductionStopCubit extends Cubit<ProductionStopState> {
   ProductionStopCubit({
     required ErrorRepository errorRepository,
     required OpenProductionDataRepository openProductionDataRepository,
-    required int productionBasicDataId,
+    required int productionGroupId,
     required List<ProductionStop> initialValue
     }
   ) : 
     _errorRepository = errorRepository,
     super(ProductionStopState(
-      productionBasicDataId: productionBasicDataId, 
+      productionGroupId: productionGroupId, 
       stops: initialValue, 
       status: ProductionStopStatus.updated
       )
     ) {
       _openProductionDataRepository = openProductionDataRepository;
-      _openProductionDataSubscription = _openProductionDataRepository.openDataStream().listen(checkProductionDataAndUpdateLosses);
+      _openProductionDataSubscription = _openProductionDataRepository.openDataStream().listen(checkProductionDataAndUpdateStops);
     }
 
-  void checkProductionDataAndUpdateLosses(List<ProductionBasicData> items) {
-    var prdData = items.firstWhere((element) => element.id == state.productionBasicDataId);
-    if (state.stops != prdData.stops) {
-      emit(state.copyWith(stops: prdData.stops));
+  void checkProductionDataAndUpdateStops(List<ProductionDataGroup> groups) {
+    var productionDataGroup = groups.firstWhere((e) => e.hasProductionData(state.productionGroupId));
+    var currentStops = productionDataGroup.getProductionStops();
+    if (state.stops != currentStops) {
+      emit(state.copyWith(stops: currentStops));
     }
   }
   
   final ErrorRepository _errorRepository;
   late OpenProductionDataRepository _openProductionDataRepository;
-  late StreamSubscription<List<ProductionBasicData>> _openProductionDataSubscription;
+  late StreamSubscription<List<ProductionDataGroup>> _openProductionDataSubscription;
 
   Future<bool> addStop({
     required int productionBasicDataId, 
@@ -60,7 +61,7 @@ class ProductionStopCubit extends Cubit<ProductionStopState> {
     emit(state.copyWith(status: ProductionStopStatus.adding));
     try {
       await _openProductionDataRepository.addStop(
-        productionBasicDataId: productionBasicDataId,
+        productionDataId: productionBasicDataId,
         lineUnitId: lineUnitId,
         stopCurrentDefinitionId: stopCurrentDefinitionId,
         stopType: stopType,

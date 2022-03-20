@@ -105,7 +105,7 @@ class _ListCardState extends State<ListCard> {
         .read<OpenProductionDataCubit>()
         .state
         .loadedItems
-        .any((loadedItem) => loadedItem.id == widget._productionItemOfList.id);
+        .any((loadedItem) => loadedItem.hasProductionData(widget._productionItemOfList.id));
     super.initState();
   }
 
@@ -114,7 +114,7 @@ class _ListCardState extends State<ListCard> {
     return BlocListener<OpenProductionDataCubit, OpenProductionDataState>(
       listener: (context, state) {
         var newStateIsSelected = state.loadedItems.any(
-            (loadedItem) => loadedItem.id == widget._productionItemOfList.id);
+            (loadedItem) => loadedItem.hasProductionData(widget._productionItemOfList.id));
         if (newStateIsSelected != isLoaded) {
           setState(() {
             isLoaded = newStateIsSelected;
@@ -337,7 +337,7 @@ class _ListCardState extends State<ListCard> {
 
     context
         .read<SelectedProductionDataCubit>()
-        .selectProductionData(widget._productionItemOfList.id);
+        .selectProductionDataGroup(widget._productionItemOfList.id);
   }
 
   void unloadProductionData() async {
@@ -349,7 +349,7 @@ class _ListCardState extends State<ListCard> {
   void editProductionData() async {
     context
         .read<SelectedProductionDataCubit>()
-        .selectProductionData(widget._productionItemOfList.id);
+        .selectProductionDataGroup(widget._productionItemOfList.id);
 
     context
         .read<MenuItemSelectedCubit>()
@@ -359,7 +359,7 @@ class _ListCardState extends State<ListCard> {
   void reopenAndEditProductionData() async {
     var loadProductionDataFunc = context.read<OpenProductionDataCubit>().loadProductionData;
 
-    var selectProductionDataFunc = context.read<SelectedProductionDataCubit>().selectProductionData;
+    var selectProductionDataFunc = context.read<SelectedProductionDataCubit>().selectProductionDataGroup;
 
     var selectPageFunc = context.read<MenuItemSelectedCubit>().selectPage;
 

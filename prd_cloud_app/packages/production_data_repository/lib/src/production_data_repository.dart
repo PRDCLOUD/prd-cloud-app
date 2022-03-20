@@ -18,11 +18,6 @@ class ProductionDataRepository {
     return list;
   }
 
-  Future<ProductionBasicData> getApontamento(int id) async {
-    var response = await _http.getProductionDataById(id);
-    return ProductionBasicData.fromJson(response.data[0], _tenantInformation.location);
-  }
-
   Future<void> cancelApontamento(int id) async {
     await _http.patchCancelProductionDataById(id);
   }

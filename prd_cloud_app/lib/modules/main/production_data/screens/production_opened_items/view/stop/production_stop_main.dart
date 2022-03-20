@@ -28,14 +28,14 @@ class ProductionStopMain extends StatelessWidget {
   Widget build(BuildContext context) {
     var productionDataId = context.read<SelectedProductionDataCubit>().state as int;
 
-    var productionData = context
+    var group = context
         .read<OpenProductionDataCubit>()
         .state
         .loadedItems
-        .firstWhere((element) => element.id == productionDataId);
+        .firstWhere((e) => e.hasProductionData(productionDataId));
     
-    var stopOptions = productionData.stopOptions;
-    var lineUnits = productionData.lineUnits.map((e) => e.lineUnit).toList();
+    var stopOptions = group.getProductionStopOptions();
+    var lineUnits = group.getLineUnits().toList();
 
     return BlocConsumer<ProductionStopCubit, ProductionStopState>(
       listener: (context, state) => { 

@@ -25,7 +25,7 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
 
   final ErrorRepository _errorRespository;
   final OpenProductionDataRepository _openProductionDataRepository;
-  late StreamSubscription<List<ProductionBasicData>> _openProductionDataSubscription;
+  late StreamSubscription<List<ProductionDataGroup>> _openProductionDataSubscription;
 
   Future openNewProductionData(List<ProductionLineAndGroup> productionLineAndGroups) async {
     if (state.loadingItem) return;
@@ -46,16 +46,16 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
     }
   }
 
-  Future loadProductionData(int id) async {
+  Future loadProductionData(int productionDataId) async {
 
     if (state.loadingItem) return null;
-    if (state.loadedItems.any((element) => element.id == id)) return null;
+    if (state.loadedItems.any((group) => group.hasProductionData(productionDataId))) return null;
 
     try {
       emit(state.copyWith(loadingItem: true));
       
       try {
-        await _openProductionDataRepository.loadProductionData(id); 
+        await _openProductionDataRepository.loadProductionData(productionDataId); 
       } catch (e) {
         _errorRespository.communicateError(e);
       }
@@ -67,16 +67,16 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
     }
   }
 
-  Future concludeProductionData(int id) async {
+  Future concludeProductionData(int productionDataId) async {
 
     if (state.loadingItem) return null;
-    if (!state.loadedItems.any((element) => element.id == id)) return null;
+    if (!state.loadedItems.any((group) => group.hasProductionData(productionDataId))) return null;
 
     try {
       emit(state.copyWith(loadingItem: true));
       
       try {
-        await _openProductionDataRepository.concludeProductionData(state.loadedItems.firstWhere((e) => e.id == id));
+        await _openProductionDataRepository.concludeProductionData(state.loadedItems.firstWhere((e) => e.hasProductionData(productionDataId)));
       } catch (e) {
         _errorRespository.communicateError(e);
       }
@@ -88,16 +88,16 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
     }
   }
 
-  Future cancelProductionData(int id) async {
+  Future cancelProductionData(int productionDataId) async {
 
     if (state.loadingItem) return null;
-    if (!state.loadedItems.any((element) => element.id == id)) return null;
+    if (!state.loadedItems.any((group) => group.hasProductionData(productionDataId))) return null;
 
     try {
       emit(state.copyWith(loadingItem: true));
       
       try {
-        await _openProductionDataRepository.cancelProductionData(id); 
+        await _openProductionDataRepository.cancelProductionData(productionDataId); 
       } catch (e) {
         _errorRespository.communicateError(e);
       }
@@ -109,8 +109,8 @@ class OpenProductionDataCubit extends Cubit<OpenProductionDataState> {
     }
   }
 
-  void closeProductionData(int id) {
-    _openProductionDataRepository.closeProductionData(id);
+  void closeProductionData(int productionDataId) {
+    _openProductionDataRepository.closeProductionData(productionDataId);
   }
 
   @override

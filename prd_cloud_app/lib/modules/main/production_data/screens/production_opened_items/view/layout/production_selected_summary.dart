@@ -8,11 +8,9 @@ import 'package:prd_cloud_app/modules/main/bloc/selected_production_data_cubit/s
 import 'production_opened_item_selection_list.dart';
 
 class ProductionSelectedSummary extends StatelessWidget {
-  const ProductionSelectedSummary({Key? key, required ProductionBasicData productionData}) : _productionData = productionData, super(key: key);
+  const ProductionSelectedSummary({Key? key, required this.productionGroup}) : super(key: key);
 
-  final ProductionBasicData _productionData;
-
-
+  final ProductionDataGroup productionGroup;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +22,7 @@ class ProductionSelectedSummary extends StatelessWidget {
         child: const Text("Confirmar"),
         onPressed: () { 
           Navigator.of(context).pop();
-          context.read<OpenProductionDataCubit>().cancelProductionData(_productionData.id);
+          context.read<OpenProductionDataCubit>().cancelProductionData(productionGroup.getId());
           context.read<ProductionListFilterCubit>().markForRefresh();
         },
       );
@@ -54,7 +52,6 @@ class ProductionSelectedSummary extends StatelessWidget {
       );
     }
 
-    var productionLine = _productionData.lineUnits.firstWhere((e) => e.type == 'ProductionLine');
     return Container(
       margin: const EdgeInsets.only(bottom: 5),
       decoration: BoxDecoration(
@@ -72,7 +69,7 @@ class ProductionSelectedSummary extends StatelessWidget {
         padding: const EdgeInsets.all(5.0),
         child: Row(
           children: [
-            _ProductionLineSelectionButton(productionData: _productionData, productionLine: productionLine),
+            _ProductionLineSelectionButton(productionGroup: productionGroup),
 
             Padding(
               padding: const EdgeInsets.all(5.0),
@@ -90,7 +87,7 @@ class ProductionSelectedSummary extends StatelessWidget {
                     );
                 },
                 onLongPress: () {
-                  context.read<OpenProductionDataCubit>().concludeProductionData(_productionData.id);
+                  context.read<OpenProductionDataCubit>().concludeProductionData(productionGroup.getId());
                 }),
             ),
             Padding(
@@ -109,7 +106,7 @@ class ProductionSelectedSummary extends StatelessWidget {
                     );
                 },
                 onLongPress: () {
-                  context.read<OpenProductionDataCubit>().closeProductionData(_productionData.id);
+                  context.read<OpenProductionDataCubit>().closeProductionData(productionGroup.getId());
                 }),
             ),
             Padding(
@@ -142,15 +139,14 @@ class ProductionSelectedSummary extends StatelessWidget {
 class _ProductionLineSelectionButton extends StatelessWidget {
   const _ProductionLineSelectionButton({
     Key? key,
-    required ProductionBasicData productionData,
-    required this.productionLine,
-  }) : _productionData = productionData, super(key: key);
+    required this.productionGroup,
+  }) : super(key: key);
 
-  final ProductionBasicData _productionData;
-  final ProductionLineUnit productionLine;
+  final ProductionDataGroup productionGroup;
 
   @override
   Widget build(BuildContext context) {
+    var productionLine = productionGroup.productionDataGroup.first.lineUnits.firstWhere((x) => x.type == "ProductionLine");
     return Expanded(
       child: ElevatedButton(
         style: TextButton.styleFrom(
@@ -165,7 +161,7 @@ class _ProductionLineSelectionButton extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Linha: " + productionLine.name, style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white)),
-                  Text("ID " + _productionData.id.toString(), style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),)
+                  Text("ID " + productionLine.id.toString(), style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),)
                 ],
               ),
             ),

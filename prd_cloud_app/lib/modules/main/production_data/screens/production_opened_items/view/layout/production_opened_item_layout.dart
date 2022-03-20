@@ -22,65 +22,62 @@ class ProductionOpenedItemLayoutPage extends StatelessWidget {
         },
         child: BlocBuilder<SelectedProductionDataCubit, int?>(
             builder: (BuildContext context, state) {
-          var selectedProductionData = context
-              .read<OpenProductionDataCubit>()
-              .state
-              .loadedItems
-              .cast<ProductionBasicData?>()
-              .firstWhere((element) => element?.id == state, orElse: () => null);
-          if (selectedProductionData != null) {
-            return Column(
-              key: UniqueKey(),
-              children: [
-                ProductionSelectedSummary(productionData: selectedProductionData),
-                Expanded(
-                    child: _Bottom(
-                        selectedProductionBasicData: selectedProductionData))
-              ],
-            );
-          } else {
-            return Center(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Sem apontamentos selecionados",
-                    style: Theme.of(context).textTheme.bodyLarge,
+              var selectedProductionData = context
+                  .read<OpenProductionDataCubit>()
+                  .state
+                  .loadedItems
+                  .cast<ProductionDataGroup?>()
+                  .firstWhere((element) => state != null && element != null && element.hasProductionData(state), orElse: () => null);
+              if (selectedProductionData != null) {
+                return Column(
+                  key: UniqueKey(),
+                  children: [
+                    ProductionSelectedSummary(productionGroup: selectedProductionData),
+                    Expanded(
+                        child: _Bottom(
+                            selectedProductionDataGroup: selectedProductionData))
+                  ],
+                );
+              } else {
+                return Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        "Sem apontamentos selecionados",
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                          "Selecione os apontamentos que deseja editar na list de apontamentos"),
+                      const SizedBox(height: 80),
+                      ElevatedButton(
+                        child: const Text("Ir para lista de apontamentos"),
+                        style:
+                            ElevatedButton.styleFrom(minimumSize: const Size(50, 50)),
+                        onPressed: () => context
+                            .read<MenuItemSelectedCubit>()
+                            .selectPage(MenuItemSelected.productionDataList),
+                      )
+                    ],
                   ),
-                  const SizedBox(height: 20),
-                  const Text(
-                      "Selecione os apontamentos que deseja editar na list de apontamentos"),
-                  const SizedBox(height: 80),
-                  ElevatedButton(
-                    child: const Text("Ir para lista de apontamentos"),
-                    style:
-                        ElevatedButton.styleFrom(minimumSize: const Size(50, 50)),
-                    onPressed: () => context
-                        .read<MenuItemSelectedCubit>()
-                        .selectPage(MenuItemSelected.productionDataList),
-                  )
-                ],
-              ),
-            );
-          }
-        }),
+                );
+              }
+            }
+          ),
       )
     );
   }
 }
 
 class _Bottom extends StatelessWidget {
-  const _Bottom(
-      {Key? key, required ProductionBasicData selectedProductionBasicData})
-      : _selectedProductionBasicData = selectedProductionBasicData,
-        super(key: key);
+  const _Bottom({Key? key, required this.selectedProductionDataGroup}) : super(key: key);
 
-  final ProductionBasicData _selectedProductionBasicData;
+  final ProductionDataGroup selectedProductionDataGroup;
 
   @override
   Widget build(BuildContext context) {
-    return ProductionOpenedBlocProvider(
-        productionBasicDataId: _selectedProductionBasicData.id);
+    return ProductionOpenedBlocProvider(productionBasicDataId: selectedProductionDataGroup.getId());
   }
 }

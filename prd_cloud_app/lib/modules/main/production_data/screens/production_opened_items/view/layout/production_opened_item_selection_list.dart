@@ -15,8 +15,8 @@ class ProductionOpenedItemSelectionListPage extends StatelessWidget {
     builder: (_) => ProductionOpenedItemSelectionListPage(openProductionDataCubit: openProductionDataCubit, selectedProductionDataCubit: selectedProductionDataCubit),
   );
 
-  selectProductionData(BuildContext context, ProductionBasicData productionBasicData) {
-    _selectedProductionDataCubit.selectProductionData(productionBasicData.id);
+  selectProductionData(BuildContext context, ProductionDataGroup productionGroup) {
+    _selectedProductionDataCubit.selectProductionDataGroup(productionGroup.getId());
     Navigator.pop(context);
   } 
 
@@ -35,9 +35,9 @@ class ProductionOpenedItemSelectionListPage extends StatelessWidget {
           itemCount: _openProductionDataCubit.state.loadedItems.length,
           itemBuilder: (BuildContext context, int index) {
             return _ProductionSummary(
-              key: ValueKey(_openProductionDataCubit.state.loadedItems[index].id),
-              productionData: _openProductionDataCubit.state.loadedItems[index],
-              isSelected: _selectedProductionDataCubit.state == _openProductionDataCubit.state.loadedItems[index].id,
+              key: ValueKey(_openProductionDataCubit.state.loadedItems[index].getId()),
+              productionGroup: _openProductionDataCubit.state.loadedItems[index],
+              isSelected: _selectedProductionDataCubit.state == _openProductionDataCubit.state.loadedItems[index].getId(),
               onTap: () => { selectProductionData(context, _openProductionDataCubit.state.loadedItems[index]) },
             );
           }
@@ -47,13 +47,13 @@ class ProductionOpenedItemSelectionListPage extends StatelessWidget {
 }
 
 class _ProductionSummary extends StatefulWidget {
-  const _ProductionSummary({Key? key, required ProductionBasicData productionData, required bool isSelected, required void Function()? onTap}) 
-  : _productionData = productionData, 
+  const _ProductionSummary({Key? key, required ProductionDataGroup productionGroup, required bool isSelected, required void Function()? onTap}) 
+  : _productionData = productionGroup, 
     _isSelected = isSelected, 
     _onTap = onTap,
     super(key: key);
 
-  final ProductionBasicData _productionData;
+  final ProductionDataGroup _productionData;
   final bool _isSelected;
   final void Function()? _onTap;
 
@@ -87,7 +87,7 @@ class _ProductionSummaryState extends State<_ProductionSummary> {
 
     return Card(
       shape: AppTheme.cardShape,
-      key: ValueKey("ProductionSummaryCard_" + widget._productionData.id.toString()),
+      key: ValueKey("ProductionSummaryCard_" + widget._productionData.getId().toString()),
       color: widget._isSelected ? Theme.of(context).primaryColor : null,
       child: InkWell(
         onTap: widget._onTap,
@@ -102,25 +102,25 @@ class _ProductionSummaryState extends State<_ProductionSummary> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [ 
-                        Text(widget._productionData.getProductionLine().name, style: title.copyWith(fontWeight: FontWeight.normal)),
-                        Text("#" + widget._productionData.id.toString(), style: title.copyWith(fontWeight: FontWeight.normal))
+                        Text(widget._productionData.productionDataGroup.first.getProductionLine().name, style: title.copyWith(fontWeight: FontWeight.normal)),
+                        Text("#" + widget._productionData.getId().toString(), style: title.copyWith(fontWeight: FontWeight.normal))
                       ] 
                     ),
-                    if (widget._productionData.productId == null) 
-                      ...[]
-                    else ...[
-                      Padding(
-                        padding: const EdgeInsets.only(left: 7.0),
-                        child: Row(children: [ Text(widget._productionData.getSelectedProduct()!.name, style: bodyMedium) ] ),
-                      )
-                    ],
+                    // if (widget._productionData.productId == null) 
+                    //   ...[]
+                    // else ...[
+                    //   Padding(
+                    //     padding: const EdgeInsets.only(left: 7.0),
+                    //     child: Row(children: [ Text(widget._productionData.getSelectedProduct()!.name, style: bodyMedium) ] ),
+                    //   )
+                    // ],
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Row(children: [ Text("Início: ", style: bodyMedium), Text(dateTimeAsString(widget._productionData.begin), style: bodyMedium) ] ),
+                      child: Row(children: [ Text("Início: ", style: bodyMedium), Text(dateTimeAsString(widget._productionData.productionDataGroup.first.begin), style: bodyMedium) ] ),
                     ),
                     Padding(
                       padding: const EdgeInsets.only(left: 8.0),
-                      child: Row(children: [ Text("Fim: ", style: bodyMedium), Text(dateTimeAsString(widget._productionData.end), style: bodyMedium) ] ),
+                      child: Row(children: [ Text("Fim: ", style: bodyMedium), Text(dateTimeAsString(widget._productionData.productionDataGroup.first.end), style: bodyMedium) ] ),
                     ),
                   ]
                 )

@@ -37,7 +37,7 @@ class FieldVariableNumericCubit extends Cubit<FieldVariableNumericState> {
   }
 
   final OpenProductionDataRepository _openProductionDataRepository;
-  late StreamSubscription<ProductionBasicData> productionDatastreamSubscription;
+  late StreamSubscription<ProductionData> productionDatastreamSubscription;
 
   void updateField(double? newValue) {
     _openProductionDataRepository.updateVariableNumeric(state.productionBasicDataId, state.variableDataId, newValue);

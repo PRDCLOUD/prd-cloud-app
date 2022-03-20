@@ -7,15 +7,17 @@ import 'package:prd_cloud_app/modules/main/production_data/screens/production_op
 import 'package:prd_cloud_app/theme.dart';
 
 
+//TODO recolocoar produto
+// BlocProvider(create: (context) => FieldProductCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionGroup.productId)),
+
 class ProductionLossMain extends StatelessWidget {
   const ProductionLossMain({Key? key}) : super(key: key);
 
-  void lossAddDialog(BuildContext context, List<Loss> lossOptions, List<LineUnit> lineUnits, LossAddCallback lossAddCallback, int productionBasicId) {
+  void lossAddDialog(BuildContext context, List<Loss> lossOptions, List<ProductionLineUnit> lineUnits, LossAddCallback lossAddCallback, int productionBasicId) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => 
         LossAdd(
-          productionBasicId: productionBasicId,
           lossOptions: lossOptions, 
           lineUnits: lineUnits, 
           lossAddCallback: lossAddCallback
@@ -32,10 +34,10 @@ class ProductionLossMain extends StatelessWidget {
         .read<OpenProductionDataCubit>()
         .state
         .loadedItems
-        .firstWhere((element) => element.id == productionDataId);
+        .firstWhere((e) => e.hasProductionData(productionDataId));
     
-    var lossesOptions = productionData.lossesOptions;
-    var lineUnits = productionData.lineUnits.map((e) => e.lineUnit).toList();
+    var lossesOptions = productionData.getProductionLossOptions();
+    var lineUnits = productionData.getProductionLineUnits();
 
     return BlocConsumer<ProductionLossCubit, ProductionLossState>(
       listener: (context, state) => { 
@@ -75,7 +77,7 @@ class ProductionLossMain extends StatelessWidget {
     );
   }
 
-  Widget _lossCard(ProductionLossState state, int index, BuildContext context, List<LineUnit> lineUnits) {
+  Widget _lossCard(ProductionLossState state, int index, BuildContext context, List<ProductionLineUnit> lineUnits) {
 
     Future showDeleteAlertDialog() async {
       // set up the button
@@ -136,7 +138,7 @@ class ProductionLossMain extends StatelessWidget {
                       children: [
                         const Icon(Icons.precision_manufacturing_outlined, size: 12), 
                         const SizedBox(width: 5), 
-                        Text(lineUnits.firstWhere((lineUnit) => lineUnit.id == state.losses[index].lineUnitId).name, style: Theme.of(context).textTheme.bodyMedium)
+                        Text(lineUnits.firstWhere((lineUnit) => lineUnit.id == state.losses[index].lineUnitId).lineUnit.name, style: Theme.of(context).textTheme.bodyMedium)
                       ]
                     ),
                     Row(

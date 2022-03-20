@@ -14,13 +14,13 @@ class ProductionLossCubit extends Cubit<ProductionLossState> {
   ProductionLossCubit({
     required ErrorRepository errorRepository,
     required OpenProductionDataRepository openProductionDataRepository,
-    required int productionBasicDataId,
+    required int productionGroupId,
     required List<ProductionLoss> initialValue
     }
   ) : 
     _errorRepository = errorRepository,
     super(ProductionLossState(
-      productionBasicDataId: productionBasicDataId, 
+      productionGroupId: productionGroupId, 
       losses: initialValue, 
       status: ProductionLossStatus.updated
       )
@@ -29,16 +29,17 @@ class ProductionLossCubit extends Cubit<ProductionLossState> {
       _openProductionDataSubscription = _openProductionDataRepository.openDataStream().listen(checkProductionDataAndUpdateLosses);
   }
 
-  void checkProductionDataAndUpdateLosses(List<ProductionBasicData> items) {
-    var prdData = items.firstWhere((element) => element.id == state.productionBasicDataId);
-    if (state.losses != prdData.stops) {
-      emit(state.copyWith(losses: prdData.losses));
+  void checkProductionDataAndUpdateLosses(List<ProductionDataGroup> groups) {
+    var productionDataGroup = groups.firstWhere((e) => e.hasProductionData(state.productionGroupId));
+    var currentLosses = productionDataGroup.getProductionLosses();
+    if (state.losses != currentLosses) {
+      emit(state.copyWith(losses: currentLosses));
     }
   }
   
   final ErrorRepository _errorRepository;
   late OpenProductionDataRepository _openProductionDataRepository;
-  late StreamSubscription<List<ProductionBasicData>> _openProductionDataSubscription;
+  late StreamSubscription<List<ProductionDataGroup>> _openProductionDataSubscription;
 
   Future<bool> addLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
     emit(state.copyWith(status: ProductionLossStatus.adding));

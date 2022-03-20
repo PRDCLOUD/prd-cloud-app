@@ -39,10 +39,6 @@ class ProductionDataEdit extends StatelessWidget {
                   padding: EdgeInsets.all(5.0),
                   child: _Comments(),
                 ),
-                const Padding(
-                  padding: EdgeInsets.all(5.0),
-                  child: _Products(),
-                ),
                 ...getVariableWidgets(context)
               ],
             ),
@@ -52,17 +48,19 @@ class ProductionDataEdit extends StatelessWidget {
     );
   }
 
-  List<_VariableLineUnit> getVariables(ProductionBasicData productionBasicData) {
+  List<_VariableLineUnit> getVariables(ProductionDataGroup productionGroup) {
     var variablesLineUnit = List<_VariableLineUnit>.empty(growable: true);
-    for (var productionLineUnit in productionBasicData.lineUnits) { 
-      if (productionLineUnit.lineUnit.productionVariables.isNotEmpty) {
-        var rows = groupBy(productionLineUnit.lineUnit.productionVariables, (ProductionVariable x) => x.rowOrder)
-                        .entries.map((rowItem) { 
-                          var columns = rowItem.value.map((e) => _ColumnVariableLineUnit(e.columnOrder, e.width, e)).toList();
-                          return _RowVariableLineUnit(rowItem.key, productionLineUnit, columns);
-                        }).toList();
+    for (var productionData in productionGroup.productionDataGroup) {
+      for (var productionLineUnit in productionData.lineUnits) { 
+        if (productionLineUnit.lineUnit.productionVariables.isNotEmpty) {
+          var rows = groupBy(productionLineUnit.lineUnit.productionVariables, (ProductionVariable x) => x.rowOrder)
+                          .entries.map((rowItem) { 
+                            var columns = rowItem.value.map((e) => _ColumnVariableLineUnit(e.columnOrder, e.width, e)).toList();
+                            return _RowVariableLineUnit(rowItem.key, productionLineUnit, columns);
+                          }).toList();
 
-        variablesLineUnit.add(_VariableLineUnit(productionLineUnit, rows));
+          variablesLineUnit.add(_VariableLineUnit(productionLineUnit, rows));
+        }
       }
     }
     return variablesLineUnit;
@@ -76,7 +74,7 @@ class ProductionDataEdit extends StatelessWidget {
         .read<OpenProductionDataCubit>()
         .state
         .loadedItems
-        .firstWhere((element) => element.id == productionDataId);
+        .firstWhere((element) => element.hasProductionData(productionDataId));
 
     var variableLineUnits = getVariables(productionData);
 
@@ -175,7 +173,7 @@ class _Comments extends StatelessWidget {
 
 
 class _Products extends StatelessWidget {
-  const _Products({Key? key}) : super(key: key);
+  const _Products({Key? key, required this.productionBasicDataId}) : super(key: key);
 
   void productSelection({required BuildContext context, required List<Product> products, required ProductSetter onChange, required int? selectedProductId}) {
     FocusScope.of(context).unfocus();
@@ -191,22 +189,25 @@ class _Products extends StatelessWidget {
     );
   }
 
+  final int productionBasicDataId;
+
   @override
   Widget build(BuildContext context) {
-    var selectedProductionDataId = context.read<SelectedProductionDataCubit>().state;
-    
-    var selectedProductionData = context
+   
+    var selectedProductionGroup = context
         .read<OpenProductionDataCubit>()
         .state
         .loadedItems
-        .firstWhere((element) => element.id == selectedProductionDataId);
+        .firstWhere((element) => element.hasProductionData(productionBasicDataId));
+    
+    var productionData = selectedProductionGroup.productionDataGroup.firstWhere((e) => e.id == productionBasicDataId);
 
-    var products = selectedProductionData.products;
+    var products = productionData.products;
       
     return BlocBuilder<FieldProductCubit, FieldProductState>(
       builder: (context, state) {
         return InkWell(
-          key: ValueKey("Product_Id_" + (state.fieldValue?.toString() ?? "")),
+          key: ValueKey("Product_Id_" + productionBasicDataId.toString() + "_" + (state.fieldValue?.toString() ?? "")),
           onTap: () => productSelection(
             context: context, 
             selectedProductId: state.fieldValue,

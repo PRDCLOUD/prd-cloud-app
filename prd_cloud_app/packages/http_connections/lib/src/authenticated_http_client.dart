@@ -129,7 +129,7 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/open/' + id.toString());
   }
 
-  Future<Response<dynamic>> patchProductionDataBegin(ProductionBasicData productionBasicData, tz.Location location) async {
+  Future<Response<dynamic>> patchProductionDataBegin(ProductionData productionBasicData, tz.Location location) async {
     var data = { 
       'begin': dateToString(productionBasicData.begin, location),
       'end': dateToString(productionBasicData.end, location),
@@ -140,7 +140,7 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/begin/' + productionBasicData.id.toString(), data);
   }
 
-  Future<Response<dynamic>> patchProductionDataEnd(ProductionBasicData productionBasicData, tz.Location location) async {
+  Future<Response<dynamic>> patchProductionDataEnd(ProductionData productionBasicData, tz.Location location) async {
     var data = { 
       'begin': dateToString(productionBasicData.begin, location),
       'end': dateToString(productionBasicData.end, location),
@@ -151,7 +151,7 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/end/' + productionBasicData.id.toString(), data);
   }
 
-  Future<Response<dynamic>> patchProductionDataComments(ProductionBasicData productionBasicData, tz.Location location) async {
+  Future<Response<dynamic>> patchProductionDataComments(ProductionData productionBasicData, tz.Location location) async {
     var data = { 
       'begin': dateToString(productionBasicData.begin, location),
       'end': dateToString(productionBasicData.end, location),
@@ -162,7 +162,7 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/comment/' + productionBasicData.id.toString(), data);
   }
 
-  Future<Response<dynamic>> patchProductionDataProduct(ProductionBasicData productionBasicData, tz.Location locale) async {
+  Future<Response<dynamic>> patchProductionDataProduct(ProductionData productionBasicData, tz.Location locale) async {
     var data = { 
       'begin': dateToString(productionBasicData.begin, locale),
       'end': dateToString(productionBasicData.end, locale),
@@ -260,35 +260,28 @@ class AuthenticatedHttpClient {
     return await _deleteRequest('api/production/stop/' + productionStopId.toString());
   }
 
-  Future<void> patchConcludeProduction({
-    required int? id,
-    required DateTime? begin,
-    required DateTime? end,
-    required String? comments,
-    required int? productId,
-    required List<ProductionVariable> variables,
-    required tz.Location location
-  }) async {
-    var data = {
-        'list': [ {
-          'id': id,
-          'begin': dateToString(begin, location),
-          'end': dateToString(end, location),
-          'comments': comments,
-          'productId': productId,
-          'variables': variables.map((e) => {
-            'id': e.id,
-            'productionBasicDataId': e.productionBasicDataId,
-            'text': e.text,
-            'type': e.typeVariableDefinition,
-            'value': e.value,
-            'definitionName': e.definitionName
-          }).toList()
-        }
-      ]
-    };
+  Future<void> patchConcludeProduction(ProductionDataGroup productionDataGroup, tz.Location location) async {
 
-    await _patchRequest('api/production/conclude', data);
+    var dataRows = productionDataGroup.productionDataGroup.map((e) =>
+    {
+      {
+        'id': e.id,
+        'begin': dateToString(e.begin, location),
+        'end': dateToString(e.end, location),
+        'comments': e.comments,
+        'productId': e.productId,
+        'variables': e.lineUnits.expand((x) => x.lineUnit.productionVariables).map((e) => {
+          'id': e.id,
+          'productionBasicDataId': e.productionBasicDataId,
+          'text': e.text,
+          'type': e.typeVariableDefinition,
+          'value': e.value,
+          'definitionName': e.definitionName
+        }).toList()
+      }
+    }).toList();
+
+    await _patchRequest('api/production/conclude', { 'list': dataRows});
   }
 
   String? dateToString(DateTime? date, tz.Location location) {

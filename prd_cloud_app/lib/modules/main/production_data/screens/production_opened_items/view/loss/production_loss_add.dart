@@ -7,11 +7,10 @@ enum LossAddStates { lossSelection, lineUnitSelection, valueFill }
 typedef LossAddCallback = Future<bool> Function(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId);
 
 class LossAdd extends StatefulWidget {
-  const LossAdd({ Key? key, required this.lossOptions, required this.lineUnits, required this.lossAddCallback, required this.productionBasicId }) : super(key: key);
+  const LossAdd({ Key? key, required this.lossOptions, required this.lineUnits, required this.lossAddCallback }) : super(key: key);
 
-  final int productionBasicId;
   final List<Loss> lossOptions;
-  final List<LineUnit> lineUnits;
+  final List<ProductionLineUnit> lineUnits;
   final LossAddCallback lossAddCallback;
 
   @override
@@ -23,7 +22,7 @@ class _LossAddState extends State<LossAdd> {
   LossAddStates lossAddStates = LossAddStates.lossSelection;
 
   Loss? selectedLoss;
-  LineUnit? selectedLineUnit;
+  ProductionLineUnit? selectedLineUnit;
   double? lossValue;
 
   void selectLoss(Loss loss) {
@@ -39,7 +38,7 @@ class _LossAddState extends State<LossAdd> {
     });
   }
 
-  void selectLineUnit(LineUnit lineUnit) {
+  void selectLineUnit(ProductionLineUnit lineUnit) {
     setState(() {
       selectedLineUnit = lineUnit;
       lossAddStates = LossAddStates.valueFill;
@@ -126,7 +125,7 @@ class _LossAddState extends State<LossAdd> {
   }
 
 
-  Widget lineUnitSelection(List<LineUnit> lineUnits) {
+  Widget lineUnitSelection(List<ProductionLineUnit> lineUnits) {
     return Column(
       children: [
         tipoPerdaSelecionada(),
@@ -143,7 +142,7 @@ class _LossAddState extends State<LossAdd> {
                 title: Card(
                   child: Container(
                     padding: const EdgeInsets.all(15),
-                    child: Text(lineUnits[index].name)
+                    child: Text(lineUnits[index].lineUnit.name)
                   )
                 ),
                 onTap: () => selectLineUnit(lineUnits[index])
@@ -258,7 +257,7 @@ class _LossAddState extends State<LossAdd> {
               onPressed: lossValue == null ? 
                 null : 
                 () async {
-                var result = await widget.lossAddCallback(widget.productionBasicId, selectedLoss!.id, lossValue!, selectedLineUnit!.id);
+                var result = await widget.lossAddCallback(selectedLineUnit!.productionBasicDataId, selectedLoss!.id, lossValue!, selectedLineUnit!.id);
                 if (result) {
                   Navigator.pop(context);
                 }

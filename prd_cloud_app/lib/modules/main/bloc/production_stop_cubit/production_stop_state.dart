@@ -5,23 +5,23 @@ enum ProductionStopStatus{ updated, adding, deleting }
 @immutable
 class ProductionStopState extends Equatable {
 
-  final int productionBasicDataId;
+  final int productionGroupId;
   final ProductionStopStatus status;
   final List<ProductionStop> stops;
 
 
-  const ProductionStopState({required this.productionBasicDataId, required this.stops, required this.status});
+  const ProductionStopState({required this.productionGroupId, required this.stops, required this.status});
 
   @override
-  List<Object?> get props => [productionBasicDataId, status, stops];
+  List<Object?> get props => [productionGroupId, status, stops];
 
   ProductionStopState copyWith({
-    int? productionBasicDataId,
+    int? productionGroupId,
     ProductionStopStatus? status,
     List<ProductionStop>? stops,
   }) {
     return ProductionStopState(
-      productionBasicDataId: productionBasicDataId ?? this.productionBasicDataId,
+      productionGroupId: productionGroupId ?? this.productionGroupId,
       status: status ?? this.status,
       stops: stops ?? this.stops,
     );

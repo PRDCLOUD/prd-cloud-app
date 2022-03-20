@@ -9,7 +9,7 @@ enum ProductionDataStatus {
   canceled 
 }
 
-class ProductionBasicData extends Equatable {
+class ProductionData extends Equatable {
 
   final int id;
 
@@ -38,7 +38,7 @@ class ProductionBasicData extends Equatable {
     return lineUnits.firstWhere((element) => element.type == 'ProductionLine').lineUnit.products ?? new List.empty();
   }
 
-  ProductionBasicData({
+  ProductionData({
     required this.id, 
     required this.begin, 
     required this.end, 
@@ -55,7 +55,7 @@ class ProductionBasicData extends Equatable {
   });
 
 
-  factory ProductionBasicData.fromJson(Map<String, dynamic> json, tz.Location location) {
+  factory ProductionData.fromJson(Map<String, dynamic> json, tz.Location location) {
 
     var stops = json['stops'].map((x) => ProductionStop.fromJson(x, location)).cast<ProductionStop>().toList() as List<ProductionStop>;
     stops.sort(((a, b) => a.codeName.toLowerCase().compareTo(b.codeName.toLowerCase())));
@@ -74,14 +74,14 @@ class ProductionBasicData extends Equatable {
 
     var lineUnitDict = Map<int, LineUnit>.fromIterable(lineUnits, key: (x) => x.lineUnit.id, value: (x) => x.lineUnit); 
 
-    return ProductionBasicData(
+    return ProductionData(
       begin: DateTimeFunctions.parseDateTime(json['begin'] as String?, location),
       end: DateTimeFunctions.parseDateTime(json['end'] as String?, location),
       comments: json['comments'],
       productId: json['productId'],
       id: json['id'],
       productionLineId: json['productionLineId'],
-      status: ProductionBasicData._parseProductionDataStatus(json['status']),
+      status: ProductionData._parseProductionDataStatus(json['status']),
       stopOptions: stopOptions,
       stops: stops,
       lossesOptions: losssesOptions,
@@ -91,7 +91,7 @@ class ProductionBasicData extends Equatable {
     );
   }
 
-  ProductionBasicData copyWith({
+  ProductionData copyWith({
     int? id,
     DateTime? begin,
     DateTime? end,
@@ -106,7 +106,7 @@ class ProductionBasicData extends Equatable {
     ProductionDataStatus? status,
     Map<int, LineUnit>? lineUnitDict
   }) {
-    return ProductionBasicData(
+    return ProductionData(
       id: id ?? this.id,
       begin: begin ?? this.begin,
       end: end ?? this.end,
@@ -152,7 +152,7 @@ class ProductionBasicData extends Equatable {
   }
 }
 
-extension ProductionBasicDataExtensions on ProductionBasicData {
+extension ProductionBasicDataExtensions on ProductionData {
   Product? getSelectedProduct() {
     if (productId == null) {
       return null;

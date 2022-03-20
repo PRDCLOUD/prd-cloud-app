@@ -88,8 +88,8 @@ class _BlocListeners extends StatelessWidget {
           if (openProductionData.isEmpty) {
             context.read<SelectedProductionDataCubit>().unselectProductionData();
           }
-          else if (!openProductionData.any((element) => element.id == selectedProductionData)) {
-            context.read<SelectedProductionDataCubit>().selectProductionData(openProductionData.first.id);
+          else if (selectedProductionData == null || !openProductionData.any((element) => element.hasProductionData(selectedProductionData))) {
+            context.read<SelectedProductionDataCubit>().selectProductionDataGroup(openProductionData.first.getId());
           }
         },
         child: _child,

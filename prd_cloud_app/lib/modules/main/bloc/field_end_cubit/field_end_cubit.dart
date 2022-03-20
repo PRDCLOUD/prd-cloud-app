@@ -8,9 +8,9 @@ part 'field_end_state.dart';
 class FieldEndCubit extends Cubit<FieldEndState> {
   FieldEndCubit({
     required OpenProductionDataRepository openProductionDataRepository, 
-    required int productionBasicDataId, 
+    required int productionGroupId, 
     required DateTime? initialValue,
-  }) : _openProductionDataRepository = openProductionDataRepository, super(FieldEndState(productionBasicDataId: productionBasicDataId, fieldValue: initialValue));
+  }) : _openProductionDataRepository = openProductionDataRepository, super(FieldEndState(productionBasicDataId: productionGroupId, fieldValue: initialValue));
 
   final OpenProductionDataRepository _openProductionDataRepository;
 
