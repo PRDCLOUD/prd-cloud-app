@@ -61,26 +61,16 @@ class LineUnit extends Equatable {
   }
   
 
-  LineUnit copyWith({
-    String? code,
-    String? description,
-    int? id,
-    String? name,
-    int? order,
-    int? productionLineId,
-    String? publicDiscriminator,
-    List<Product>? products,
-    List<ProductionVariable>? productionVariables
-  }) {
+  LineUnit copyWithNewVariables({List<ProductionVariable>? productionVariables}) {
     return LineUnit(
-      code: code ?? this.code,
-      description: description ?? this.description,
-      id: id ?? this.id,
-      name: name ?? this.name,
-      order: order ?? this.order,
-      productionLineId: productionLineId ?? this.productionLineId,
-      publicDiscriminator: publicDiscriminator ?? this.publicDiscriminator,
-      products: products ?? this.products,
+      code: code,
+      description: description,
+      id: id,
+      name: name,
+      order: order,
+      productionLineId: productionLineId,
+      publicDiscriminator: publicDiscriminator,
+      products: products,
       productionVariables: productionVariables ?? this.productionVariables
     );
   }

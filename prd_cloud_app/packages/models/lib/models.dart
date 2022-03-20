@@ -17,3 +17,4 @@ export 'src/models/production_data_filter.dart';
 export 'src/models/production_item_of_list.dart';
 export 'src/models/config.dart';
 export 'src/models/production_data_group.dart';
+export 'src/utils/optional.dart';

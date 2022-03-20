@@ -79,26 +79,6 @@ class Stop extends Equatable {
       stopClaims,
     ];
   }
-
-  Stop copyWith({
-    int? id,
-    String? code,
-    String? name,
-    int? typeOf,
-    double? averageTime,
-    List<int>? lineUnitStops,
-    List<StopClaim>? stopClaims,
-  }) {
-    return Stop(
-      id: id ?? this.id,
-      code: code ?? this.code,
-      name: name ?? this.name,
-      typeOf: typeOf ?? this.typeOf,
-      averageTime: averageTime ?? this.averageTime,
-      lineUnitStops: lineUnitStops ?? this.lineUnitStops,
-      stopClaims: stopClaims ?? this.stopClaims,
-    );
-  }
 }
 
 class StopClaim extends Equatable {

@@ -10,10 +10,7 @@ class UserPreferencesState extends Equatable {
   @override
   List<Object> get props => [selectedProductionLines];
 
-  UserPreferencesState copyWith({
-    String? tenant,
-    List<String>? selectedProductionLines,
-  }) {
+  UserPreferencesState copyWith({List<String>? selectedProductionLines}) {
     return UserPreferencesState(
       selectedProductionLines: selectedProductionLines ?? this.selectedProductionLines,
     );

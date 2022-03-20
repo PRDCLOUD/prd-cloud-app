@@ -258,12 +258,12 @@ class OpenProductionDataRepository {
 
     if (productionLineUnit != null && productionVariable != null) {
       if (productionVariable!.value != newValue) {
-        var newVariable = productionVariable!.copyWith(value: newValue);
+        var newVariable = productionVariable!.copyWith(value: Optional.value(newValue));
 
         var newVariablesList = productionLineUnit!.lineUnit.productionVariables.toList();
         newVariablesList[productionVariableIndex!] = newVariable;
 
-        var newLineUnit = productionLineUnit!.lineUnit.copyWith(productionVariables: newVariablesList);
+        var newLineUnit = productionLineUnit!.lineUnit.copyWithNewVariables(productionVariables: newVariablesList);
         var newProcutionLineUnit = productionLineUnit!.copyWith(lineUnit: newLineUnit);
 
         var newProcutionLineUnitList = prdData.lineUnits.toList();
@@ -304,12 +304,12 @@ class OpenProductionDataRepository {
 
     if (productionLineUnit != null && productionVariable != null) {
       if (productionVariable!.value != newValue) {
-        var newVariable = productionVariable!.copyWith(text: newValue);
+        var newVariable = productionVariable!.copyWith(text: Optional.value(newValue));
 
         var newVariablesList = productionLineUnit!.lineUnit.productionVariables.toList();
         newVariablesList[productionVariableIndex!] = newVariable;
 
-        var newLineUnit = productionLineUnit!.lineUnit.copyWith(productionVariables: newVariablesList);
+        var newLineUnit = productionLineUnit!.lineUnit.copyWithNewVariables(productionVariables: newVariablesList);
         var newProcutionLineUnit = productionLineUnit!.copyWith(lineUnit: newLineUnit);
 
         var newProcutionLineUnitList = prdData.lineUnits.toList();

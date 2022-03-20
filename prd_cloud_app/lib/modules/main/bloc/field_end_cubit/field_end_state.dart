@@ -11,13 +11,10 @@ class FieldEndState extends Equatable {
   @override
   List<Object?> get props => [productionBasicDataId, fieldValue];
 
-  FieldEndState copyWith({
-    int? productionBasicDataId,
-    DateTime? fieldValue,
-  }) {
+  FieldEndState copyWithNewFieldValue({DateTime? fieldValue}) {
     return FieldEndState(
-      productionBasicDataId: productionBasicDataId ?? this.productionBasicDataId,
-      fieldValue: fieldValue ?? this.fieldValue,
+      productionBasicDataId: productionBasicDataId,
+      fieldValue: fieldValue,
     );
   }
 }

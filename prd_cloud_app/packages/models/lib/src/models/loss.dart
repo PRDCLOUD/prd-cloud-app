@@ -45,24 +45,4 @@ class Loss extends Equatable {
       lineUnitLoss,
     ];
   }
-
-  Loss copyWith({
-    int? id,
-    String? code,
-    String? name,
-    String? unit,
-    int? order,
-    String? lossGridOption,
-    List<int>? lineUnitLoss,
-  }) {
-    return Loss(
-      id: id ?? this.id,
-      code: code ?? this.code,
-      name: name ?? this.name,
-      unit: unit ?? this.unit,
-      order: order ?? this.order,
-      lossGridOption: lossGridOption ?? this.lossGridOption,
-      lineUnitLoss: lineUnitLoss ?? this.lineUnitLoss,
-    );
-  }
 }

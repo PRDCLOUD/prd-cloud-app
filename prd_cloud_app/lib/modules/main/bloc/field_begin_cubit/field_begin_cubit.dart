@@ -16,7 +16,7 @@ class FieldBeginCubit extends Cubit<FieldBeginState> {
 
   updateField(DateTime? newValue) {
     _openProductionDataRepository.updateBegin(state.productionBasicDataId, newValue);
-    emit(state.copyWith(fieldValue: newValue));
+    emit(state.copyWithNewFieldValue(fieldValue: newValue));
   }
 
 }

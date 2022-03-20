@@ -16,12 +16,11 @@ class ProductionLossState extends Equatable {
   List<Object?> get props => [productionGroupId, status, losses];
 
   ProductionLossState copyWith({
-    int? productionGroupId,
     ProductionLossStatus? status,
     List<ProductionLoss>? losses,
   }) {
     return ProductionLossState(
-      productionGroupId: productionGroupId ?? this.productionGroupId,
+      productionGroupId: productionGroupId,
       status: status ?? this.status,
       losses: losses ?? this.losses,
     );

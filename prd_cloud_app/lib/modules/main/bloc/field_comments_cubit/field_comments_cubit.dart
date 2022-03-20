@@ -16,7 +16,7 @@ class FieldCommentsCubit extends Cubit<FieldCommentsState> {
 
   updateField(String? newValue) {
     _openProductionDataRepository.updateComments(state.productionBasicDataId, newValue);
-    emit(state.copyWith(fieldValue: newValue));
+    emit(state.copyWithNewFieldValue(fieldValue: newValue));
   }
 
 }

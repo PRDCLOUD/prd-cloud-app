@@ -1,4 +1,5 @@
 import 'package:equatable/equatable.dart';
+import 'package:models/src/utils/optional.dart';
 
 class ProductionVariable extends Equatable {
 
@@ -116,44 +117,28 @@ class ProductionVariable extends Equatable {
   }
 
   ProductionVariable copyWith({
-    int? id,
-    String? definitionName,
-    String? implementationName,
-    String? implementationLabel,
-    int? lineUnitId,
-    int? productionBasicDataId,
-    bool? required,
-    String? typeVariableDefinition,
-    String? typeVariableImplementation,
-    int? variableCurrentImplementationId,
-    String? variableFormulaIdentifier,
-    int? decimalPlaces,
-    double? value,
-    String? text,
-    String? textOptions,
-    int? rowOrder,
-    int? columnOrder,
-    int? width,
+    Optional<double?> value = const Optional(),
+    Optional<String?> text = const Optional(),
   }) {
     return ProductionVariable(
-      id: id ?? this.id,
-      definitionName: definitionName ?? this.definitionName,
-      implementationName: implementationName ?? this.implementationName,
-      implementationLabel: implementationLabel ?? this.implementationLabel,
-      lineUnitId: lineUnitId ?? this.lineUnitId,
-      productionBasicDataId: productionBasicDataId ?? this.productionBasicDataId,
-      required: required ?? this.required,
-      typeVariableDefinition: typeVariableDefinition ?? this.typeVariableDefinition,
-      typeVariableImplementation: typeVariableImplementation ?? this.typeVariableImplementation,
-      variableCurrentImplementationId: variableCurrentImplementationId ?? this.variableCurrentImplementationId,
-      variableFormulaIdentifier: variableFormulaIdentifier ?? this.variableFormulaIdentifier,
-      decimalPlaces: decimalPlaces ?? this.decimalPlaces,
-      value: value ?? this.value,
-      text: text ?? this.text,
-      textOptions: textOptions ?? this.textOptions,
-      rowOrder: rowOrder ?? this.rowOrder,
-      columnOrder: columnOrder ?? this.columnOrder,
-      width: width ?? this.width,
+      id: id,
+      definitionName: definitionName,
+      implementationName: implementationName,
+      implementationLabel: implementationLabel,
+      lineUnitId: lineUnitId,
+      productionBasicDataId: productionBasicDataId,
+      required: required,
+      typeVariableDefinition: typeVariableDefinition,
+      typeVariableImplementation: typeVariableImplementation,
+      variableCurrentImplementationId: variableCurrentImplementationId,
+      variableFormulaIdentifier: variableFormulaIdentifier,
+      decimalPlaces: decimalPlaces,
+      value: value.valueOr(this.value),
+      text: text.valueOr(this.text),
+      textOptions: textOptions,
+      rowOrder: rowOrder,
+      columnOrder: columnOrder,
+      width: width,
     );
   }
 }

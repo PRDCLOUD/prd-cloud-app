@@ -92,32 +92,31 @@ class ProductionData extends Equatable {
   }
 
   ProductionData copyWith({
-    int? id,
-    DateTime? begin,
-    DateTime? end,
-    int? productId,
-    int? productionLineId,
+    Optional<DateTime> begin = const Optional(),
+    Optional<DateTime> end = const Optional(),
+    Optional<int> productId = const Optional(),
+    Optional<int> productionLineId = const Optional(),
     List<ProductionLineUnit>? lineUnits,
     List<ProductionLoss>? losses,
     List<ProductionStop>? stops,
     List<Loss>? lossesOptions,
     List<Stop>? stopOptions,
-    String? comments,
+    Optional<String> comments = const Optional(),
     ProductionDataStatus? status,
     Map<int, LineUnit>? lineUnitDict
   }) {
     return ProductionData(
-      id: id ?? this.id,
-      begin: begin ?? this.begin,
-      end: end ?? this.end,
-      productId: productId ?? this.productId,
-      productionLineId: productionLineId ?? this.productionLineId,
+      id: id,
+      begin: begin.valueOr(this.begin),
+      end: end.valueOr(this.end),
+      productId: productId.valueOr(this.productId),
+      productionLineId: productionLineId.isValid ? productionLineId.value : this.productionLineId,
       lineUnits: lineUnits ?? this.lineUnits,
       losses: losses ?? this.losses,
       stops: stops ?? this.stops,
       lossesOptions: lossesOptions ?? this.lossesOptions,
       stopOptions: stopOptions ?? this.stopOptions,
-      comments: comments ?? this.comments,
+      comments: comments.valueOr(this.comments),
       status: status ?? this.status,
       lineUnitDict: lineUnitDict ?? this.lineUnitDict
     );

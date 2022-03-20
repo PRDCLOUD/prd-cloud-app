@@ -11,13 +11,10 @@ class FieldCommentsState extends Equatable {
   @override
   List<Object?> get props => [productionBasicDataId, fieldValue];
 
-  FieldCommentsState copyWith({
-    int? productionBasicDataId,
-    String? fieldValue,
-  }) {
+  FieldCommentsState copyWithNewFieldValue({String? fieldValue}) {
     return FieldCommentsState(
-      productionBasicDataId: productionBasicDataId ?? this.productionBasicDataId,
-      fieldValue: fieldValue ?? this.fieldValue,
+      productionBasicDataId: productionBasicDataId,
+      fieldValue: fieldValue,
     );
   }
 }

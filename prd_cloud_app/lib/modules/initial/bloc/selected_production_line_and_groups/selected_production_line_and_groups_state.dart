@@ -17,8 +17,6 @@ class SelectedProductionLineAndGroupsState extends Equatable {
   SelectedProductionLineAndGroupsState copyWith({
     List<ProductionLineAndGroup>? selectedProductionLinesAndGroups,
   }) {
-    return SelectedProductionLineAndGroupsState(
-      selectedProductionLinesAndGroups ?? this.selectedProductionLinesAndGroups,
-    );
+    return SelectedProductionLineAndGroupsState(selectedProductionLinesAndGroups ?? this.selectedProductionLinesAndGroups);
   }
 }

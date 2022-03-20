@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:intl/intl.dart';
 
-import 'line_unit.dart';
-
 class ProductionLoss extends Equatable {
 
   final int id;
@@ -50,29 +48,6 @@ class ProductionLoss extends Equatable {
       lossValue,
       order,
     ];
-  }
-
-  ProductionLoss copyWith({
-    int? id,
-    int? lineUnitId,
-    LineUnit? lineUnit,
-    int? lossCurrentDefinitionId,
-    String? code,
-    String? name,
-    String? unit,
-    double? lossValue,
-    int? order,
-  }) {
-    return ProductionLoss(
-      id: id ?? this.id,
-      lineUnitId: lineUnitId ?? this.lineUnitId,
-      lossCurrentDefinitionId: lossCurrentDefinitionId ?? this.lossCurrentDefinitionId,
-      code: code ?? this.code,
-      name: name ?? this.name,
-      unit: unit ?? this.unit,
-      lossValue: lossValue ?? this.lossValue,
-      order: order ?? this.order,
-    );
   }
 }
 
