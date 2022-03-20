@@ -33,7 +33,7 @@ class _BlocProvider extends StatelessWidget {
     return MultiBlocProvider(providers: [
       BlocProvider(create: (context) => MenuItemSelectedCubit(), lazy: false),
       BlocProvider(
-          create: (context) => ProductionDataCubit(
+          create: (context) => ProductionDataListCubit(
               errorRepository: context.read<ErrorRepository>(),
               apontamentosRepository: context.read<ProductionDataRepository>())),
       BlocProvider(
@@ -58,7 +58,8 @@ class _BlocProvider extends StatelessWidget {
       BlocProvider(
           create: (context) =>
             ErrorCubit(errorRepository: context.read<ErrorRepository>()),
-          lazy: false)
+          lazy: false),
+      BlocProvider( create: (context) => PendingHttpRequestsCubit(openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false)
     ], child: _child);
   }
 }

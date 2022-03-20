@@ -1,4 +1,4 @@
-part of 'production_data_cubit.dart';
+part of 'production_data_list_cubit.dart';
 
 enum ProductionDataLoadState { loading, loaded, notLoaded }
 

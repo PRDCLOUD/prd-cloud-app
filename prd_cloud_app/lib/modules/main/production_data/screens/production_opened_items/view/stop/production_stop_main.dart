@@ -129,7 +129,7 @@ Widget _stopCard(ProductionStopState state, int index, BuildContext context, Lis
                       children: [
                         const Icon(Icons.build_outlined, size: 12), 
                         const SizedBox(width: 5), 
-                        Text(state.stops[index].name, style: Theme.of(context).textTheme.bodyMedium) 
+                        Text(state.stops[index].codeName, style: Theme.of(context).textTheme.bodyMedium) 
                       ]
                     ),
                     Row(

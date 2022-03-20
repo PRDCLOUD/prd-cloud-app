@@ -4,6 +4,7 @@ import 'package:easy_debounce/easy_debounce.dart';
 import 'package:error_repository/error_repository.dart';
 import 'package:http_connections/http_connections.dart';
 import 'package:models/models.dart';
+import 'package:uuid/uuid.dart';
 
 class OpenProductionDataRepository {
 
@@ -19,6 +20,9 @@ class OpenProductionDataRepository {
   final ErrorRepository _errorRepository;
   final AuthenticatedHttpClient _authHttpClient;
   final TenantInformation _tenantInformation;
+
+  final Set<String> _pendingHttpRequests = Set();
+  final _pendingHttpRequestsStreamController = StreamController<List<String>>.broadcast();
 
   final _lastLoadedProductionGroupController = StreamController<int?>.broadcast();
 
@@ -41,6 +45,11 @@ class OpenProductionDataRepository {
     } else {
       return prdData;
     }
+  }
+
+  Stream<List<String>> pendingHttpRequestsStream() async* {
+    yield _pendingHttpRequests.toList();
+    yield* _pendingHttpRequestsStreamController.stream;
   }
 
   Stream<List<ProductionDataGroup>> openDataStream() async* {
@@ -66,11 +75,16 @@ class OpenProductionDataRepository {
   Future<void> openNewProductionData(List<ProductionLineAndGroup> productionLineAndGroups) async {
     var openedItems = List<ProductionDataGroup>.empty(growable: true);
     
-    for (var item in productionLineAndGroups) {
-      var productionId = await _authHttpClient.postOpenInputProductionData(item.id, item.isGroup());
-      var response = await _authHttpClient.getProductionDataById(productionId);
-      var productionBasicData = response.data.map((e) => ProductionData.fromJson(e, _tenantInformation.location)).cast<ProductionData>().toList() as List<ProductionData>;
-      openedItems.add(ProductionDataGroup(productionBasicData));
+    var requestId = startHttpRequestMark();
+    try {
+      for (var item in productionLineAndGroups) {
+        var productionId = await _authHttpClient.postOpenInputProductionData(item.id, item.isGroup());
+        var response = await _authHttpClient.getProductionDataById(productionId);
+        var productionBasicData = response.data.map((e) => ProductionData.fromJson(e, _tenantInformation.location)).cast<ProductionData>().toList() as List<ProductionData>;
+        openedItems.add(ProductionDataGroup(productionBasicData));
+      }
+    } finally {
+      endHttpRequestMark(requestId);
     }
 
     for (var openedItem in openedItems) {
@@ -94,7 +108,13 @@ class OpenProductionDataRepository {
   }
 
   Future<void> concludeProductionData(ProductionDataGroup productionDataGroup) async {
-    await _authHttpClient.patchConcludeProduction(productionDataGroup, _tenantInformation.location);
+
+    var requestId = startHttpRequestMark();
+    try {
+      await _authHttpClient.patchConcludeProduction(productionDataGroup, _tenantInformation.location);
+    } finally {
+      endHttpRequestMark(requestId);
+    }
 
     if (_openProductionGroup.containsKey(productionDataGroup.getId())) {
       _openProductionGroup.remove(productionDataGroup.getId());
@@ -115,8 +135,12 @@ class OpenProductionDataRepository {
 
   Future<void> cancelProductionData(int id) async {
 
-    await _authHttpClient.patchCancelProductionDataById(id);
-
+    var requestId = startHttpRequestMark();
+    try {
+      await _authHttpClient.patchCancelProductionDataById(id);
+    } finally {
+      endHttpRequestMark(requestId);
+    }
     var productionGroup = _getProductionGroupData(id);
 
     if (_openProductionGroup.containsKey(productionGroup.getId())) {
@@ -138,53 +162,68 @@ class OpenProductionDataRepository {
   }
 
   Future<void> loadProductionData(int id) async {
-    var response = await _authHttpClient.getProductionDataById(id);
 
-    var productionBasicData = response.data.map((e) => ProductionData.fromJson(e, _tenantInformation.location)).cast<ProductionData>().toList() as List<ProductionData>;
-    var group = ProductionDataGroup(productionBasicData);
+    var requestId = startHttpRequestMark();
+    try {
+      var response = await _authHttpClient.getProductionDataById(id);
 
-    _openProductionGroup[group.getId()] = group;
+      var productionBasicData = response.data.map((e) => ProductionData.fromJson(e, _tenantInformation.location)).cast<ProductionData>().toList() as List<ProductionData>;
+      var group = ProductionDataGroup(productionBasicData);
 
-    for (var productionData in group.productionDataGroup) {
-      _openProductionDataList[productionData.id] = productionData;
-      _productionDataStreamController[productionData.id] = StreamController<ProductionData>.broadcast();
+      _openProductionGroup[group.getId()] = group;
+
+      for (var productionData in group.productionDataGroup) {
+        _openProductionDataList[productionData.id] = productionData;
+        _productionDataStreamController[productionData.id] = StreamController<ProductionData>.broadcast();
+      }
+
+      if (_openDataStreamController.hasListener) {
+        _openDataStreamController.add(_openProductionGroup.values.toList());
+      }
+
+      if (_lastLoadedProductionGroupController.hasListener) {
+        _lastLoadedProductionGroupController.add(group.getId());
+      }
+    } finally {
+      endHttpRequestMark(requestId);
     }
-
-    if (_openDataStreamController.hasListener) {
-      _openDataStreamController.add(_openProductionGroup.values.toList());
-    }
-
-    if (_lastLoadedProductionGroupController.hasListener) {
-      _lastLoadedProductionGroupController.add(group.getId());
-    }
-
   }
 
   Future _updateBeginApi(ProductionData productionBasicData) async {
+    var requestId = startHttpRequestMark();
     try {
       await _authHttpClient.patchProductionDataBegin(productionBasicData, _tenantInformation.location);
     } catch (e) {
       _errorRepository.communicateError(e);
+    } finally {
+      endHttpRequestMark(requestId);
     }
   }
 
   Future _updateEndApi(ProductionData productionBasicData) async {
+    var requestId = startHttpRequestMark();
     try {
       await _authHttpClient.patchProductionDataEnd(productionBasicData, _tenantInformation.location);
     } catch (e) {
       _errorRepository.communicateError(e);
+    } finally {
+      endHttpRequestMark(requestId);
     }
   }
 
   Future _updateCommentsApi(ProductionData productionBasicData) async {
+    var requestId = startHttpRequestMark();
     try {
       await _authHttpClient.patchProductionDataComments(productionBasicData, _tenantInformation.location);
     } catch (e) {
       _errorRepository.communicateError(e);
+    } finally {
+      endHttpRequestMark(requestId);
     }
   }
 
   Future _updateProductApi(ProductionData productionBasicData) async {
+    var requestId = startHttpRequestMark();
     try {
       var result = await _authHttpClient.patchProductionDataProduct(productionBasicData, _tenantInformation.location);
       if (result.data != null && result.data is List<dynamic>) {
@@ -198,14 +237,19 @@ class OpenProductionDataRepository {
       }
     } catch (e) {
       _errorRepository.communicateError(e);
+    } finally {
+      endHttpRequestMark(requestId);
     }
   }
 
   Future _updateVariableApi(ProductionVariable variable) async {
+    var requestId = startHttpRequestMark();
     try {
       await _authHttpClient.patchProductionVariable(variable);
     } catch (e) {
       _errorRepository.communicateError(e);
+    } finally {
+      endHttpRequestMark(requestId);
     }
   }
 
@@ -227,7 +271,13 @@ class OpenProductionDataRepository {
     var prdDataGroup = _getProductionGroupData(id);
     var newPrdDataGroup = prdDataGroup.copyWithComments(comments);
     emitProductionChanges(newPrdDataGroup);
-    unawaited(_updateCommentsApi(newPrdDataGroup.productionDataGroup.firstWhere((e) => e.id == id)));
+
+    var requestId = startHttpRequestMark();
+    try {     
+      EasyDebounce.debounce(id.toString() + '-comments', Duration(seconds: 2), () => unawaited(_updateCommentsApi(newPrdDataGroup.productionDataGroup.firstWhere((e) => e.id == id))));
+    } finally {
+      EasyDebounce.debounce(requestId, Duration(seconds: 2), () => endHttpRequestMark(requestId));
+    }
   }
 
   updateProduct(int id, int? productId) {
@@ -277,7 +327,12 @@ class OpenProductionDataRepository {
         emitProductionChanges(newPrdGroup);
 
         if (!newVariable.isReadOnly) {
-          EasyDebounce.debounce(productionDataId.toString() + '-update-variable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+          var requestId = startHttpRequestMark();
+          try {     
+            EasyDebounce.debounce(productionDataId.toString() + '-update-variable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+          } finally {
+            EasyDebounce.debounce(requestId, Duration(seconds: 2), () => endHttpRequestMark(requestId));
+          }
         }
       }
     }
@@ -323,34 +378,48 @@ class OpenProductionDataRepository {
         emitProductionChanges(newPrdGroup);
         
         if (!newVariable.isReadOnly) {
-          EasyDebounce.debounce(productionDataId.toString() + '-update-variable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+          var requestId = startHttpRequestMark();
+          try {     
+            EasyDebounce.debounce(productionDataId.toString() + '-update-variable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+          } finally {
+            EasyDebounce.debounce(requestId, Duration(seconds: 2), () => endHttpRequestMark(requestId));
+          }
         }
       }
     }
   }
 
   Future<void> addLoss(int productionDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
-    var response = await _authHttpClient.postProductionLoss(productionDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
-    var newLosses = response.data.map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList();
-    var prdData = _getProductionBasicData(productionDataId);
-    var oldLosses = prdData.losses; 
-    var allLosses = List<ProductionLoss>.from(oldLosses)..addAll(newLosses);
-    var newPrdData = prdData.copyWith(losses: allLosses);
+    var requestId = startHttpRequestMark();
+    try {
+      var response = await _authHttpClient.postProductionLoss(productionDataId, lossCurrentDefinitionId, lossValue, lineUnitId);
+      var newLosses = response.data.map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList();
+      var prdData = _getProductionBasicData(productionDataId);
+      var oldLosses = prdData.losses; 
+      var allLosses = List<ProductionLoss>.from(oldLosses)..addAll(newLosses);
+      var newPrdData = prdData.copyWith(losses: allLosses);
 
-    var prdGroup = _getProductionGroupData(productionDataId);
-    var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
-    emitProductionChanges(newPrdGroup);
-
+      var prdGroup = _getProductionGroupData(productionDataId);
+      var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
+      emitProductionChanges(newPrdGroup);
+    } finally {
+      endHttpRequestMark(requestId);
+    }
   }
 
   Future<void> deleteLoss(int productionDataId, int productionLossId) async {
-    await _authHttpClient.deleteProductionLoss(productionLossId);
-    var prdData = _getProductionBasicData(productionDataId);
-    var filteredLosses = prdData.losses.where((e) => e.id != productionLossId).toList(); 
-    var newPrdData = prdData.copyWith(losses: filteredLosses);
-    var prdGroup = _getProductionGroupData(productionDataId);
-    var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
-    emitProductionChanges(newPrdGroup);
+    var requestId = startHttpRequestMark();
+    try {
+      await _authHttpClient.deleteProductionLoss(productionLossId);
+      var prdData = _getProductionBasicData(productionDataId);
+      var filteredLosses = prdData.losses.where((e) => e.id != productionLossId).toList(); 
+      var newPrdData = prdData.copyWith(losses: filteredLosses);
+      var prdGroup = _getProductionGroupData(productionDataId);
+      var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
+      emitProductionChanges(newPrdGroup);
+    } finally {
+      endHttpRequestMark(requestId);
+    }
   }
 
   Future<void> addStop({
@@ -369,45 +438,54 @@ class OpenProductionDataRepository {
     double? totalTimeAtStopQtyTotalTime,
     double? stopTimeAtStopTimePerStop
   }) async {
+    var requestId = startHttpRequestMark();
+    try {
+      var response = await _authHttpClient.postProductionStop(
+        location: _tenantInformation.location,
+        productionBasicDataId: productionDataId,
+        lineUnitId: lineUnitId,
+        stopCurrentDefinitionId: stopCurrentDefinitionId,
+        stopType: stopType,
+        claims: claims,
+        averageTimeAtStopQtyAverageTime: averageTimeAtStopQtyAverageTime,
+        qtyAtStopQtyAverageTime: qtyAtStopQtyAverageTime,
+        beginAtStopBeginAndTimeSpan: beginAtStopBeginAndTimeSpan,
+        timeSpanAtStopBeginAndTimeSpan: timeSpanAtStopBeginAndTimeSpan,
+        beginAtStopBeginEnd: beginAtStopBeginEnd,
+        endAtStopBeginEnd: endAtStopBeginEnd,
+        qtyAtStopQtyTotalTime: qtyAtStopQtyTotalTime,
+        totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime,
+        stopTimeAtStopTimePerStop: stopTimeAtStopTimePerStop,
+      );
+      var newStops = response.data.map((x) => ProductionStop.fromJson(x, _tenantInformation.location)).cast<ProductionStop>().toList();
+      var prdData = _getProductionBasicData(productionDataId);
+      var oldStops = prdData.stops; 
+      var allStops = List<ProductionStop>.from(oldStops)..addAll(newStops);
+      var newPrdData = prdData.copyWith(stops: allStops);
 
-    var response = await _authHttpClient.postProductionStop(
-      location: _tenantInformation.location,
-      productionBasicDataId: productionDataId,
-      lineUnitId: lineUnitId,
-      stopCurrentDefinitionId: stopCurrentDefinitionId,
-      stopType: stopType,
-      claims: claims,
-      averageTimeAtStopQtyAverageTime: averageTimeAtStopQtyAverageTime,
-      qtyAtStopQtyAverageTime: qtyAtStopQtyAverageTime,
-      beginAtStopBeginAndTimeSpan: beginAtStopBeginAndTimeSpan,
-      timeSpanAtStopBeginAndTimeSpan: timeSpanAtStopBeginAndTimeSpan,
-      beginAtStopBeginEnd: beginAtStopBeginEnd,
-      endAtStopBeginEnd: endAtStopBeginEnd,
-      qtyAtStopQtyTotalTime: qtyAtStopQtyTotalTime,
-      totalTimeAtStopQtyTotalTime: totalTimeAtStopQtyTotalTime,
-      stopTimeAtStopTimePerStop: stopTimeAtStopTimePerStop,
-    );
-    var newStops = response.data.map((x) => ProductionStop.fromJson(x, _tenantInformation.location)).cast<ProductionStop>().toList();
-    var prdData = _getProductionBasicData(productionDataId);
-    var oldStops = prdData.stops; 
-    var allStops = List<ProductionStop>.from(oldStops)..addAll(newStops);
-    var newPrdData = prdData.copyWith(stops: allStops);
-
-    var prdGroup = _getProductionGroupData(productionDataId);
-    var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
-    emitProductionChanges(newPrdGroup);
+      var prdGroup = _getProductionGroupData(productionDataId);
+      var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
+      emitProductionChanges(newPrdGroup);
+    } finally {
+      endHttpRequestMark(requestId);
+    }
   }
 
   Future<void> deleteStop(int productionDataId, int productionStopId) async {
-    await _authHttpClient.deleteProductionStop(productionStopId);
-    var prdData = _getProductionBasicData(productionDataId);
-    var filteredStops = prdData.stops.where((e) => e.id != productionStopId).toList(); 
+    var requestId = startHttpRequestMark();
+    try {
+      await _authHttpClient.deleteProductionStop(productionStopId);
+      var prdData = _getProductionBasicData(productionDataId);
+      var filteredStops = prdData.stops.where((e) => e.id != productionStopId).toList(); 
 
-    var newPrdData = prdData.copyWith(stops: filteredStops);
+      var newPrdData = prdData.copyWith(stops: filteredStops);
 
-    var prdGroup = _getProductionGroupData(productionDataId);
-    var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
-    emitProductionChanges(newPrdGroup);
+      var prdGroup = _getProductionGroupData(productionDataId);
+      var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
+      emitProductionChanges(newPrdGroup);
+    } finally {
+      endHttpRequestMark(requestId);
+    }
   }
 
   void emitProductionChanges(ProductionDataGroup productionDataGroup) {
@@ -440,8 +518,21 @@ class OpenProductionDataRepository {
     }
   }
 
+  String startHttpRequestMark() {
+    var uid = Uuid().v1().toString();
+    _pendingHttpRequests.add(uid);
+    _pendingHttpRequestsStreamController.add(_pendingHttpRequests.toList());
+    return uid;
+  }
+
+  void endHttpRequestMark(String requestId) {
+    _pendingHttpRequests.remove(requestId);
+    _pendingHttpRequestsStreamController.add(_pendingHttpRequests.toList());
+  }
+
   void dispose() {
     _openDataStreamController.close();
+    _pendingHttpRequestsStreamController.close();
     _productionDataStreamController.forEach((key, value) => value.close());
   }
     

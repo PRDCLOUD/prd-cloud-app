@@ -16,17 +16,17 @@ class ProductionDataList extends StatefulWidget {
 class _ProductionDataListState extends State<ProductionDataList> {
   @override
   void initState() {
-    var currentFilteredDataState = context.read<ProductionDataCubit>().state;
+    var currentFilteredDataState = context.read<ProductionDataListCubit>().state;
     if (currentFilteredDataState.status == ProductionDataLoadState.notLoaded) {
       context
-          .read<ProductionDataCubit>()
+          .read<ProductionDataListCubit>()
           .filter(context.read<ProductionListFilterCubit>().state);
     } else if (currentFilteredDataState.status ==
         ProductionDataLoadState.loaded) {
       var filter = context.read<ProductionListFilterCubit>().state;
       if (currentFilteredDataState.filter != filter) {
         context
-            .read<ProductionDataCubit>()
+            .read<ProductionDataListCubit>()
             .filter(context.read<ProductionListFilterCubit>().state);
       }
     }
@@ -38,8 +38,8 @@ class _ProductionDataListState extends State<ProductionDataList> {
     return Scaffold(
       body: BlocListener<ProductionListFilterCubit, ProductionDataFilter>(
         listener: (context, state) {
-          if (state != context.read<ProductionDataCubit>().state.filter) {
-            context.read<ProductionDataCubit>().filter(state);
+          if (state != context.read<ProductionDataListCubit>().state.filter) {
+            context.read<ProductionDataListCubit>().filter(state);
           }
         },
         child: BlocListener<OpenProductionDataCubit, OpenProductionDataState>(
@@ -50,7 +50,7 @@ class _ProductionDataListState extends State<ProductionDataList> {
               context.loaderOverlay.hide();
             }
           },
-          child: BlocConsumer<ProductionDataCubit, ProductionDataState>(
+          child: BlocConsumer<ProductionDataListCubit, ProductionDataState>(
             listener: (context, state) {
               if (state.status == ProductionDataLoadState.loading) {
                 context.loaderOverlay.show();
@@ -65,7 +65,7 @@ class _ProductionDataListState extends State<ProductionDataList> {
                   return const Center(child: Text("carregando..."));
                 case ProductionDataLoadState.loaded:
                   return RefreshIndicator(
-                      onRefresh: context.read<ProductionDataCubit>().refresh,
+                      onRefresh: context.read<ProductionDataListCubit>().refresh,
                       child: listOrNoData(state));
                 case ProductionDataLoadState.notLoaded:
                   return const Center(child: Text("Não carregado!"));
@@ -389,7 +389,7 @@ class _ListCardState extends State<ListCard> {
     var selectPageFunc = context.read<MenuItemSelectedCubit>().selectPage;
 
     var reopenSucceded = await context
-        .read<ProductionDataCubit>()
+        .read<ProductionDataListCubit>()
         .reOpenItem(widget._productionItemOfList.id);
 
     if (reopenSucceded) {
@@ -403,13 +403,13 @@ class _ListCardState extends State<ListCard> {
 
   void reopenProductionData() async {
     await context
-      .read<ProductionDataCubit>()
+      .read<ProductionDataListCubit>()
       .reOpenItem(widget._productionItemOfList.id);
   }
 
   void cancelProductionData() async {
     context
-        .read<ProductionDataCubit>()
+        .read<ProductionDataListCubit>()
         .cancelItem(widget._productionItemOfList.id);
   }
 

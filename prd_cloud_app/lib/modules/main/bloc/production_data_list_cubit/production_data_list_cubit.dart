@@ -4,10 +4,10 @@ import 'package:production_data_repository/production_data_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 
-part 'production_data_state.dart';
+part 'production_data_list_state.dart';
 
-class ProductionDataCubit extends Cubit<ProductionDataState> {
-  ProductionDataCubit({
+class ProductionDataListCubit extends Cubit<ProductionDataState> {
+  ProductionDataListCubit({
     required ProductionDataRepository apontamentosRepository,
     required ErrorRepository errorRepository
   }) : 
