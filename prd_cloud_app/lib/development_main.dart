@@ -1,7 +1,7 @@
 
-import 'package:prd_cloud_app/config/config.dart';
+import 'package:prd_cloud_app/config/config_development.dart';
 import 'package:prd_cloud_app/main.dart';
 
-void main() {
-  mainWithConfig(DevelopmentEnvConfig());
+Future<void> main() async {
+  await mainWithConfig(DevelopmentEnvConfig());
 }

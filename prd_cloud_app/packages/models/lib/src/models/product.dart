@@ -33,4 +33,6 @@ class Product extends Equatable {
       name: name ?? this.name,
     );
   }
+
+  String getNameCode() => code != null ? (name + " (" + code! + ")") : name;
 }

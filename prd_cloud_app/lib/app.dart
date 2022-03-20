@@ -15,13 +15,18 @@ import 'package:prd_cloud_app/modules/initial/screens/splash/view/splash_page.da
 import 'package:prd_cloud_app/modules/initial/screens/tenant_selection/view/tenant_selection_page.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:prd_cloud_app/widgets/loading_scaffold.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 
 class App extends StatelessWidget {
-  const App(
-      {Key? key, required this.authenticationRepository, required this.config})
-      : super(key: key);
+  App({Key? key, required this.authenticationRepository, required this.config})
+      : errorRepository = ErrorRepository(), super(key: key) {
+    errorRepository.errorStream().listen((exception) async {
+      await Sentry.captureException(exception);
+    });
+  }
 
   final AuthenticationRepository authenticationRepository;
+  final ErrorRepository errorRepository;
   final Config config;
 
   @override
@@ -29,7 +34,7 @@ class App extends StatelessWidget {
     return MultiRepositoryProvider(
       providers: [
         RepositoryProvider.value(value: authenticationRepository),
-        RepositoryProvider(create: (context) => ErrorRepository()),
+        RepositoryProvider.value(value: errorRepository),
         RepositoryProvider(create: (context) => config)
       ],
       child: MultiBlocProvider(

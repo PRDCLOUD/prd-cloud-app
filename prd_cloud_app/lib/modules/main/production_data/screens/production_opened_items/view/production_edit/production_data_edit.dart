@@ -259,7 +259,7 @@ class _Products extends StatelessWidget {
                   ? null
                   : products
                       .firstWhere((element) => element.id == state.fieldValue)
-                      .name,
+                      .getNameCode(),
               enabled: false,
               decoration: InputDecoration(
                 label: Text(
