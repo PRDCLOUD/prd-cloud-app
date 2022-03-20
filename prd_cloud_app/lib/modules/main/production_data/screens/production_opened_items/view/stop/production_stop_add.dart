@@ -431,7 +431,7 @@ class _ListOfStopsState extends State<_ListOfStops> {
             onChanged: (value) => _runFilter(value),
               decoration: InputDecoration(
                 border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
-                labelText: 'Pesquisa', 
+                labelText: 'Pesquisar', 
                 suffixIcon: searchIconButton(),
               ),
           ),

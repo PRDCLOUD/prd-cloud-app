@@ -24,8 +24,14 @@ class ProductSelectionPage extends StatefulWidget {
 class _ProductSelectionPageState extends State<ProductSelectionPage> {
 
   List<Product> filteredProducts = List.empty();
+  String? searchText;
+  TextEditingController textEditingController = TextEditingController();
 
   void _runFilter(String? searchValue) {
+
+    setState(() {
+      searchText = searchValue;
+    });
 
     var lcSearchValue = searchValue?.toLowerCase() ?? "";
 
@@ -79,10 +85,12 @@ class _ProductSelectionPageState extends State<ProductSelectionPage> {
           SizedBox(
             width: 500,
             child: TextField(
+              controller: textEditingController,
               onChanged: (value) => _runFilter(value),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
-                labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
+                labelText: 'Pesquisar', 
+                suffixIcon: searchIconButton(),
               ),
             ),
           ),
@@ -128,5 +136,19 @@ class _ProductSelectionPageState extends State<ProductSelectionPage> {
         ],
       ),
     );
+  }
+
+    Widget searchIconButton() {
+    if (searchText == null || searchText!.isEmpty) {
+      return const Icon(Icons.search);
+    } else {
+      return IconButton(
+        onPressed: () {
+          textEditingController.clear();
+          _runFilter(null);
+        },
+        icon: const Icon(Icons.close_rounded)
+      );
+    }
   }
 }

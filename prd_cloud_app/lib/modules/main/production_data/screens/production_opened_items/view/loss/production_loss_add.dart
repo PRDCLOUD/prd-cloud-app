@@ -349,7 +349,7 @@ class _ListOfLossesState extends State<_ListOfLosses> {
               onChanged: (value) => _runFilter(value),
               decoration: InputDecoration(
                 border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
-                labelText: 'Pesquisa', 
+                labelText: 'Pesquisar', 
                 suffixIcon: searchIconButton(),
               ),
             ),
