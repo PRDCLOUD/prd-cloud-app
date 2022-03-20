@@ -86,8 +86,9 @@ class ProductionSelectedSummary extends StatelessWidget {
                       const SnackBar(content: Text('Segure o botão para concluir o apontamento')),
                     );
                 },
-                onLongPress: () {
-                  context.read<OpenProductionDataCubit>().concludeProductionData(productionGroup.getId());
+                onLongPress: () async {
+                  await context.read<OpenProductionDataCubit>().concludeProductionData(productionGroup.getId());
+                  context.read<ProductionListFilterCubit>().markForRefresh();
                 }),
             ),
             Padding(
