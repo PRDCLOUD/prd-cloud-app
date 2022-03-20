@@ -127,7 +127,12 @@ class _DropdownField extends StatelessWidget {
             label: Text(_label),
           ),
           value: state.fieldValue,
-          onChanged: context.read<FieldVariableTextCubit>().updateField,
+          onTap:() {
+            FocusManager.instance.primaryFocus?.unfocus();
+          },
+          onChanged: (newValue) {
+            context.read<FieldVariableTextCubit>().updateField(newValue);
+          },
           items: state.options!.map<DropdownMenuItem<String>>((String value) {
             return DropdownMenuItem<String>(
               value: value,

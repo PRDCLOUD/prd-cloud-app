@@ -24,12 +24,15 @@ class DrawerMenu extends StatelessWidget {
       child: BlocBuilder<MenuItemSelectedCubit, MenuItemSelectedState>(
         builder: (context, state) {
           var menuItemSelected = state.menuItemSelected;
-          return Scaffold(
-            appBar: menuItemAppBar(context, menuItemSelected),
-            drawer: const DrawerMenuList(),
-            body: BlocListener<ErrorCubit, ErrorState>(
-              listener: snackBarErrorHandler,
-              child: menuItemSelectedPage(menuItemSelected),
+          return GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: Scaffold(
+              appBar: menuItemAppBar(context, menuItemSelected),
+              drawer: const DrawerMenuList(),
+              body: BlocListener<ErrorCubit, ErrorState>(
+                listener: snackBarErrorHandler,
+                child: menuItemSelectedPage(menuItemSelected),
+              ),
             ),
           );
         },
