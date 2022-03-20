@@ -195,8 +195,7 @@ class _ProductsCubitProvider extends StatelessWidget {
         .read<OpenProductionDataCubit>()
         .state
         .loadedItems
-        .firstWhere(
-            (element) => element.hasProductionData(productionBasicDataId));
+        .firstWhere((e) => e.hasProductionData(productionBasicDataId));
 
     var productionData = selectedProductionGroup.productionDataGroup
         .firstWhere((e) => e.id == productionBasicDataId);
@@ -213,11 +212,11 @@ class _Products extends StatelessWidget {
 
   final int productionBasicDataId;
 
-  void productSelection(
-      {required BuildContext context,
-      required List<Product> products,
-      required ProductSetter onChange,
-      required int? selectedProductId}) {
+  void productSelection({required BuildContext context,
+                          required List<Product> products,
+                          required ProductSetter onChange,
+                          required int? selectedProductId
+                        }) {
     FocusScope.of(context).unfocus();
     Navigator.push(
         context,

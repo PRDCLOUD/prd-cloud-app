@@ -12,7 +12,7 @@ class AuthenticatedHttpClient {
 
   AuthenticatedHttpClient(this._authority, this._tenant, this._getAccessToken);
 
-  Future<Response> _getRequest(String path, [ Map<String, dynamic>? queryParams = null ]) async {
+  Future<Response> _getRequest(String path, { Map<String, dynamic>? queryParams = null }) async {
 
     var accessToken = await _getAccessToken();
 
@@ -27,7 +27,7 @@ class AuthenticatedHttpClient {
     return response;  
   }
 
-  Future<Response> _patchRequest(String path, [ dynamic data = null ]) async {
+  Future<Response> _patchRequest(String path, { dynamic data = null }) async {
 
     var accessToken = await _getAccessToken();
 
@@ -42,7 +42,7 @@ class AuthenticatedHttpClient {
     return response;  
   }
 
-  Future<Response> _postRequest(String path, [ dynamic data = null, Map<String, dynamic>? queryParams = null ]) async {
+  Future<Response> _postRequest(String path, { dynamic data = null, Map<String, dynamic>? queryParams = null }) async {
 
     var accessToken = await _getAccessToken();
 
@@ -57,7 +57,7 @@ class AuthenticatedHttpClient {
     return response;  
   }
 
-  Future<Response> _deleteRequest(String path, [ dynamic data = null ]) async {
+  Future<Response> _deleteRequest(String path, { dynamic data = null }) async {
 
     var accessToken = await _getAccessToken();
 
@@ -93,7 +93,7 @@ class AuthenticatedHttpClient {
       }
     };
 
-    var response = await _getRequest('api/production/list', 
+    var response = await _getRequest('api/production/list', queryParams: 
     { 
       'status': statusString(),
       'take': take.toString(),
@@ -113,7 +113,7 @@ class AuthenticatedHttpClient {
 
   Future<int> postOpenInputProductionData(String lineId, bool isGroup) async {
     if (isGroup) {
-      var response = await _postRequest('api/production/open/group', { 'group': lineId});
+      var response = await _postRequest('api/production/open/group', queryParams:  { 'group': lineId});
       return response.data['id'] as int; 
     } else {
       var response = await _postRequest('api/production/open/' + lineId);
@@ -137,7 +137,7 @@ class AuthenticatedHttpClient {
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
     };
-    return await _patchRequest('api/production/begin/' + productionBasicData.id.toString(), data);
+    return await _patchRequest('api/production/begin/' + productionBasicData.id.toString(), data: data);
   }
 
   Future<Response<dynamic>> patchProductionDataEnd(ProductionData productionBasicData, tz.Location location) async {
@@ -148,7 +148,7 @@ class AuthenticatedHttpClient {
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
     };
-    return await _patchRequest('api/production/end/' + productionBasicData.id.toString(), data);
+    return await _patchRequest('api/production/end/' + productionBasicData.id.toString(), data: data);
   }
 
   Future<Response<dynamic>> patchProductionDataComments(ProductionData productionBasicData, tz.Location location) async {
@@ -159,7 +159,7 @@ class AuthenticatedHttpClient {
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
     };
-    return await _patchRequest('api/production/comment/' + productionBasicData.id.toString(), data);
+    return await _patchRequest('api/production/comment/' + productionBasicData.id.toString(), data: data);
   }
 
   Future<Response<dynamic>> patchProductionDataProduct(ProductionData productionBasicData, tz.Location locale) async {
@@ -170,7 +170,7 @@ class AuthenticatedHttpClient {
       'id': productionBasicData.id,
       'productId': productionBasicData.productId
     };
-    return await _patchRequest('api/production/product/' + productionBasicData.id.toString(), data);
+    return await _patchRequest('api/production/product/' + productionBasicData.id.toString(), data: data);
   }
 
   Future<Response<dynamic>> patchProductionVariable(ProductionVariable variable) async {
@@ -182,7 +182,7 @@ class AuthenticatedHttpClient {
       'value': variable.value,
       'type': variable.typeVariableDefinition.toLowerCase()
     };
-    return await _patchRequest('api/production/variable/' + variable.typeVariableDefinition.toLowerCase() + '/' + variable.id.toString(), data);
+    return await _patchRequest('api/production/variable/' + variable.typeVariableDefinition.toLowerCase() + '/' + variable.id.toString(), data: data);
   }
 
   Future<Response<dynamic>> postProductionLoss(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId) async {
@@ -195,7 +195,7 @@ class AuthenticatedHttpClient {
         'productionBasicDataId': productionBasicDataId
       },
     };
-    return await _postRequest('api/production/loss', data);
+    return await _postRequest('api/production/loss', data: data);
   }
 
   Future<Response<dynamic>> deleteProductionLoss(int productionLossId) async {
@@ -243,7 +243,7 @@ class AuthenticatedHttpClient {
       },
     };
     
-    return await _postRequest(_endpointAddStop(stopType), data);
+    return await _postRequest(_endpointAddStop(stopType), data: data);
   }
 
   String _endpointAddStop(StopTypeOf typeOf) {
@@ -281,7 +281,7 @@ class AuthenticatedHttpClient {
       }
     }).toList();
 
-    await _patchRequest('api/production/conclude', { 'list': dataRows});
+    await _patchRequest('api/production/conclude', data: { 'list': dataRows});
   }
 
   String? dateToString(DateTime? date, tz.Location location) {

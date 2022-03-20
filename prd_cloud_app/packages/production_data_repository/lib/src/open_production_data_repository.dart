@@ -66,8 +66,6 @@ class OpenProductionDataRepository {
       openedItems.add(ProductionDataGroup(productionBasicData));
     }
 
-    
-    
     for (var openedItem in openedItems) {
 
       _openProductionGroup[openedItem.getId()] = openedItem;
@@ -198,28 +196,28 @@ class OpenProductionDataRepository {
     var prdDataGroup = _getProductionGroupData(id);
     var newPrdDataGroup = prdDataGroup.copyWithBegin(begin);
     emitProductionChanges(newPrdDataGroup);
-    unawaited(_updateBeginApi(prdDataGroup.productionDataGroup.firstWhere((e) => e.id == id)));
+    unawaited(_updateBeginApi(newPrdDataGroup.productionDataGroup.firstWhere((e) => e.id == id)));
   }
 
   updateEnd(int id, DateTime? end) {
     var prdDataGroup = _getProductionGroupData(id);
     var newPrdDataGroup = prdDataGroup.copyWithEnd(end);
     emitProductionChanges(newPrdDataGroup);
-    unawaited(_updateEndApi(prdDataGroup.productionDataGroup.firstWhere((e) => e.id == id)));
+    unawaited(_updateEndApi(newPrdDataGroup.productionDataGroup.firstWhere((e) => e.id == id)));
   }
 
   updateComments(int id, String? comments) {
     var prdDataGroup = _getProductionGroupData(id);
     var newPrdDataGroup = prdDataGroup.copyWithComments(comments);
     emitProductionChanges(newPrdDataGroup);
-    unawaited(_updateCommentsApi(prdDataGroup.productionDataGroup.firstWhere((e) => e.id == id)));
+    unawaited(_updateCommentsApi(newPrdDataGroup.productionDataGroup.firstWhere((e) => e.id == id)));
   }
 
   updateProduct(int id, int? productId) {
     var prdDataGroup = _getProductionGroupData(id);
     var newPrdDataGroup = prdDataGroup.copyWithProductId(id, productId);
     emitProductionChanges(newPrdDataGroup);
-    unawaited(_updateProductApi(prdDataGroup.productionDataGroup.firstWhere((e) => e.id == id)));
+    unawaited(_updateProductApi(newPrdDataGroup.productionDataGroup.firstWhere((e) => e.id == id)));
   }
 
   updateVariableNumeric(int productionDataId, int variableId, double? newValue) {
@@ -257,9 +255,9 @@ class OpenProductionDataRepository {
         var newPrdData = prdData.copyWith(lineUnits: newProcutionLineUnitList);
 
         var prdGroup = _getProductionGroupData(productionDataId);
-        prdGroup.copyWithProductionData(newPrdData);
+        var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
 
-        emitProductionChanges(prdGroup);
+        emitProductionChanges(newPrdGroup);
 
         if (!newVariable.isReadOnly) {
           EasyDebounce.debounce(productionDataId.toString() + '-update-variable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
@@ -303,9 +301,9 @@ class OpenProductionDataRepository {
         var newPrdData = prdData.copyWith(lineUnits: newProcutionLineUnitList);
 
         var prdGroup = _getProductionGroupData(productionDataId);
-        prdGroup.copyWithProductionData(newPrdData);
+        var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
 
-        emitProductionChanges(prdGroup);
+        emitProductionChanges(newPrdGroup);
         
         if (!newVariable.isReadOnly) {
           EasyDebounce.debounce(productionDataId.toString() + '-update-variable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
@@ -400,6 +398,8 @@ class OpenProductionDataRepository {
     _openProductionGroup[productionDataGroup.getId()] = productionDataGroup;
 
     for (var item in productionDataGroup.productionDataGroup) {
+      _openProductionDataList[item.id] = item;
+
       var productionDataStreamController = _productionDataStreamController[item.id];
       if (productionDataStreamController != null && productionDataStreamController.hasListener) {
         productionDataStreamController.add(item);

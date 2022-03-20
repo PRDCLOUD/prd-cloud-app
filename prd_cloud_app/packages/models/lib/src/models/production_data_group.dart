@@ -15,22 +15,22 @@ class ProductionDataGroup extends Equatable {
   
   bool hasProductionData(int productionDataId) => productionDataGroup.any((x) => x.id == productionDataId);
 
-  copyWithBegin(DateTime? begin) {
+  ProductionDataGroup copyWithBegin(DateTime? begin) {
     var updatedProductionData = productionDataGroup.map((e) => e.copyWith(begin: begin)).toList();
     return ProductionDataGroup(updatedProductionData);
   }
 
-  copyWithEnd(DateTime? end) {
+  ProductionDataGroup copyWithEnd(DateTime? end) {
     var updatedProductionData = productionDataGroup.map((e) => e.copyWith(end: end)).toList();
     return ProductionDataGroup(updatedProductionData);
   }
 
-  copyWithComments(String? comments) {
+  ProductionDataGroup copyWithComments(String? comments) {
     var updatedProductionData = productionDataGroup.map((e) => e.copyWith(comments: comments)).toList();
     return ProductionDataGroup(updatedProductionData);
   }
 
-  copyWithProductionData(ProductionData productionData) {
+  ProductionDataGroup copyWithProductionData(ProductionData productionData) {
     var changedProductionDataList = productionDataGroup.map((e) {
       if (e.id == productionData.id) {
         return productionData;
@@ -42,7 +42,7 @@ class ProductionDataGroup extends Equatable {
     return ProductionDataGroup(changedProductionDataList);
   }
 
-  copyWithProductId(int productionDataId, int? productId) {
+  ProductionDataGroup copyWithProductId(int productionDataId, int? productId) {
 
     var changedProductionDataList = productionDataGroup.map((e) {
       if (e.id == productionDataId) {
