@@ -35,16 +35,14 @@ class _BlocProvider extends StatelessWidget {
       BlocProvider(
           create: (context) => ProductionDataCubit(
               errorRepository: context.read<ErrorRepository>(),
-              apontamentosRepository:
-                  context.read<ProductionDataRepository>())),
+              apontamentosRepository: context.read<ProductionDataRepository>())),
       BlocProvider(
           create: (context) => OpenProductionDataCubit(
               errorRepository: context.read<ErrorRepository>(),
-              openProductionDataRepository:
-                  context.read<OpenProductionDataRepository>()),
+              openProductionDataRepository: context.read<OpenProductionDataRepository>()),
           lazy: false),
       BlocProvider(
-          create: (context) => SelectedProductionDataCubit(), lazy: false),
+          create: (context) => SelectedProductionDataCubit(openProductionDataRepository: context.read<OpenProductionDataRepository>()), lazy: false),
       BlocProvider(
           create: (context) => ProductionListFilterCubit(ProductionDataFilter(
               filterKey: DateTime.now().toIso8601String(),
@@ -74,8 +72,7 @@ class _BlocListeners extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocListener<SelectedProductionLineAndGroupsCubit,
-        SelectedProductionLineAndGroupsState>(
+    return BlocListener<SelectedProductionLineAndGroupsCubit, SelectedProductionLineAndGroupsState>(
       listener: (context, state) {
         context
             .read<ProductionListFilterCubit>()

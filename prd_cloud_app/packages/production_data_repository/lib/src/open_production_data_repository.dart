@@ -20,6 +20,8 @@ class OpenProductionDataRepository {
   final AuthenticatedHttpClient _authHttpClient;
   final TenantInformation _tenantInformation;
 
+  final _lastLoadedProductionGroupController = StreamController<int?>.broadcast();
+
   final Map<int, ProductionDataGroup> _openProductionGroup = new Map();
   final _openDataStreamController = StreamController<List<ProductionDataGroup>>.broadcast();
 
@@ -44,6 +46,11 @@ class OpenProductionDataRepository {
   Stream<List<ProductionDataGroup>> openDataStream() async* {
     yield _openProductionGroup.values.toList();
     yield* _openDataStreamController.stream;
+  }
+
+  Stream<int?> lastLoadedStream() async* {
+    yield null;
+    yield* _lastLoadedProductionGroupController.stream;
   }
 
   Stream<ProductionData> productionDataStream(int id) async* {
@@ -74,6 +81,10 @@ class OpenProductionDataRepository {
         _openProductionDataList[productionData.id] = productionData;
         _productionDataStreamController[productionData.id] = StreamController<ProductionData>.broadcast();
       }
+    }
+
+    if (_lastLoadedProductionGroupController.hasListener) {
+      _lastLoadedProductionGroupController.add(openedItems.last.getId());
     }
 
     if (_openDataStreamController.hasListener) {
@@ -141,6 +152,10 @@ class OpenProductionDataRepository {
 
     if (_openDataStreamController.hasListener) {
       _openDataStreamController.add(_openProductionGroup.values.toList());
+    }
+
+    if (_lastLoadedProductionGroupController.hasListener) {
+      _lastLoadedProductionGroupController.add(group.getId());
     }
 
   }
