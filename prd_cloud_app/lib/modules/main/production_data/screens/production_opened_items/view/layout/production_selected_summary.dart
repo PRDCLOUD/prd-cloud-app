@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 
@@ -70,10 +71,7 @@ class ProductionSelectedSummary extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: ElevatedButton(
-                    child: const Icon(
-                      Icons.check,
-                      size: 35,
-                    ),
+                    child: buttonInterior(context, state.hasPendingRequests(), const Icon(Icons.check, size: 35)),
                     style: ElevatedButton.styleFrom(
                         primary: const Color.fromRGBO(56, 118, 29, 1),
                         fixedSize: const Size(60, 60)),
@@ -98,10 +96,7 @@ class ProductionSelectedSummary extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(5.0),
                 child: ElevatedButton(
-                  child: const Icon(
-                    Icons.close,
-                    size: 35,
-                  ),
+                  child: buttonInterior(context, state.hasPendingRequests(), const Icon(Icons.close,size: 35)),
                   style: ElevatedButton.styleFrom(
                     primary: Theme.of(context).colorScheme.secondary,
                     fixedSize: const Size(60, 60)),
@@ -124,10 +119,7 @@ class ProductionSelectedSummary extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.only(left: 5.0),
                 child: ElevatedButton(
-                  child: const Icon(
-                    Icons.delete_outline,
-                    size: 35,
-                  ),
+                  child: buttonInterior(context, state.hasPendingRequests(), const Icon(Icons.delete_outline, size: 35)),
                   style: ElevatedButton.styleFrom(
                     primary: Theme.of(context).colorScheme.error,
                     fixedSize: const Size(60, 60)),
@@ -152,11 +144,23 @@ class ProductionSelectedSummary extends StatelessWidget {
     );
   }
 
-  VoidCallback? voidFunction(bool disable, VoidCallback callback) {
-    if (disable) {
+  VoidCallback? voidFunction(bool disabled, VoidCallback callback) {
+    if (disabled) {
       return null;
     } else {
       return callback;
+    }
+  }
+  
+  Widget buttonInterior(BuildContext context, bool disabled, Widget enabledWidget) {
+    if (disabled) {
+      return SpinKitCircle(
+        key: UniqueKey(),
+        color: Theme.of(context).colorScheme.primary,
+        size: 25.0,
+      );
+    } else {
+      return enabledWidget;
     }
   }
 
