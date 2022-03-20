@@ -14,6 +14,7 @@ import 'package:prd_cloud_app/modules/initial/screens/login/view/login_page.dart
 import 'package:prd_cloud_app/modules/initial/screens/splash/view/splash_page.dart';
 import 'package:prd_cloud_app/modules/initial/screens/tenant_selection/view/tenant_selection_page.dart';
 import 'package:flex_color_scheme/flex_color_scheme.dart';
+import 'package:prd_cloud_app/widgets/loading_scaffold.dart';
 
 
 class App extends StatelessWidget {
@@ -155,11 +156,6 @@ class InitialLoadingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     RepositoryProvider.of<AuthenticationRepository>(context).refreshToken();
 
-    return const Scaffold(
-        body: Padding(
-            padding: EdgeInsets.all(12),
-            child: Center(child: Text("Carregando informações do usuário...", textAlign: TextAlign.center))
-          )
-        );
+    return const LoadingScaffold(text: "Carregando informações do usuário...");
   }
 }

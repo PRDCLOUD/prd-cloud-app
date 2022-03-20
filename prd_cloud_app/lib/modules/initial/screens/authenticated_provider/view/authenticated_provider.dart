@@ -2,6 +2,7 @@ import 'package:authentication_repository/authentication_repository.dart';
 import 'package:error_repository/error_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:http_connections/http_connections.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/modules/initial/bloc/auth_data_cubit/auth_data_cubit.dart';
@@ -62,12 +63,7 @@ class TenantInformationLoadingPage extends StatelessWidget {
             );
           case TenantInformationLoadState.loading:
           case TenantInformationLoadState.unloaded:
-            return const Scaffold(
-              body: Padding(
-                  padding: EdgeInsets.all(12),
-                  child: Center(child: Text("Carregando informações do cliente...", textAlign: TextAlign.center))
-                )
-              );
+            return const LoadingScaffold(text: "Carregando informações do cliente...");
         }
       },
     );
