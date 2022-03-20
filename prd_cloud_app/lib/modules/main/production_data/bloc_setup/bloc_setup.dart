@@ -57,7 +57,7 @@ class _BlocProvider extends StatelessWidget {
           lazy: false),
       BlocProvider(
           create: (context) =>
-              ErrorCubit(errorRepository: context.read<ErrorRepository>()),
+            ErrorCubit(errorRepository: context.read<ErrorRepository>()),
           lazy: false)
     ], child: _child);
   }

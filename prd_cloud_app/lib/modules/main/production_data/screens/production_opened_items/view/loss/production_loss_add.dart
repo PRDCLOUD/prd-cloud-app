@@ -51,19 +51,22 @@ class _LossAddState extends State<LossAdd> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back_outlined),
-          onPressed: () => Navigator.pop(context),
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back_outlined),
+            onPressed: () => Navigator.pop(context),
+          ),
+          title: const Text("Cadastro de Perda"),
+          
         ),
-        title: const Text("Cadastro de Perda"),
-        
-      ),
-      body: Column(
-        children: [
-          Expanded(child: dialogBody()),
-        ],
+        body: Column(
+          children: [
+            Expanded(child: dialogBody()),
+          ],
+        ),
       ),
     );
   }
@@ -257,12 +260,14 @@ class _LossAddState extends State<LossAdd> {
               onPressed: lossValue == null ? 
                 null : 
                 () async {
-                var result = await widget.lossAddCallback(selectedLineUnit!.productionBasicDataId, selectedLoss!.id, lossValue!, selectedLineUnit!.lineUnitId);
-                if (result) {
-                  Navigator.pop(context);
+                  FocusManager.instance.primaryFocus?.unfocus();
+                  var result = await widget.lossAddCallback(selectedLineUnit!.productionBasicDataId, selectedLoss!.id, lossValue!, selectedLineUnit!.lineUnitId);
+                  if (result) {
+                    Navigator.pop(context);
+                  }
                 }
-              }
-            )]
+              )
+            ]
           else
             ...[],
           ElevatedButton.icon(
@@ -295,8 +300,14 @@ class _ListOfLosses extends StatefulWidget {
 class _ListOfLossesState extends State<_ListOfLosses> {
 
   List<Loss> filteredLosses = List.empty();
+  String? searchText;
+  TextEditingController textEditingController = TextEditingController();
 
   void _runFilter(String? searchValue) {
+
+    setState(() {
+      searchText = searchValue;
+    });
 
     var lcSearchValue = searchValue?.toLowerCase() ?? "";
 
@@ -334,10 +345,12 @@ class _ListOfLossesState extends State<_ListOfLosses> {
           SizedBox(
             width: 500,
             child: TextField(
+              controller: textEditingController,
               onChanged: (value) => _runFilter(value),
-              decoration: const InputDecoration(
-                border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
-                labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
+                labelText: 'Pesquisa', 
+                suffixIcon: searchIconButton(),
               ),
             ),
           ),
@@ -366,5 +379,19 @@ class _ListOfLossesState extends State<_ListOfLosses> {
         ),
       ],
     );
+  }
+
+  Widget searchIconButton() {
+    if (searchText == null || searchText!.isEmpty) {
+      return const Icon(Icons.search);
+    } else {
+      return IconButton(
+        onPressed: () {
+          textEditingController.clear();
+          _runFilter(null);
+        },
+        icon: const Icon(Icons.close_rounded)
+      );
+    }
   }
 }

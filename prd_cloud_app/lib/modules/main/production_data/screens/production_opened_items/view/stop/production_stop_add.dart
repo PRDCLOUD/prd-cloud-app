@@ -266,7 +266,10 @@ class _StopAddState extends State<StopAdd> {
                       primary: Theme.of(context).colorScheme.primary),
                   onPressed: state.timeValidation == TimeValidation.invalid ?
                     null :
-                    () => context.read<StopAddCubit>().addStop()
+                    () {
+                      FocusManager.instance.primaryFocus?.unfocus();
+                      context.read<StopAddCubit>().addStop(); 
+                    } 
                   );
             },
           )
@@ -380,8 +383,14 @@ class _ListOfStops extends StatefulWidget {
 class _ListOfStopsState extends State<_ListOfStops> {
 
   List<Stop> filteredStops = List.empty();
+  String? searchText;
+  TextEditingController textEditingController = TextEditingController();
 
   void _runFilter(String? searchValue) {
+
+    setState(() {
+      searchText = searchValue;
+    });
 
     var lcSearchValue = searchValue?.toLowerCase() ?? "";
 
@@ -390,8 +399,7 @@ class _ListOfStopsState extends State<_ListOfStops> {
       results = widget._stops;
     } else {
       results = widget._stops
-          .where((user) =>
-              user.codeName.toLowerCase().contains(lcSearchValue))
+          .where((user) => user.codeName.toLowerCase().contains(lcSearchValue))
           .toList();
       // we use the toLowerCase() method to make it case-insensitive
     }
@@ -419,11 +427,13 @@ class _ListOfStopsState extends State<_ListOfStops> {
         SizedBox(
           width: 500,
           child: TextField(
+            controller: textEditingController,
             onChanged: (value) => _runFilter(value),
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
-              labelText: 'Pesquisa', suffixIcon: Icon(Icons.search)
-            ),
+              decoration: InputDecoration(
+                border: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(40.0))),
+                labelText: 'Pesquisa', 
+                suffixIcon: searchIconButton(),
+              ),
           ),
         ),
         const SizedBox(
@@ -451,5 +461,19 @@ class _ListOfStopsState extends State<_ListOfStops> {
         ),
       ],
     );
+  }
+
+  Widget searchIconButton() {
+    if (searchText == null || searchText!.isEmpty) {
+      return const Icon(Icons.search);
+    } else {
+      return IconButton(
+        onPressed: () {
+          textEditingController.clear();
+          _runFilter(null);
+        },
+        icon: const Icon(Icons.close_rounded)
+      );
+    }
   }
 }

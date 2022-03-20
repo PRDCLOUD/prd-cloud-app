@@ -271,7 +271,7 @@ class _ListCardState extends State<ListCard> {
               ..hideCurrentSnackBar()
               ..showSnackBar(
                 const SnackBar(
-                    content: Text('Segure o botão para exluir o apontamento')),
+                    content: Text('Segure o botão para excluir o apontamento')),
               );
           },
           onLongPress: () => showDeleteAlertDialog(),
@@ -331,13 +331,26 @@ class _ListCardState extends State<ListCard> {
           },
           onLongPress: () => reopenProductionData(),
         ),
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(
-              primary: Theme.of(context).colorScheme.error),
-          icon: const Icon(Icons.delete_outline),
-          label: const Text("Excluir"),
-          onPressed: () => showDeleteAlertDialog(),
-        )
+        if (widget._productionItemOfList.status != ProductionDataStatus.canceled)
+        ...[
+          ElevatedButton.icon(
+            style: ElevatedButton.styleFrom(
+                primary: Theme.of(context).colorScheme.error),
+            icon: const Icon(Icons.delete_outline),
+            label: const Text("Excluir"),
+            onPressed: () {
+              ScaffoldMessenger.of(context)
+                ..hideCurrentSnackBar()
+                ..showSnackBar(
+                  const SnackBar(
+                      content: Text('Segure o botão para excluir o apontamento')),
+                );
+            },
+            onLongPress: () => showDeleteAlertDialog(),
+          )
+        ]
+        else
+        ...[]
       ],
     );
   }
