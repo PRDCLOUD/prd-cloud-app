@@ -27,11 +27,13 @@ class ProductionDataEdit extends StatelessWidget {
               children: [
                 Row(children: const [
                   Padding(
-                    padding: EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0, top: 2.0),
+                    padding: EdgeInsets.only(
+                        left: 5.0, right: 5.0, bottom: 5.0, top: 2.0),
                     child: _Begin(),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 5.0, right: 5.0, bottom: 5.0, top: 2.0),
+                    padding: EdgeInsets.only(
+                        left: 5.0, right: 5.0, bottom: 5.0, top: 2.0),
                     child: _End(),
                   ),
                 ]),
@@ -39,7 +41,7 @@ class ProductionDataEdit extends StatelessWidget {
                   padding: EdgeInsets.all(5.0),
                   child: _Comments(),
                 ),
-                ...getVariableWidgets(context)
+                ...getProductAndVariableWidgets(context)
               ],
             ),
           ),
@@ -51,13 +53,16 @@ class ProductionDataEdit extends StatelessWidget {
   List<_VariableLineUnit> getVariables(ProductionDataGroup productionGroup) {
     var variablesLineUnit = List<_VariableLineUnit>.empty(growable: true);
     for (var productionData in productionGroup.productionDataGroup) {
-      for (var productionLineUnit in productionData.lineUnits) { 
+      for (var productionLineUnit in productionData.lineUnits) {
         if (productionLineUnit.lineUnit.productionVariables.isNotEmpty) {
-          var rows = groupBy(productionLineUnit.lineUnit.productionVariables, (ProductionVariable x) => x.rowOrder)
-                          .entries.map((rowItem) { 
-                            var columns = rowItem.value.map((e) => _ColumnVariableLineUnit(e.columnOrder, e.width, e)).toList();
-                            return _RowVariableLineUnit(rowItem.key, productionLineUnit, columns);
-                          }).toList();
+          var rows = groupBy(productionLineUnit.lineUnit.productionVariables,
+              (ProductionVariable x) => x.rowOrder).entries.map((rowItem) {
+            var columns = rowItem.value
+                .map((e) => _ColumnVariableLineUnit(e.columnOrder, e.width, e))
+                .toList();
+            return _RowVariableLineUnit(
+                rowItem.key, productionLineUnit, columns);
+          }).toList();
 
           variablesLineUnit.add(_VariableLineUnit(productionLineUnit, rows));
         }
@@ -66,9 +71,9 @@ class ProductionDataEdit extends StatelessWidget {
     return variablesLineUnit;
   }
 
-  List<Widget> getVariableWidgets(BuildContext context) {
-
-    var productionDataId = context.read<SelectedProductionDataCubit>().state as int;
+  List<Widget> getProductAndVariableWidgets(BuildContext context) {
+    var productionDataId =
+        context.read<SelectedProductionDataCubit>().state as int;
 
     var productionData = context
         .read<OpenProductionDataCubit>()
@@ -80,30 +85,39 @@ class ProductionDataEdit extends StatelessWidget {
 
     var widgetRows = List<Widget>.empty(growable: true);
 
-    for(var lineUnit in variableLineUnits) {
-      var cardWidgets = List<Widget>.empty(growable: true); 
-      for(var row in lineUnit.rows) {
-        for(var column in row.columns) {
-          cardWidgets.add(
-            Padding(
-              padding: const EdgeInsets.all(5.0),
-              child: ProductionVariableEdit(productionVariable: column.productionVariable),
-            )
-          );
+    for (var lineUnit in variableLineUnits) {
+      var cardWidgets = List<Widget>.empty(growable: true);
+
+      if (lineUnit.productionLineUnit.isProductionLine()) {
+        cardWidgets.add(Padding(
+          padding: const EdgeInsets.all(5.0),
+          child: _ProductsCubitProvider(productionBasicDataId: lineUnit.productionLineUnit.productionBasicDataId),
+        ));
+      }
+
+      for (var row in lineUnit.rows) {
+        for (var column in row.columns) {
+          cardWidgets.add(Padding(
+            padding: const EdgeInsets.all(5.0),
+            child: ProductionVariableEdit(
+                productionVariable: column.productionVariable),
+          ));
         }
       }
       var card = Card(
-        shape: AppTheme.cardShape,
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-            Text(lineUnit.productionLineUnit.name, style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.black87, fontWeight: FontWeight.bold),),
-            ...cardWidgets
-          ]),
-        )
-      );
+          shape: AppTheme.cardShape,
+          child: Padding(
+            padding: const EdgeInsets.all(8.0),
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(
+                lineUnit.productionLineUnit.name,
+                style: Theme.of(context).textTheme.bodyLarge!.copyWith(
+                    color: Colors.black87, fontWeight: FontWeight.bold),
+              ),
+              ...cardWidgets
+            ]),
+          ));
 
       widgetRows.add(card);
     }
@@ -118,16 +132,15 @@ class _Begin extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FieldBeginCubit, FieldBeginState>(
-      builder: (BuildContext context, state) {
-        return DateTimePicker(
+        builder: (BuildContext context, state) {
+      return DateTimePicker(
           key: const ValueKey("Início"),
           label: "Início",
           locale: Localizations.localeOf(context),
           date: state.fieldValue,
-          onChange: (newValue) => context.read<FieldBeginCubit>().updateField(newValue)
-        );
-      }
-    );
+          onChange: (newValue) =>
+              context.read<FieldBeginCubit>().updateField(newValue));
+    });
   }
 }
 
@@ -137,16 +150,15 @@ class _End extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<FieldEndCubit, FieldEndState>(
-      builder: (BuildContext context, state) {
-        return DateTimePicker(
+        builder: (BuildContext context, state) {
+      return DateTimePicker(
           key: const ValueKey("Fim"),
           label: "Fim",
           locale: Localizations.localeOf(context),
           date: state.fieldValue,
-          onChange: (newValue) => context.read<FieldEndCubit>().updateField(newValue)
-        );
-      }
-    );
+          onChange: (newValue) =>
+              context.read<FieldEndCubit>().updateField(newValue));
+    });
   }
 }
 
@@ -157,81 +169,116 @@ class _Comments extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<FieldCommentsCubit, FieldCommentsState>(
         builder: (BuildContext context, state) {
-          return TextFormField(
-            initialValue: state.fieldValue,
-            maxLines: 3,
-            keyboardType: TextInputType.multiline,
-            onChanged: (newValue) => context.read<FieldCommentsCubit>().updateField(newValue),
-            decoration: const InputDecoration(
-              label: Text("Comentário"),
-            ),
-          );
-        }
+      return TextFormField(
+        initialValue: state.fieldValue,
+        maxLines: 3,
+        keyboardType: TextInputType.multiline,
+        onChanged: (newValue) =>
+            context.read<FieldCommentsCubit>().updateField(newValue),
+        decoration: const InputDecoration(
+          label: Text("Comentário"),
+        ),
       );
+    });
   }
 }
 
-
-class _Products extends StatelessWidget {
-  const _Products({Key? key, required this.productionBasicDataId}) : super(key: key);
-
-  void productSelection({required BuildContext context, required List<Product> products, required ProductSetter onChange, required int? selectedProductId}) {
-    FocusScope.of(context).unfocus();
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => 
-        ProductSelectionPage(
-          products: products, 
-          onChange: onChange,
-          selectedProductId: selectedProductId,
-          )
-        )
-    );
-  }
+class _ProductsCubitProvider extends StatelessWidget {
+  const _ProductsCubitProvider({Key? key, required this.productionBasicDataId})
+      : super(key: key);
 
   final int productionBasicDataId;
 
   @override
   Widget build(BuildContext context) {
-   
     var selectedProductionGroup = context
         .read<OpenProductionDataCubit>()
         .state
         .loadedItems
-        .firstWhere((element) => element.hasProductionData(productionBasicDataId));
-    
-    var productionData = selectedProductionGroup.productionDataGroup.firstWhere((e) => e.id == productionBasicDataId);
+        .firstWhere(
+            (element) => element.hasProductionData(productionBasicDataId));
+
+    var productionData = selectedProductionGroup.productionDataGroup
+        .firstWhere((e) => e.id == productionBasicDataId);
+    return BlocProvider(
+      create: (context) => FieldProductCubit(openProductionDataRepository: context.read(), productionBasicDataId: productionBasicDataId, initialValue: productionData.productId),
+      child: _Products(productionBasicDataId: productionBasicDataId),
+    );
+  }
+}
+
+class _Products extends StatelessWidget {
+  const _Products({Key? key, required this.productionBasicDataId})
+      : super(key: key);
+
+  final int productionBasicDataId;
+
+  void productSelection(
+      {required BuildContext context,
+      required List<Product> products,
+      required ProductSetter onChange,
+      required int? selectedProductId}) {
+    FocusScope.of(context).unfocus();
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+            builder: (context) => ProductSelectionPage(
+                  products: products,
+                  onChange: onChange,
+                  selectedProductId: selectedProductId,
+                )));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var selectedProductionGroup = context
+        .read<OpenProductionDataCubit>()
+        .state
+        .loadedItems
+        .firstWhere(
+            (element) => element.hasProductionData(productionBasicDataId));
+
+    var productionData = selectedProductionGroup.productionDataGroup
+        .firstWhere((e) => e.id == productionBasicDataId);
 
     var products = productionData.products;
-      
+
     return BlocBuilder<FieldProductCubit, FieldProductState>(
       builder: (context, state) {
         return InkWell(
-          key: ValueKey("Product_Id_" + productionBasicDataId.toString() + "_" + (state.fieldValue?.toString() ?? "")),
-          onTap: () => productSelection(
-            context: context, 
-            selectedProductId: state.fieldValue,
-            products: products, 
-            onChange: context.read<FieldProductCubit>().updateField
-          ),
-          child: TextFormField(
-            initialValue: state.fieldValue == null ? null : products.firstWhere((element) => element.id == state.fieldValue).name,
-            enabled: false,
-            decoration: InputDecoration(
-              label: Text("Produto", style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.black54),),
-            ).copyWith(
-              disabledBorder: const UnderlineInputBorder(borderSide: BorderSide(color: Colors.black54)),
-            ),
-          )
-        );
+            key: ValueKey("Product_Id_" +
+                productionBasicDataId.toString() +
+                "_" +
+                (state.fieldValue?.toString() ?? "")),
+            onTap: () => productSelection(
+                context: context,
+                selectedProductId: state.fieldValue,
+                products: products,
+                onChange: context.read<FieldProductCubit>().updateField),
+            child: TextFormField(
+              initialValue: state.fieldValue == null
+                  ? null
+                  : products
+                      .firstWhere((element) => element.id == state.fieldValue)
+                      .name,
+              enabled: false,
+              decoration: InputDecoration(
+                label: Text(
+                  "Produto",
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyLarge!
+                      .copyWith(color: Colors.black54),
+                ),
+              ).copyWith(
+                disabledBorder: const UnderlineInputBorder(
+                    borderSide: BorderSide(color: Colors.black54)),
+              ),
+            ));
       },
     );
   }
-  
 }
-
-
-
 
 class _VariableLineUnit {
   final ProductionLineUnit productionLineUnit;

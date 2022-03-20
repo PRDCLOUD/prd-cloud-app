@@ -11,15 +11,13 @@ import 'stop_claim_cubit/stop_claim_cubit.dart';
 class StopTimePerStop extends StatefulWidget {
   const StopTimePerStop(
       {Key? key,
-      required this.productionBasicId,
       required this.selectedStop,
       required this.selectedLineUnit,
       required this.stopAddCallback})
       : super(key: key);
 
-  final int productionBasicId;
   final Stop selectedStop;
-  final LineUnit selectedLineUnit;
+  final ProductionLineUnit selectedLineUnit;
   final StopAddCallback stopAddCallback;
 
   @override
@@ -38,7 +36,7 @@ class _StopTimePerStopState extends State<StopTimePerStop> {
       listener: (context, state) async {
         var result = await widget.stopAddCallback(
             lineUnitId: widget.selectedLineUnit.id,
-            productionBasicDataId: widget.productionBasicId,
+            productionBasicDataId: widget.selectedLineUnit.productionBasicDataId,
             stopCurrentDefinitionId: widget.selectedStop.id,
             stopType: widget.selectedStop.stopTypeOf,
             averageTimeAtStopQtyAverageTime: widget.selectedStop.averageTime,

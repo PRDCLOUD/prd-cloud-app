@@ -6,10 +6,6 @@ import 'package:prd_cloud_app/modules/main/bloc/main_bloc.dart';
 import 'package:prd_cloud_app/modules/main/production_data/screens/production_opened_items/view/loss/production_loss_add.dart';
 import 'package:prd_cloud_app/theme.dart';
 
-
-//TODO recolocoar produto
-// BlocProvider(create: (context) => FieldProductCubit(openProductionDataRepository: openProductionDataRepository, productionBasicDataId: _productionBasicDataId, initialValue: productionGroup.productId)),
-
 class ProductionLossMain extends StatelessWidget {
   const ProductionLossMain({Key? key}) : super(key: key);
 

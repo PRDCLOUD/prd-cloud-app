@@ -40,7 +40,7 @@ class StopAdd extends StatefulWidget {
 
   final int productionBasicId;
   final List<Stop> stopOptions;
-  final List<LineUnit> lineUnits;
+  final List<ProductionLineUnit> lineUnits;
   final StopAddCallback stopAddCallback;
 
   @override
@@ -51,7 +51,7 @@ class _StopAddState extends State<StopAdd> {
   StopAddStates stopAddStates = StopAddStates.stopSelection;
 
   Stop? selectedStop;
-  LineUnit? selectedLineUnit;
+  ProductionLineUnit? selectedLineUnit;
 
   @override
   Widget build(BuildContext context) {
@@ -116,7 +116,7 @@ class _StopAddState extends State<StopAdd> {
 
   Widget _lineUnitSelection() {
     var lineUnits = widget.lineUnits
-        .where((lineUnit) => selectedStop!.lineUnitStops.contains(lineUnit.id))
+        .where((lineUnit) => selectedStop!.lineUnitStops.contains(lineUnit.lineUnitId))
         .toList();
     return Column(
       children: [
@@ -192,7 +192,7 @@ class _StopAddState extends State<StopAdd> {
       selectedLineUnit = null;
 
       var lineUnits = widget.lineUnits
-        .where((lineUnit) => selectedStop!.lineUnitStops.contains(lineUnit.id))
+        .where((lineUnit) => selectedStop!.lineUnitStops.contains(lineUnit.lineUnitId))
         .toList();
 
       if (lineUnits.length == 1) {
@@ -203,7 +203,7 @@ class _StopAddState extends State<StopAdd> {
     });
   }
 
-  void selectLineUnit(LineUnit lineUnit) {
+  void selectLineUnit(ProductionLineUnit lineUnit) {
     setState(() {
       selectedLineUnit = lineUnit;
       stopAddStates = StopAddStates.stopFill;
@@ -214,31 +214,26 @@ class _StopAddState extends State<StopAdd> {
     switch (selectedStop!.stopTypeOf) {
       case StopTypeOf.QtyAverageTime:
         return StopQtyAverageTime(
-            productionBasicId: widget.productionBasicId,
             selectedLineUnit: selectedLineUnit!,
             selectedStop: selectedStop!,
             stopAddCallback: widget.stopAddCallback);
       case StopTypeOf.QtyTotalTime:
         return StopQtyTotalTime(
-            productionBasicId: widget.productionBasicId,
             selectedLineUnit: selectedLineUnit!,
             selectedStop: selectedStop!,
             stopAddCallback: widget.stopAddCallback);
       case StopTypeOf.TimeBegin:
         return StopBeginTime(
-            productionBasicId: widget.productionBasicId,
             selectedLineUnit: selectedLineUnit!,
             selectedStop: selectedStop!,
             stopAddCallback: widget.stopAddCallback);
       case StopTypeOf.TimePerStop:
         return StopTimePerStop(
-            productionBasicId: widget.productionBasicId,
             selectedLineUnit: selectedLineUnit!,
             selectedStop: selectedStop!,
             stopAddCallback: widget.stopAddCallback);
       case StopTypeOf.BeginEnd:
         return StopBeginEnd(
-            productionBasicId: widget.productionBasicId,
             selectedLineUnit: selectedLineUnit!,
             selectedStop: selectedStop!,
             stopAddCallback: widget.stopAddCallback);

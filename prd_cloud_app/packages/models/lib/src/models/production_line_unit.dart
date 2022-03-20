@@ -67,4 +67,6 @@ class ProductionLineUnit extends Equatable {
       type: type ?? this.type,
     );
   }
+
+  bool isProductionLine() => type.toLowerCase() == "productionline";
 }

@@ -11,15 +11,13 @@ import 'stop_add_cubit/stop_add_cubit.dart';
 class StopBeginEnd extends StatefulWidget {
   const StopBeginEnd({ 
     Key? key, 
-    required this.productionBasicId,
     required this.selectedStop,
     required this.selectedLineUnit,
     required this.stopAddCallback
   }) : super(key: key);
 
-  final int productionBasicId;
   final Stop selectedStop;
-  final LineUnit selectedLineUnit;
+  final ProductionLineUnit selectedLineUnit;
   final StopAddCallback stopAddCallback;
 
   @override
@@ -40,7 +38,7 @@ class _StopBeginEndState extends State<StopBeginEnd> {
       listener: (context, state) async {
         var result = await widget.stopAddCallback(
           lineUnitId: widget.selectedLineUnit.id,
-          productionBasicDataId: widget.productionBasicId,
+          productionBasicDataId: widget.selectedLineUnit.productionBasicDataId,
           stopCurrentDefinitionId: widget.selectedStop.id,
           stopType: widget.selectedStop.stopTypeOf,
           averageTimeAtStopQtyAverageTime: widget.selectedStop.averageTime,

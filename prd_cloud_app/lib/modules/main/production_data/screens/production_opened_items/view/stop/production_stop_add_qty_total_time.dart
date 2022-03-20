@@ -11,15 +11,13 @@ import 'stop_add_validation_cubit copy/stop_add_validation_cubit.dart';
 class StopQtyTotalTime extends StatefulWidget {
   const StopQtyTotalTime(
       {Key? key,
-      required this.productionBasicId,
       required this.selectedStop,
       required this.selectedLineUnit,
       required this.stopAddCallback})
       : super(key: key);
 
-  final int productionBasicId;
   final Stop selectedStop;
-  final LineUnit selectedLineUnit;
+  final ProductionLineUnit selectedLineUnit;
   final StopAddCallback stopAddCallback;
 
   @override
@@ -39,7 +37,7 @@ class _StopQtyTotalTimeState extends State<StopQtyTotalTime> {
       listener: (context, state) async {
         var result = await widget.stopAddCallback(
             lineUnitId: widget.selectedLineUnit.id,
-            productionBasicDataId: widget.productionBasicId,
+            productionBasicDataId: widget.selectedLineUnit.productionBasicDataId,
             stopCurrentDefinitionId: widget.selectedStop.id,
             stopType: widget.selectedStop.stopTypeOf,
             averageTimeAtStopQtyAverageTime: widget.selectedStop.averageTime,

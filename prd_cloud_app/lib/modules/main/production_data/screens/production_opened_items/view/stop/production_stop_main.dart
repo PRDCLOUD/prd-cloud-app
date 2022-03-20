@@ -10,7 +10,7 @@ import 'production_stop_add.dart';
 class ProductionStopMain extends StatelessWidget {
   const ProductionStopMain({Key? key}) : super(key: key);
 
-  void stopAddDialog(BuildContext context, List<Stop> stopOptions, List<LineUnit> lineUnits, StopAddCallback stopAddCallback, int productionBasicId) {
+  void stopAddDialog(BuildContext context, List<Stop> stopOptions, List<ProductionLineUnit> lineUnits, StopAddCallback stopAddCallback, int productionBasicId) {
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => 
@@ -35,7 +35,7 @@ class ProductionStopMain extends StatelessWidget {
         .firstWhere((e) => e.hasProductionData(productionDataId));
     
     var stopOptions = group.getProductionStopOptions();
-    var lineUnits = group.getLineUnits().toList();
+    var lineUnits = group.getProductionLineUnits().toList();
 
     return BlocConsumer<ProductionStopCubit, ProductionStopState>(
       listener: (context, state) => { 
@@ -75,7 +75,7 @@ class ProductionStopMain extends StatelessWidget {
     );
   }
 
-Widget _stopCard(ProductionStopState state, int index, BuildContext context, List<LineUnit> lineUnits) {
+Widget _stopCard(ProductionStopState state, int index, BuildContext context, List<ProductionLineUnit> lineUnits) {
 
   Future showDeleteAlertDialog() async {
       // set up the button
@@ -136,7 +136,7 @@ Widget _stopCard(ProductionStopState state, int index, BuildContext context, Lis
                       children: [
                         const Icon(Icons.precision_manufacturing_outlined, size: 12), 
                         const SizedBox(width: 5), 
-                        Text(lineUnits.firstWhere((lineUnit) => lineUnit.id == state.stops[index].lineUnitId).name, style: Theme.of(context).textTheme.bodyMedium)
+                        Text(lineUnits.firstWhere((lineUnit) => lineUnit.id == state.stops[index].lineUnitId).lineUnit.name, style: Theme.of(context).textTheme.bodyMedium)
                       ]
                     ),
                     Row(

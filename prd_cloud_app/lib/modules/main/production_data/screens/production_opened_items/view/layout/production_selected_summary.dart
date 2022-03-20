@@ -146,7 +146,7 @@ class _ProductionLineSelectionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var productionLine = productionGroup.productionDataGroup.first.lineUnits.firstWhere((x) => x.type == "ProductionLine");
+    var productionLine = productionGroup.productionDataGroup.first.lineUnits.firstWhere((x) => x.isProductionLine());
     return Expanded(
       child: ElevatedButton(
         style: TextButton.styleFrom(
@@ -161,7 +161,7 @@ class _ProductionLineSelectionButton extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text("Linha: " + productionLine.name, style: Theme.of(context).textTheme.headline6!.copyWith(color: Colors.white)),
-                  Text("ID " + productionLine.id.toString(), style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),)
+                  Text("ID " + productionGroup.getId().toString(), style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white),)
                 ],
               ),
             ),

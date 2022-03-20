@@ -30,7 +30,7 @@ class _LossAddState extends State<LossAdd> {
       selectedLoss = loss;
       lossAddStates = LossAddStates.lineUnitSelection;
 
-      var possibleLineUnits = widget.lineUnits.where((lineUnit) => selectedLoss!.lineUnitLoss.contains(lineUnit.id)).toList();
+      var possibleLineUnits = widget.lineUnits.where((lineUnit) => selectedLoss!.lineUnitLoss.contains(lineUnit.lineUnitId)).toList();
       if (possibleLineUnits.length == 1) {
         selectedLineUnit = possibleLineUnits.first;
         lossAddStates = LossAddStates.valueFill;
@@ -73,7 +73,7 @@ class _LossAddState extends State<LossAdd> {
       case LossAddStates.lossSelection:
         return lossSelection();
       case LossAddStates.lineUnitSelection:
-        var lineUnits = widget.lineUnits.where((lineUnit) => selectedLoss!.lineUnitLoss.contains(lineUnit.id)).toList();
+        var lineUnits = widget.lineUnits.where((lineUnit) => selectedLoss!.lineUnitLoss.contains(lineUnit.lineUnitId)).toList();
         return lineUnitSelection(lineUnits);
       case LossAddStates.valueFill:
         return SingleChildScrollView(child: valueFill());

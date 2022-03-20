@@ -35,7 +35,7 @@ class ProductionDataGroup extends Equatable {
       if (e.id == productionData.id) {
         return productionData;
       } else {
-        e;
+        return e;
       }
     }).cast<ProductionData>().toList();
 
@@ -48,7 +48,7 @@ class ProductionDataGroup extends Equatable {
       if (e.id == productionDataId) {
         return e.copyWith(productId: productId);
       } else {
-        e;
+        return e;
       }
     }).cast<ProductionData>().toList();
 
