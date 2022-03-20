@@ -16,21 +16,18 @@ import 'package:prd_cloud_app/modules/initial/screens/tenant_selection/view/tena
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:prd_cloud_app/widgets/loading_scaffold.dart';
 
-
 class App extends StatelessWidget {
-  const App({
-    Key? key, 
-    required this.authenticationRepository,
-    required this.config
-    }) : super(key: key);
+  const App(
+      {Key? key, required this.authenticationRepository, required this.config})
+      : super(key: key);
 
   final AuthenticationRepository authenticationRepository;
   final Config config;
-  
+
   @override
   Widget build(BuildContext context) {
     return MultiRepositoryProvider(
-      providers:[
+      providers: [
         RepositoryProvider.value(value: authenticationRepository),
         RepositoryProvider(create: (context) => ErrorRepository()),
         RepositoryProvider(create: (context) => config)
@@ -38,21 +35,21 @@ class App extends StatelessWidget {
       child: MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => AuthenticationBloc(authenticationRepository: authenticationRepository),
-            lazy: false
-          ),
+              create: (_) => AuthenticationBloc(
+                  authenticationRepository: authenticationRepository),
+              lazy: false),
           BlocProvider(
-            create: (_) => AuthDataCubit(authenticationRepository: authenticationRepository),
-            lazy: false
-          ),
+              create: (_) => AuthDataCubit(
+                  authenticationRepository: authenticationRepository),
+              lazy: false),
           BlocProvider(
-            create: (_) => TenantSelectionCubit(authenticationRepository: authenticationRepository),
-            lazy: false
-          ),
+              create: (_) => TenantSelectionCubit(
+                  authenticationRepository: authenticationRepository),
+              lazy: false),
           BlocProvider(
-            create: (_) => TenantOptionsCubit(authenticationRepository: authenticationRepository),
-            lazy: false
-          )
+              create: (_) => TenantOptionsCubit(
+                  authenticationRepository: authenticationRepository),
+              lazy: false)
         ],
         child: const AppView(),
       ),
@@ -75,59 +72,56 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return GlobalLoaderOverlay(
-      child: MaterialApp(
-        localizationsDelegates: const [
-          ...GlobalMaterialLocalizations.delegates,
-          GlobalWidgetsLocalizations.delegate,
-        ],
-        locale: const Locale('pt', 'BR'),
-        supportedLocales: const [
-          Locale('en', 'US'),
-          Locale('pt', 'BR'),
-          Locale('es', 'AR'),
-        ],
-        // The Mandy red, light theme.
-        theme: FlexThemeData.light(scheme: FlexScheme.bigStone),
-        // Use dark or light theme based on system setting.
-        themeMode: ThemeMode.light,
-        navigatorKey: _navigatorKey,
-        builder: (context, child) {
-          
-          var initialTenantSelectionState = context.select((TenantSelectionCubit bloc) => bloc.state);
-
-          return BlocListener<TenantSelectionCubit, TenantSelectionState>(
-            listener: (context, state) {
-              tenantSelectionStateToView(state);
-            },
-            child: BlocListener<AuthenticationBloc, AuthenticationState>(
-              listener: (context, state) {
-                switch (state.status) {
-                  case AuthenticationStatus.authenticated:
-                    tenantSelectionStateToView(initialTenantSelectionState);
-                    break;
-                  case AuthenticationStatus.unauthenticated:
-                    _navigator.pushAndRemoveUntil<void>(
-                      LoginPage.route(),
-                      (route) => false,
-                    );
-                    break;
-                  case AuthenticationStatus.unknown:
-                    _navigator.pushAndRemoveUntil<void>(
-                      InitialLoadingPage.route(),
-                      (route) => false,
-                    );
-                    break;
-                  default:
-                    break;
-                }
-              },
-              child: child,
-            ),
-          );
-        },
-        onGenerateRoute: (_) => SplashPage.route(),
-      )
-    );
+        child: MaterialApp(
+      localizationsDelegates: const [
+        ...GlobalMaterialLocalizations.delegates,
+        GlobalWidgetsLocalizations.delegate,
+      ],
+      locale: const Locale('pt', 'BR'),
+      supportedLocales: const [
+        Locale('en', 'US'),
+        Locale('pt', 'BR'),
+        Locale('es', 'AR'),
+      ],
+      // The Mandy red, light theme.
+      theme: FlexThemeData.light(scheme: FlexScheme.bigStone),
+      // Use dark or light theme based on system setting.
+      themeMode: ThemeMode.light,
+      navigatorKey: _navigatorKey,
+      builder: (context, child) {
+        
+        return BlocListener<AuthenticationBloc, AuthenticationState>(
+          listener: (context, state) {
+            switch (state.status) {
+              case AuthenticationStatus.authenticated:
+                tenantSelectionStateToView(context.read<TenantSelectionCubit>().state);
+                BlocListener<TenantSelectionCubit, TenantSelectionState>(
+                  listener: (context, state) {
+                    tenantSelectionStateToView(state);
+                  }
+                );
+                break;
+              case AuthenticationStatus.unauthenticated:
+                _navigator.pushAndRemoveUntil<void>(
+                  LoginPage.route(),
+                  (route) => false,
+                );
+                break;
+              case AuthenticationStatus.unknown:
+                _navigator.pushAndRemoveUntil<void>(
+                  InitialLoadingPage.route(),
+                  (route) => false,
+                );
+                break;
+              default:
+                break;
+            }
+          },
+          child: child,
+        );
+      },
+      onGenerateRoute: (_) => SplashPage.route(),
+    ));
   }
 
   void tenantSelectionStateToView(TenantSelectionState state) {
