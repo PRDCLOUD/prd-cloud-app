@@ -6,10 +6,6 @@ import 'package:prd_cloud_app/modules/initial/bloc/tenant_selection/tenant_selec
 class TenantSelectionPage extends StatelessWidget {
   const TenantSelectionPage({Key? key}) : super(key: key);
 
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => const TenantSelectionPage());
-  }
-
   @override
   Widget build(BuildContext context) {
 

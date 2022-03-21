@@ -19,10 +19,6 @@ import 'package:user_preferences_repository/user_preferences_repository.dart';
 class AuthenticatedProviderPage extends StatelessWidget {
   const AuthenticatedProviderPage({Key? key}) : super(key: key);
 
-  static Route route() {
-    return MaterialPageRoute<void>(builder: (_) => const AuthenticatedProviderPage());
-  }
-
   @override
   Widget build(BuildContext context) {
     var authenticationRepository = context.read<AuthenticationRepository>();
