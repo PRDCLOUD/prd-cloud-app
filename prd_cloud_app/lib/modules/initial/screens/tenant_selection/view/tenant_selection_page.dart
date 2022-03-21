@@ -16,7 +16,7 @@ class TenantSelectionPage extends StatelessWidget {
     final tenantOptions = context.select((TenantOptionsCubit bloc) => bloc.state).tenants.toList();
 
     return Scaffold(
-      appBar: AppBar(centerTitle: true, title: const Text('Selectione a Planta')),
+      appBar: AppBar(centerTitle: true, title: const Text('Selecione a Planta')),
       body: ListView.builder(
         itemCount: tenantOptions.length,
         itemBuilder: (BuildContext context, int index) {

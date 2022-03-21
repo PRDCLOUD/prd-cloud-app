@@ -86,6 +86,10 @@ class DrawerMenu extends StatelessWidget {
             dioError.response!.statusCode == 400 &&
             dioError.response?.data is Map) {
           errorToShow = (dioError.response!.data as Map)['errorMessage'];
+        } else if (dioError.response?.statusCode != null &&
+            dioError.response!.statusCode == 403 &&
+            dioError.response?.data is Map) {
+          errorToShow = "Ação não permitida para o usuário";
         }
       }
       if (errorToShow != null && errorToShow.isNotEmpty) {
