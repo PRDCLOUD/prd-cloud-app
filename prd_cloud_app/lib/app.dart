@@ -77,56 +77,58 @@ class _AppViewState extends State<AppView> {
   @override
   Widget build(BuildContext context) {
     return GlobalLoaderOverlay(
-        child: MaterialApp(
-      localizationsDelegates: const [
-        ...GlobalMaterialLocalizations.delegates,
-        GlobalWidgetsLocalizations.delegate,
-      ],
-      locale: const Locale('pt', 'BR'),
-      supportedLocales: const [
-        Locale('en', 'US'),
-        Locale('pt', 'BR'),
-        Locale('es', 'AR'),
-      ],
-      // The Mandy red, light theme.
-      theme: FlexThemeData.light(scheme: FlexScheme.bigStone),
-      // Use dark or light theme based on system setting.
-      themeMode: ThemeMode.light,
-      navigatorKey: _navigatorKey,
-      builder: (context, child) {
-        
-        return BlocListener<AuthenticationBloc, AuthenticationState>(
-          listener: (context, state) {
-            switch (state.status) {
-              case AuthenticationStatus.authenticated:
-                tenantSelectionStateToView(context.read<TenantSelectionCubit>().state);
-                BlocListener<TenantSelectionCubit, TenantSelectionState>(
-                  listener: (context, state) {
-                    tenantSelectionStateToView(state);
-                  }
-                );
-                break;
-              case AuthenticationStatus.unauthenticated:
-                _navigator.pushAndRemoveUntil<void>(
-                  LoginPage.route(),
-                  (route) => false,
-                );
-                break;
-              case AuthenticationStatus.unknown:
-                _navigator.pushAndRemoveUntil<void>(
-                  InitialLoadingPage.route(),
-                  (route) => false,
-                );
-                break;
-              default:
-                break;
-            }
-          },
-          child: child,
-        );
-      },
-      onGenerateRoute: (_) => SplashPage.route(),
-    ));
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        localizationsDelegates: const [
+          ...GlobalMaterialLocalizations.delegates,
+          GlobalWidgetsLocalizations.delegate,
+        ],
+        locale: const Locale('pt', 'BR'),
+        supportedLocales: const [
+          Locale('en', 'US'),
+          Locale('pt', 'BR'),
+          Locale('es', 'AR'),
+        ],
+        // The Mandy red, light theme.
+        theme: FlexThemeData.light(scheme: FlexScheme.bigStone),
+        // Use dark or light theme based on system setting.
+        themeMode: ThemeMode.light,
+        navigatorKey: _navigatorKey,
+        builder: (context, child) {
+          
+          return BlocListener<AuthenticationBloc, AuthenticationState>(
+            listener: (context, state) {
+              switch (state.status) {
+                case AuthenticationStatus.authenticated:
+                  tenantSelectionStateToView(context.read<TenantSelectionCubit>().state);
+                  BlocListener<TenantSelectionCubit, TenantSelectionState>(
+                    listener: (context, state) {
+                      tenantSelectionStateToView(state);
+                    }
+                  );
+                  break;
+                case AuthenticationStatus.unauthenticated:
+                  _navigator.pushAndRemoveUntil<void>(
+                    LoginPage.route(),
+                    (route) => false,
+                  );
+                  break;
+                case AuthenticationStatus.unknown:
+                  _navigator.pushAndRemoveUntil<void>(
+                    InitialLoadingPage.route(),
+                    (route) => false,
+                  );
+                  break;
+                default:
+                  break;
+              }
+            },
+            child: child,
+          );
+        },
+        onGenerateRoute: (_) => SplashPage.route(),
+      )
+    );
   }
 
   void tenantSelectionStateToView(TenantSelectionState state) {
