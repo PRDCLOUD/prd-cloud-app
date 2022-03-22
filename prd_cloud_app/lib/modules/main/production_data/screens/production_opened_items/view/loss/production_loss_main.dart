@@ -35,6 +35,11 @@ class ProductionLossMain extends StatelessWidget {
     var lossesOptions = productionData.getProductionLossOptions();
     var lineUnits = productionData.getProductionLineUnits();
 
+    var hasMoreThanOneGridOption = lossesOptions.map((e) => e.lossGridOption).toSet().length > 1;
+
+    var lossesOptionsNullable = lossesOptions.cast<Loss?>().toList();
+    Loss? getLossOption(int lossId) => lossesOptionsNullable.firstWhere((x) => x?.id == lossId, orElse: () => null);
+
     return BlocConsumer<ProductionLossCubit, ProductionLossState>(
       listener: (context, state) => { 
         if (state.status == ProductionLossStatus.adding || state.status == ProductionLossStatus.deleting) {
@@ -62,7 +67,7 @@ class ProductionLossMain extends StatelessWidget {
                   shrinkWrap: true,
                   itemCount: state.losses.length,
                   itemBuilder: (BuildContext context, int index) {
-                    return _lossCard(state, index, context, lineUnits);
+                    return _lossCard(state, hasMoreThanOneGridOption ? getLossOption(state.losses[index].lossCurrentDefinitionId) : null, index, context, lineUnits);
                   },
                 ),
               ),
@@ -73,7 +78,7 @@ class ProductionLossMain extends StatelessWidget {
     );
   }
 
-  Widget _lossCard(ProductionLossState state, int index, BuildContext context, List<ProductionLineUnit> lineUnits) {
+  Widget _lossCard(ProductionLossState state, Loss? loss, int index, BuildContext context, List<ProductionLineUnit> lineUnits) {
 
     Future showDeleteAlertDialog() async {
       // set up the button
@@ -125,9 +130,16 @@ class ProductionLossMain extends StatelessWidget {
                   children: [
                     Row(
                       children: [
-                        const Icon(Icons.build_outlined, size: 12), 
+                        const Icon(Icons.delete_outline, size: 12), 
                         const SizedBox(width: 5), 
-                        Text(state.losses[index].name, style: Theme.of(context).textTheme.bodyMedium) 
+                        Text(state.losses[index].name, style: Theme.of(context).textTheme.bodyMedium),
+                        if (loss != null)
+                          ...[
+                            const SizedBox(width: 5),
+                            Text("(" + loss.lossGridOption + ")", style: Theme.of(context).textTheme.bodyMedium),
+                          ] 
+                        else
+                          ...[]
                       ]
                     ),
                     Row(

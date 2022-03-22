@@ -2,16 +2,18 @@ import 'package:flutter/material.dart';
 import 'package:models/models.dart';
 import 'package:prd_cloud_app/widgets/widgets.dart';
 
-enum LossAddStates { lossSelection, lineUnitSelection, valueFill }
+enum LossAddStates { gridSelection, lossSelection, lineUnitSelection, valueFill }
 
 typedef LossAddCallback = Future<bool> Function(int productionBasicDataId, int lossCurrentDefinitionId, double lossValue, int lineUnitId);
 
 class LossAdd extends StatefulWidget {
-  const LossAdd({ Key? key, required this.lossOptions, required this.lineUnits, required this.lossAddCallback }) : super(key: key);
+  LossAdd({ Key? key, required this.lossOptions, required this.lineUnits, required this.lossAddCallback }) :
+  gridOptions = lossOptions.map((e) => e.lossGridOption).toSet().toList(), super(key: key);
 
   final List<Loss> lossOptions;
   final List<ProductionLineUnit> lineUnits;
   final LossAddCallback lossAddCallback;
+  final List<String> gridOptions;
 
   @override
   State<LossAdd> createState() => _LossAddState();
@@ -19,8 +21,10 @@ class LossAdd extends StatefulWidget {
 
 class _LossAddState extends State<LossAdd> {
 
-  LossAddStates lossAddStates = LossAddStates.lossSelection;
+  LossAddStates lossAddStates = LossAddStates.gridSelection;
 
+  
+  String? selectedGrid;
   Loss? selectedLoss;
   ProductionLineUnit? selectedLineUnit;
   double? lossValue;
@@ -38,6 +42,13 @@ class _LossAddState extends State<LossAdd> {
     });
   }
 
+  void selectGrid(String grid) {
+    setState(() {
+      selectedGrid = grid;
+      lossAddStates = LossAddStates.lossSelection;
+    });
+  }
+
   void selectLineUnit(ProductionLineUnit lineUnit) {
     setState(() {
       selectedLineUnit = lineUnit;
@@ -47,6 +58,14 @@ class _LossAddState extends State<LossAdd> {
 
   void fillLossValue(double? value) {
     lossValue = value;
+  }
+
+  @override
+  void initState() {
+    if (widget.gridOptions.length == 1) {
+      lossAddStates = LossAddStates.lossSelection;
+    }
+    super.initState();
   }
 
   @override
@@ -73,8 +92,14 @@ class _LossAddState extends State<LossAdd> {
 
   Widget dialogBody() {
     switch (lossAddStates) {
+      case LossAddStates.gridSelection:
+        return gridSelection(widget.gridOptions);
       case LossAddStates.lossSelection:
-        return lossSelection();
+        if (widget.gridOptions.length > 1) {
+          return lossSelection(widget.lossOptions.where((loss) => loss.lossGridOption == selectedGrid).toList());
+        } else {
+          return lossSelection(widget.lossOptions);
+        }
       case LossAddStates.lineUnitSelection:
         var lineUnits = widget.lineUnits.where((lineUnit) => selectedLoss!.lineUnitLoss.contains(lineUnit.lineUnitId)).toList();
         return lineUnitSelection(lineUnits);
@@ -109,7 +134,36 @@ class _LossAddState extends State<LossAdd> {
       );
   }
 
-  Widget lossSelection() {
+Widget gridSelection(List<String> gridOptions) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(15),
+          child: Text("Selecione o tipo de perda", style: Theme.of(context).textTheme.titleMedium)
+        ),
+        Expanded(
+          child: ListView.builder(
+            shrinkWrap: true,
+            itemCount: gridOptions.length,
+            itemBuilder: (BuildContext context, int index) {
+              return ListTile(
+                title: Card(
+                  child: Container(
+                    padding: const EdgeInsets.all(15),
+                    child: Text(gridOptions[index])
+                  )
+                ),
+                onTap: () => selectGrid(gridOptions[index])
+              );
+            },
+          )
+        ),
+        flowControlButtons(),
+      ],
+    );
+  }
+
+  Widget lossSelection(List<Loss> losses) {
     return Column(
       children: [
         Container(
@@ -118,7 +172,7 @@ class _LossAddState extends State<LossAdd> {
         ),
         Expanded(
           child: _ListOfLosses(
-            losses: widget.lossOptions, 
+            losses: losses, 
             selectStopCallback: selectLoss
           ),
         ),
@@ -170,7 +224,7 @@ class _LossAddState extends State<LossAdd> {
             padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10),
             child: Row(
               children: [
-                Text("Perda:", style: textStyle.copyWith(fontWeight: FontWeight.bold)),
+                Text((selectedGrid ?? "Perda") + ":", style: textStyle.copyWith(fontWeight: FontWeight.bold)),
                 const SizedBox(width: 10),
                 Text(selectedLoss!.name + '(' + selectedLoss!.unit + ')', style: textStyle)
               ],
@@ -178,7 +232,7 @@ class _LossAddState extends State<LossAdd> {
           )
         ),
       ),
-      onTap: () => backToLossSelectionStage(),
+      onTap: () => widget.gridOptions.length > 1 ? backToGridSelectionStage() : backToLossSelectionStage(),
     );
   }
 
@@ -207,8 +261,13 @@ class _LossAddState extends State<LossAdd> {
     );
   }
 
+  bool isFirstScreen() => widget.gridOptions.length > 1 ? (lossAddStates == LossAddStates.gridSelection) : (lossAddStates == LossAddStates.lossSelection);
+
   void backOneStage() {
-    if (lossAddStates == LossAddStates.lineUnitSelection) {
+    if (lossAddStates == LossAddStates.lossSelection) {
+      backToGridSelectionStage();
+    }
+    else if (lossAddStates == LossAddStates.lineUnitSelection) {
       backToLossSelectionStage();
     } else if (lossAddStates == LossAddStates.valueFill) {
       backToLineUnitSelectionStage();
@@ -232,13 +291,23 @@ class _LossAddState extends State<LossAdd> {
     });
   }
 
+  void backToGridSelectionStage() {
+    setState(() {
+      selectedGrid = null;
+      selectedLoss = null;
+      lossAddStates = LossAddStates.gridSelection;
+      selectedLineUnit = null;
+      lossValue = null;
+    });
+  }
+
   Widget flowControlButtons() {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical:  8.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          if (lossAddStates != LossAddStates.lossSelection) 
+          if (!isFirstScreen()) 
             ...[ ElevatedButton.icon(
               icon: const Icon(Icons.arrow_back),
               label: const Text("Voltar"),
