@@ -7,6 +7,7 @@ export './field_end_cubit/field_end_cubit.dart';
 export './field_comments_cubit/field_comments_cubit.dart';
 export './field_product_cubit/field_product_cubit.dart';
 export './field_variable_text_cubit/field_variable_text_cubit.dart';
+export './field_variable_datetime_cubit/field_variable_datetime_cubit.dart';
 export './field_variable_numeric_cubit/field_variable_numeric_cubit.dart';
 export './production_loss_cubit/production_loss_cubit.dart';
 export './production_stop_cubit/production_stop_cubit.dart';

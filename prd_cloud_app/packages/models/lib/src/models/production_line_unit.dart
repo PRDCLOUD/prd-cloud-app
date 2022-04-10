@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:models/models.dart';
+import 'package:timezone/timezone.dart' as tz;
 
 class ProductionLineUnit extends Equatable {
 
@@ -21,11 +22,11 @@ class ProductionLineUnit extends Equatable {
     required this.type
   });
 
-  factory ProductionLineUnit.fromJson(Map<String, dynamic> json) {
+  factory ProductionLineUnit.fromJson(Map<String, dynamic> json, tz.Location location) {
 
     return ProductionLineUnit(
       id: json['id'],
-      lineUnit: LineUnit.fromJson(json['lineUnit']),
+      lineUnit: LineUnit.fromJson(json['lineUnit'], location),
       lineUnitId: json['lineUnitId'],
       productionBasicDataId: json['productionBasicDataId'],
       name: json['name'],

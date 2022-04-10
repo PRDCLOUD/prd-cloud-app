@@ -245,7 +245,7 @@ class OpenProductionDataRepository {
   Future _updateVariableApi(ProductionVariable variable) async {
     var requestId = startHttpRequestMark();
     try {
-      await _authHttpClient.patchProductionVariable(variable);
+      await _authHttpClient.patchProductionVariable(variable, _tenantInformation.location);
     } catch (e) {
       _errorRepository.communicateError(e);
     } finally {
@@ -360,6 +360,57 @@ class OpenProductionDataRepository {
     if (productionLineUnit != null && productionVariable != null) {
       if (productionVariable!.value != newValue) {
         var newVariable = productionVariable!.copyWith(text: Optional.value(newValue));
+
+        var newVariablesList = productionLineUnit!.lineUnit.productionVariables.toList();
+        newVariablesList[productionVariableIndex!] = newVariable;
+
+        var newLineUnit = productionLineUnit!.lineUnit.copyWithNewVariables(productionVariables: newVariablesList);
+        var newProcutionLineUnit = productionLineUnit!.copyWith(lineUnit: newLineUnit);
+
+        var newProcutionLineUnitList = prdData.lineUnits.toList();
+        newProcutionLineUnitList[productionLineUnitIndex!] = newProcutionLineUnit;
+
+        var newPrdData = prdData.copyWith(lineUnits: newProcutionLineUnitList);
+
+        var prdGroup = _getProductionGroupData(productionDataId);
+        var newPrdGroup = prdGroup.copyWithProductionData(newPrdData);
+
+        emitProductionChanges(newPrdGroup);
+        
+        if (!newVariable.isReadOnly) {
+          var requestId = startHttpRequestMark();
+          try {     
+            EasyDebounce.debounce(productionDataId.toString() + '-update-variable-' + variableId.toString(), Duration(seconds: 2), () => unawaited(_updateVariableApi(newVariable)));
+          } finally {
+            EasyDebounce.debounce(requestId, Duration(seconds: 2), () => endHttpRequestMark(requestId));
+          }
+        }
+      }
+    }
+  }
+
+  updateVariableDateTime(int productionDataId, int variableId, DateTime? newValue) {
+    var prdData = _getProductionBasicData(productionDataId);
+
+    ProductionLineUnit? productionLineUnit;
+    int? productionLineUnitIndex;
+    ProductionVariable? productionVariable;
+    int? productionVariableIndex;
+
+    prdData.lineUnits.asMap().forEach((indexProductionLineUnit, lineUnit) {
+      lineUnit.lineUnit.productionVariables.asMap().forEach((indexVariable, variable) {
+        if (variable.id == variableId) {
+          productionLineUnit = lineUnit;
+          productionLineUnitIndex = indexProductionLineUnit;
+          productionVariable = variable;
+          productionVariableIndex = indexVariable;
+        }
+      });
+    });
+
+    if (productionLineUnit != null && productionVariable != null) {
+      if (productionVariable!.value != newValue) {
+        var newVariable = productionVariable!.copyWith(dateTime: Optional.value(newValue));
 
         var newVariablesList = productionLineUnit!.lineUnit.productionVariables.toList();
         newVariablesList[productionVariableIndex!] = newVariable;

@@ -173,13 +173,14 @@ class AuthenticatedHttpClient {
     return await _patchRequest('api/production/product/' + productionBasicData.id.toString(), data: data);
   }
 
-  Future<Response<dynamic>> patchProductionVariable(ProductionVariable variable) async {
+  Future<Response<dynamic>> patchProductionVariable(ProductionVariable variable, tz.Location locale) async {
     var data = { 
       'definitionName': variable.definitionName,
       'productionBasicDataId': variable.productionBasicDataId,
       'text': variable.text,
       'id': variable.id,
       'value': variable.value,
+      'dateTime': dateToString(variable.dateTime, locale),
       'type': variable.typeVariableDefinition.toLowerCase()
     };
     return await _patchRequest('api/production/variable/' + variable.typeVariableDefinition.toLowerCase() + '/' + variable.id.toString(), data: data);
@@ -270,10 +271,11 @@ class AuthenticatedHttpClient {
         'text': e.text,
         'type': e.typeVariableDefinition,
         'value': e.value,
-        'definitionName': e.definitionName
+        'definitionName': e.definitionName,
+        'dateTime': dateToString(e.dateTime, location),
       }).toList();
 
-      return Map<String, dynamic>.from( {
+      return Map<String, dynamic>.from({
         'id': e.id,
         'begin': dateToString(e.begin, location),
         'end': dateToString(e.end, location),

@@ -24,11 +24,10 @@ class ProductionVariableEdit extends StatelessWidget {
             required: productionVariable.required,
             decimals: productionVariable.decimalPlaces ?? 0,
             initialValue: productionVariable.value,
-            openProductionDataRepository:
-                context.read<OpenProductionDataRepository>()),
+            openProductionDataRepository: context.read<OpenProductionDataRepository>()),
         child: const _NumericVariable(),
       );
-    } else {
+    } else if (productionVariable.typeVariableDefinition.toLowerCase() == 'text') {
       return BlocProvider(
         create: (context) => FieldVariableTextCubit(
             productionBasicDataId: productionVariable.productionBasicDataId,
@@ -37,11 +36,63 @@ class ProductionVariableEdit extends StatelessWidget {
             enabled: !productionVariable.isReadOnly,
             options: productionVariable.textOptionsList,
             initialValue: productionVariable.text,
-            openProductionDataRepository:
-                context.read<OpenProductionDataRepository>()),
+            openProductionDataRepository: context.read<OpenProductionDataRepository>()),
         child: const _TextVariable(),
       );
+    } else {
+      return BlocProvider(
+        create: (context) => FieldVariableDateTimeCubit(
+            productionBasicDataId: productionVariable.productionBasicDataId,
+            variableDataId: productionVariable.id,
+            label: productionVariable.implementationLabel,
+            enabled: !productionVariable.isReadOnly,
+            required: productionVariable.required,
+            initialValue: productionVariable.dateTime,
+            dateTimeType: productionVariable.dateTimeType,
+            openProductionDataRepository: context.read<OpenProductionDataRepository>()),
+        child: const _DateTimeVariable(),
+      );
     }
+  }
+}
+
+class _DateTimeVariable extends StatelessWidget {
+  const _DateTimeVariable({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocBuilder<FieldVariableDateTimeCubit, FieldVariableDateTimeState>(
+      builder: (context, state) {
+        if (state.dateTimeType == DateTimeType.DateTime) {
+          return DateTimePicker(
+            key: ValueKey(state.variableDataId),
+            label: state.label + (state.required ? "*" : ""),
+            date: state.fieldValue,
+            enabled: state.enabled,
+            locale: Localizations.localeOf(context),
+            onChange: (newValue) => context.read<FieldVariableDateTimeCubit>().updateField(newValue),
+          );
+        } else if (state.dateTimeType == DateTimeType.Date) {
+          return DatePicker(
+            key: ValueKey(state.variableDataId),
+            label: state.label + (state.required ? "*" : ""),
+            date: state.fieldValue,
+            enabled: state.enabled,
+            locale: Localizations.localeOf(context),
+            onChange: (newValue) => context.read<FieldVariableDateTimeCubit>().updateField(newValue),
+          );
+        } else {
+          return TimePicker(
+            key: ValueKey(state.variableDataId),
+            label: state.label + (state.required ? "*" : ""),
+            date: state.fieldValue,
+            enabled: state.enabled,
+            locale: Localizations.localeOf(context),
+            onChange: (newValue) => context.read<FieldVariableDateTimeCubit>().updateField(newValue),
+          );
+        }
+      },
+    );
   }
 }
 

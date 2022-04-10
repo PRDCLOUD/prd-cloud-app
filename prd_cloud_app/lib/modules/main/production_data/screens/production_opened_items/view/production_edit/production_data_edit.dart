@@ -136,6 +136,8 @@ class _Begin extends StatelessWidget {
       return DateTimePicker(
           key: const ValueKey("Início"),
           label: "Início",
+          width: 200,
+          enabled: true,
           locale: Localizations.localeOf(context),
           date: state.fieldValue,
           onChange: (newValue) =>
@@ -154,6 +156,8 @@ class _End extends StatelessWidget {
       return DateTimePicker(
           key: const ValueKey("Fim"),
           label: "Fim",
+          width: 200,
+          enabled: true,
           locale: Localizations.localeOf(context),
           date: state.fieldValue,
           onChange: (newValue) =>

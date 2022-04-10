@@ -56,8 +56,10 @@ class _StopBeginTimeState extends State<StopBeginTime> {
         children: [
           DateTimePicker(
             label: "Início",
+            width: 200,
             locale: Localizations.localeOf(context),
             date: beginAtStopBeginAndTimeSpan,
+            enabled: true,
             onChange: (newValue) {
               setState(() {
                 beginAtStopBeginAndTimeSpan = newValue;

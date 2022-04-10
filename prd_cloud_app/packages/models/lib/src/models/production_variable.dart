@@ -1,5 +1,13 @@
 import 'package:equatable/equatable.dart';
+import 'package:models/src/utils/date_time_functions.dart';
 import 'package:models/src/utils/optional.dart';
+import 'package:timezone/timezone.dart' as tz;
+
+enum DateTimeType { 
+  DateTime, 
+  Date, 
+  Time 
+}
 
 class ProductionVariable extends Equatable {
 
@@ -25,6 +33,9 @@ class ProductionVariable extends Equatable {
     final int rowOrder;
     final int columnOrder;
     final int width;
+
+    final DateTimeType? dateTimeType;
+    final DateTime? dateTime;
 
     List<String>? get textOptionsList {
       if (textOptions == null || textOptions == "") {
@@ -64,12 +75,23 @@ class ProductionVariable extends Equatable {
       required this.textOptions, 
       required this.rowOrder, 
       required this.columnOrder, 
-      required this.width 
+      required this.width,
+      required this.dateTimeType,
+      required this.dateTime
     });
 
 
-    factory ProductionVariable.fromJson(Map<String, dynamic> json) {
+    factory ProductionVariable.fromJson(Map<String, dynamic> json, tz.Location location) {
       
+      DateTimeType? StringToDateTimeType(String? value) {
+        switch (value?.toLowerCase()) {
+          case "date": return DateTimeType.Date;
+          case "datetime": return DateTimeType.DateTime;
+          case "time": return DateTimeType.Time;
+        }
+        return null;
+      }
+
       return ProductionVariable(
         id: json['id'],
         columnOrder: json['columnOrder'],
@@ -88,57 +110,62 @@ class ProductionVariable extends Equatable {
         value: json['value'],
         variableCurrentImplementationId: json['variableCurrentImplementationId'],
         variableFormulaIdentifier: json['variableFormulaIdentifier'],
-        width: json['width']
+        width: json['width'],
+        dateTimeType: StringToDateTimeType(json['dateTimeType']),
+        dateTime: DateTimeFunctions.parseDateTime(json['dateTime'] as String?, location)
       );
     }
 
-  @override
-  List<Object?> get props {
-    return [
-      id,
-      definitionName,
-      implementationName,
-      implementationLabel,
-      lineUnitId,
-      productionBasicDataId,
-      required,
-      typeVariableDefinition,
-      typeVariableImplementation,
-      variableCurrentImplementationId,
-      variableFormulaIdentifier,
-      decimalPlaces,
-      value,
-      text,
-      textOptions,
-      rowOrder,
-      columnOrder,
-      width,
-    ];
-  }
+    @override
+    List<Object?> get props {
+      return [
+        id,
+        definitionName,
+        implementationName,
+        implementationLabel,
+        lineUnitId,
+        productionBasicDataId,
+        required,
+        typeVariableDefinition,
+        typeVariableImplementation,
+        variableCurrentImplementationId,
+        variableFormulaIdentifier,
+        decimalPlaces,
+        value,
+        text,
+        textOptions,
+        rowOrder,
+        columnOrder,
+        width,
+      ];
+    }
 
-  ProductionVariable copyWith({
-    Optional<double?> value = const Optional(),
-    Optional<String?> text = const Optional(),
-  }) {
-    return ProductionVariable(
-      id: id,
-      definitionName: definitionName,
-      implementationName: implementationName,
-      implementationLabel: implementationLabel,
-      lineUnitId: lineUnitId,
-      productionBasicDataId: productionBasicDataId,
-      required: required,
-      typeVariableDefinition: typeVariableDefinition,
-      typeVariableImplementation: typeVariableImplementation,
-      variableCurrentImplementationId: variableCurrentImplementationId,
-      variableFormulaIdentifier: variableFormulaIdentifier,
-      decimalPlaces: decimalPlaces,
-      value: value.valueOr(this.value),
-      text: text.valueOr(this.text),
-      textOptions: textOptions,
-      rowOrder: rowOrder,
-      columnOrder: columnOrder,
-      width: width,
-    );
-  }
+    ProductionVariable copyWith({
+      Optional<double?> value = const Optional(),
+      Optional<String?> text = const Optional(),
+      Optional<DateTime?> dateTime = const Optional(),
+    }) {
+      return ProductionVariable(
+        id: id,
+        definitionName: definitionName,
+        implementationName: implementationName,
+        implementationLabel: implementationLabel,
+        lineUnitId: lineUnitId,
+        productionBasicDataId: productionBasicDataId,
+        required: required,
+        typeVariableDefinition: typeVariableDefinition,
+        typeVariableImplementation: typeVariableImplementation,
+        variableCurrentImplementationId: variableCurrentImplementationId,
+        variableFormulaIdentifier: variableFormulaIdentifier,
+        decimalPlaces: decimalPlaces,
+        value: value.valueOr(this.value),
+        text: text.valueOr(this.text),
+        textOptions: textOptions,
+        rowOrder: rowOrder,
+        columnOrder: columnOrder,
+        width: width,
+        dateTime: dateTime.valueOr(this.dateTime),
+        dateTimeType: this.dateTimeType
+      );
+    }
 }

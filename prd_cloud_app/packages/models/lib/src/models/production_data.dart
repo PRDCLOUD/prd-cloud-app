@@ -69,7 +69,7 @@ class ProductionData extends Equatable {
     var losses = json['losses'].map((x) => ProductionLoss.fromJson(x)).cast<ProductionLoss>().toList() as List<ProductionLoss>;
     losses.sort(((a, b) => a.name.toLowerCase().compareTo(b.name.toLowerCase())));
 
-    var lineUnits = json['lineUnits'].map((x) => ProductionLineUnit.fromJson(x)).cast<ProductionLineUnit>().toList() as List<ProductionLineUnit>;
+    var lineUnits = json['lineUnits'].map((x) => ProductionLineUnit.fromJson(x, location)).cast<ProductionLineUnit>().toList() as List<ProductionLineUnit>;
     lineUnits.sort((a, b) => a.order - b.order);
 
     var lineUnitDict = Map<int, LineUnit>.fromIterable(lineUnits, key: (x) => x.lineUnit.id, value: (x) => x.lineUnit); 

@@ -54,8 +54,10 @@ class _StopBeginEndState extends State<StopBeginEnd> {
           children: [
             DateTimePicker(
               label: "Início",
+              width: 200,
               locale: Localizations.localeOf(context),
               date: beginAtStopBeginEnd,
+              enabled: true,
               onChange: (newValue) {
                 setState(() {
                   beginAtStopBeginEnd = newValue;
@@ -65,8 +67,10 @@ class _StopBeginEndState extends State<StopBeginEnd> {
             const SizedBox(height: 10),
             DateTimePicker(
               label: "Fim",
+              width: 200,
               locale: Localizations.localeOf(context),
               date: endAtStopBeginEnd,
+              enabled: true,
               onChange: (newValue) {
                 setState(() {
                   endAtStopBeginEnd = newValue;

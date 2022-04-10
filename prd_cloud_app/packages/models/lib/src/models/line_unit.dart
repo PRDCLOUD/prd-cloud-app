@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:models/models.dart';
+import 'package:timezone/timezone.dart' as tz;
+
 
 class LineUnit extends Equatable {
 
@@ -26,9 +28,9 @@ class LineUnit extends Equatable {
     required this.productionVariables
     });
 
-  factory LineUnit.fromJson(Map<String, dynamic> json) {
+  factory LineUnit.fromJson(Map<String, dynamic> json, tz.Location location) {
 
-    var productionVariables = (json['productionVariables']?.map((x) => ProductionVariable.fromJson(x)).cast<ProductionVariable>().toList() ?? List<ProductionVariable>.empty()) as List<ProductionVariable>;
+    var productionVariables = (json['productionVariables']?.map((x) => ProductionVariable.fromJson(x, location)).cast<ProductionVariable>().toList() ?? List<ProductionVariable>.empty()) as List<ProductionVariable>;
     productionVariables = productionVariables.where((e) => e.width != 0).toList();
     productionVariables.sort((a, b) => (a.rowOrder - b.rowOrder) != 0 ? (a.rowOrder - b.rowOrder) : (a.columnOrder - b.columnOrder));
 
